@@ -1,0 +1,34 @@
+*{margin: 0; padding: 0; box-sizing: border-box;}
+
+input, button{
+  border: 0;
+}
+
+.flex-center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+
+::-webkit-scrollbar { /*滚动条整体样式*/
+  width: 7px;  /*高宽分别对应横竖滚动条的尺寸*/
+  height: 6px;
+  background: #ffffff;
+  cursor: pointer;
+
+}
+
+::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 0 5px rgba(240, 240, 240, .5);
+  background: #ccc;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar-track { /*滚动条里面轨道*/
+  -webkit-box-shadow: inset 0 0 5px rgba(240, 240, 240, .5);
+  border-radius: 0;
+  background: rgba(240, 240, 240, 0.5);
+  cursor: pointer;
+}

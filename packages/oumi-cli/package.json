@@ -1,0 +1,19 @@
+{
+  "name": "@oumi/cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "oumi": "bin/oumi.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "dasheng",
+  "license": "MIT",
+  "dependencies": {
+    "@oumi/oumi-ui": "^1.0.0",
+    "@oumi/cli-shared-utils": "^1.0.0",
+    "commander": "^8.0.0"
+  }
+}

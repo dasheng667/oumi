@@ -1,0 +1,181 @@
+@primary: #cfe3f7;
+
+
+.container-center{
+  width: 1000px;
+  margin: 0 auto;
+}
+
+
+.ui-container{
+  height: 100vh;
+  overflow: hidden;
+  .title{
+    padding: 20px 0;
+    background: @primary;
+    font-size: 24px;
+    text-align: center;
+    height: 70px;
+  }
+  .ui-tabs{
+    height: calc(100vh - 70px);
+    overflow: hidden;
+    position: relative;
+    
+    .loading{
+      position: absolute;
+      background: rgba(255, 255, 255, .3);
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 3;
+    }
+  }
+  .ant-tabs-nav-wrap{
+    justify-content: center;
+    align-items: center;
+  }
+
+  .project-select-list{
+    margin-top: 10px;
+    font-size: 14px;
+
+    &-item{
+      margin-bottom: 15px;
+      background: #f9f9f9;
+      padding: 10px;
+      border-radius: 4px;
+    }
+
+    .content{
+      display: flex;
+      align-items: center;
+      .content-icon{
+        width: 40px;
+      }
+      .content-left{
+        flex: 1;
+        cursor: pointer;
+      }
+      .content-right{
+        > span{
+          background: #e5e5e5;
+          padding: 5px 10px;
+          border-radius: 2px;
+          margin-right: 15px;
+          cursor: pointer;
+          &:hover{
+            background: #e1e1e1;
+          }
+        }
+      }
+      .name{
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+.tabs-content-auto{
+  height: calc(100vh - 130px);
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+
+.project-import{
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+
+  .toolbar{
+    padding: 16px 0;
+    display: flex;
+    .back{
+      flex: auto 0 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 3px;
+      background: @primary;
+      margin-right: 20px;
+      cursor: pointer;
+      &:hover{
+        background: #b5d5f5;
+      }
+    }
+    .current-path{
+      flex: 100% 1 1;
+      display: flex;
+      border-radius: 3px;
+      background: @primary;
+      .path-part{
+        padding: 0 10px;
+        border-radius: 2px;
+        border-left: 2px solid;
+        border-left-color: #fff;
+        cursor: pointer;
+        &:hover{
+          background: #b5d5f5;
+        }
+      }
+    }
+  }
+
+  .folders{
+    flex: 1;
+    overflow-y: auto;
+    padding-left: 55px;
+
+    .folder-explorer-item{
+      .icon{
+        width: 26px;
+        height: 24px;
+        margin-right: 5px;
+      }
+      font-size: 14px;
+      padding: 10px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      cursor: pointer;
+      position: relative;
+      border-radius: 2px;
+      &:hover{
+        background: #ddebf9;
+      }
+    }
+  }
+
+  .import-btn{
+    text-align: center;
+    padding: 10px 0;
+    > button{
+      display: inline-block;
+      min-width: 190px;
+      color: #fff;
+      padding: 0 18px;
+      font-size: 16px;
+      height: 44px;
+      line-height: 44px;
+      background: #559de5;
+      border-radius: 4px;
+      cursor: pointer;
+      &.disabled{
+        background: #ccc;
+        cursor: not-allowed;
+        &:hover{
+          background: #ccc;
+        }
+      }
+      &:hover{
+        background: #75b3f1;
+      }
+    }
+  }
+}

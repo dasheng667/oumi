@@ -1,0 +1,12 @@
+/lambda/
+/scripts
+/config
+.history
+public
+dist
+mock
+_mock.ts
+_mock.js
+.less
+.scss
+/packages/cli-shared-utils
