@@ -12,19 +12,20 @@ const projectListPath = '/project/select';
 export default () => {
   const history = useHistory();
   const { data, error, loading } = useRequest<ProjectListItem>('/api/dashboard/get');
-
   const { data: projectList = [] } = useRequest<ProjectListItem[]>('/api/project/list');
 
   const goProjectList = () => {
     history.push(projectListPath);
   };
 
+  useEffect(() => {
+    if (error) {
+      history.replace(projectListPath);
+    }
+  }, [error]);
+
   if (loading || !data) {
     return <Spin />;
-  }
-
-  if (error) {
-    return <Redirect to={projectListPath} />;
   }
 
   return (

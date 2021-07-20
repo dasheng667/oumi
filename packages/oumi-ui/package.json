@@ -17,5 +17,8 @@
     "koa-router": "^10.0.0",
     "koa-static": "^5.0.0",
     "lowdb": "^1.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

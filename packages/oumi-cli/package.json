@@ -12,8 +12,12 @@
   "author": "dasheng",
   "license": "MIT",
   "dependencies": {
-    "@oumi/oumi-ui": "^1.0.0",
+    "@oumi/oumi-ui": "^0.0.1-beta",
+    "@oumi/swagger-api": "^0.0.1-beta",
     "@oumi/cli-shared-utils": "^1.0.0",
     "commander": "^8.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
