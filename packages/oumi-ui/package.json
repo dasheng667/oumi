@@ -1,6 +1,6 @@
 {
-  "name": "@oumi/oumi-ui",
-  "version": "1.0.0",
+  "name": "@oumi/ui",
+  "version": "0.0.1-beta",
   "description": "oumi-ui",
   "main": "index.js",
   "scripts": {

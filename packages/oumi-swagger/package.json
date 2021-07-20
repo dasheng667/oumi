@@ -1,11 +1,47 @@
 {
-  "name": "@oumi/swagger",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "@oumi/swagger-api",
+  "version": "0.0.1-beta",
+  "description": "远程拉取swagger内容，生成json模拟数据、typescript文件",
+  "author": "dasheng <345263463@qq.com> (http://www.yuque.com/qqhh)",
+  "license": "none",
+  "main": "lib/index.js",
+  "files": [
+    "lib",
+    "typings"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node ./example/index.ts"
   },
-  "author": "",
-  "license": "MIT"
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:dasheng91"
+  },
+  "licenses": "(MIT OR Apache-2.0)",
+  "engines": {
+    "node": ">= 10.0.0",
+    "npm": ">= 4.0.0"
+  },
+  "dependencies": {
+    "chalk": "^4.1.1",
+    "fs-extra": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.23",
+    "@types/node": "^15.3.0",
+    "jest": "^27.0.6",
+    "request": "^2.88.2",
+    "ts-jest": "^27.0.3",
+    "typescript": "^4.3.4"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "/__tests__/.*\\.(ts|tsx|js)$"
+  }
 }

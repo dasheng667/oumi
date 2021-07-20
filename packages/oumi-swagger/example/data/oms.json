@@ -1,0 +1,195 @@
+{
+  "swagger": "2.0",
+  "info": { "version": "1.0", "title": "测试api" },
+  "host": "xxxx.hobby.com",
+  "basePath": "/",
+  "tags": [
+    { "name": "物流API", "description": "Logistics Supplier Controller" },
+    {
+      "name": "new name",
+      "description": "Fill Order Apply Controller"
+    },
+    { "name": "V1.0.0", "description": "Sales Fill Order Controller" }
+  ],
+  "paths": {
+    "/api/export": {
+      "get": {
+        "tags": ["管理"],
+        "summary": "批量导出列表",
+        "description": "",
+        "operationId": "exportUsingGET",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [
+          {
+            "name": "XX-Head",
+            "in": "header",
+            "description": "用户登登ttoo",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "XX-UserId",
+            "in": "header",
+            "description": "用户登登UserId",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "companyId",
+            "in": "query",
+            "description": "公司编号",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "companyName",
+            "in": "query",
+            "description": "公司名称",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "province",
+            "in": "query",
+            "description": "省编码",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "description": "市编码",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "district",
+            "in": "query",
+            "description": "区编码",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "belongIndustry",
+            "in": "query",
+            "description": "所属行业",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": { "description": "OK" },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not Found" }
+        }
+      }
+    },
+    "/api/getDetail": {
+      "get": {
+        "tags": ["管理"],
+        "summary": "获取详情",
+        "description": "获取详情",
+        "operationId": "getDetailUsingGET",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [
+          {
+            "name": "FFS-Head",
+            "in": "header",
+            "description": "用户登登ttoo",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "FFS-UserId",
+            "in": "header",
+            "description": "用户登登UserId",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "companyId",
+            "in": "query",
+            "description": "companyId",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": { "$ref": "#/definitions/ModelResult«CompanyManageVO»" }
+          },
+          "401": { "description": "Unauthorized" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not Found" }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ModelResult«CompanyManageVO»": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "currentTimeMillis": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "data": {
+          "$ref": "#/definitions/CompanyManageVO"
+        },
+        "msg": {
+          "type": "string"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "CompanyManageVO": {
+      "type": "object",
+      "properties": {
+        "addTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "添加时间"
+        },
+        "addUserId": {
+          "type": "integer",
+          "format": "int64",
+          "example": 1,
+          "description": "添加人Id"
+        },
+        "addUserName": {
+          "type": "string",
+          "example": "admin",
+          "description": "添加人用户名"
+        },
+        "applyNum": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "申请数"
+        },
+        "belongIndustryName": {
+          "type": "string",
+          "example": "医学",
+          "description": "所属行业名称"
+        },
+        "companyId": {
+          "type": "integer",
+          "format": "int64",
+          "example": 1101,
+          "description": "公司编号"
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
-  "name": "@oumi/oumi-ui-frontend",
-  "version": "1.0.0",
+  "name": "@oumi/ui-frontend",
+  "version": "0.0.1-beta",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
