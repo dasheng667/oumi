@@ -12,7 +12,7 @@ const index_1 = require("./index");
  * @param callback
  */
 const createFileSync = (filePath, callback) => {
-    fs_extra_1.default.ensureFile(filePath, function (err, data) {
+    fs_extra_1.default.ensureFile(filePath, (err, data) => {
         if (typeof callback === 'function') {
             callback(err, data);
         }
@@ -21,7 +21,7 @@ const createFileSync = (filePath, callback) => {
 exports.createFileSync = createFileSync;
 function writeJSON(filePath, data, callback) {
     fs_extra_1.default.createFileSync(filePath);
-    fs_extra_1.default.writeFile(filePath, JSON.stringify(data, null, "\t"), null, (err, data) => {
+    fs_extra_1.default.writeFile(filePath, JSON.stringify(data, null, '\t'), null, (err, data2) => {
         if (err) {
             index_1.log.red(`写入失败: ${filePath} `, err);
         }
@@ -29,7 +29,7 @@ function writeJSON(filePath, data, callback) {
             index_1.log.green(`写入成功: ${filePath}`);
         }
         if (typeof callback === 'function') {
-            callback(err, data);
+            callback(err, data2);
         }
     });
 }

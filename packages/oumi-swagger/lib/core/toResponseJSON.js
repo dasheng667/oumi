@@ -6,33 +6,33 @@ const utils_1 = require("../utils");
  * @param data
  * @returns
  */
-function toResponseJSON(data) {
+function toResponseJSON(resData) {
     const result = {};
-    function each(result, data) {
+    function each(res, data) {
         if (Array.isArray(data)) {
-            data.forEach(value => {
+            data.forEach((value) => {
                 console.log('数组的暂没有处理~');
             });
         }
         else if (data && typeof data === 'object') {
-            Object.keys(data).forEach(key => {
+            Object.keys(data).forEach((key) => {
                 const value = { ...data[key] };
                 if (value.isArray) {
                     delete value.isArray;
-                    result[key] = [value];
+                    res[key] = [value];
                 }
                 else if (utils_1.verifyNodeIsDeclarationType(value)) {
                     // 是一个正常的数据声明格式
-                    result[key] = transformDataResult(value);
+                    res[key] = transformDataResult(value);
                 }
                 else {
-                    result[key] = {};
-                    each(result[key], value);
+                    res[key] = {};
+                    each(res[key], value);
                 }
             });
         }
     }
-    each(result, data);
+    each(result, resData);
     return result;
 }
 exports.default = toResponseJSON;
@@ -40,7 +40,7 @@ function transformDataResult(data) {
     const { type, items, explame } = data;
     if (explame)
         return explame;
-    const typeName = (items && items.type) ? items.type : type;
+    const typeName = items && items.type ? items.type : type;
     if (type === 'array') {
         if (typeName === 'integer' || typeName === 'number') {
             return [1];

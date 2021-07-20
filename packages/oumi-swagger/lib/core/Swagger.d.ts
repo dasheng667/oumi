@@ -1,4 +1,4 @@
-import { Query, QueryListItem, InterfaceTempCallback, ResponseCallback, BuildMockOption, BuildApiOption } from '../../typings/swagger';
+import type { Query, QueryListItem, InterfaceTempCallback, ResponseCallback, BuildMockOption, BuildApiOption } from '../../typings/swagger';
 /**
  * Swagger 拉取工具
  */
@@ -7,7 +7,7 @@ export default class Swagger {
     responseData: any;
     typescriptData: any;
     queryList: QueryListItem;
-    step: "" | "mock" | "typescript";
+    step: '' | 'mock' | 'typescript';
     constructor(body?: Object);
     fetchApi(url: string): Promise<any>;
     query(options: Query, callback?: (list: any) => void): this;
@@ -16,9 +16,7 @@ export default class Swagger {
      * @param callback
      * @returns
      */
-    toResponseJSON(callback?: (data: {
-        [path: string]: any;
-    }) => void): this;
+    toResponseJSON(callback?: (data: Record<string, any>) => void): this;
     /**
      * 转换成ts声明文件
      * @param callback

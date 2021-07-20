@@ -14,7 +14,7 @@ function toTypeScript(data, interfaceName = 'props') {
     function eachValue(value) {
         const res = {};
         if (utils_1.isObject(value)) {
-            Object.keys(value).forEach(key => {
+            Object.keys(value).forEach((key) => {
                 const val = { ...value[key] };
                 if (val.isArray) {
                     res[key] = {
@@ -40,7 +40,7 @@ function toTypeScript(data, interfaceName = 'props') {
         return res;
     }
     if (utils_1.isObject(data)) {
-        Object.keys(data).forEach(key => {
+        Object.keys(data).forEach((key) => {
             const value = data[key];
             if (value.isArray) {
                 console.log('isArray: ', value);

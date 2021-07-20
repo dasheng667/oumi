@@ -15,31 +15,28 @@ function parametersBody(definitions = {}, request = {}) {
     if (!parameters || !Array.isArray(parameters))
         return null;
     const body = {};
-    if (parameters.length == 1 && parameters[0].in == "body") {
+    if (parameters.length === 1 && parameters[0].in === 'body') {
         const value = eachDefinitions_1.default({
             definitions,
-            ref: parameters[0].schema.$ref,
+            ref: parameters[0].schema.$ref
         });
         Object.assign(body, value);
         return body;
     }
-    parameters.map((item) => {
+    parameters.forEach((item) => {
         if (item.schema && item.schema.$ref) {
             const value = eachDefinitions_1.default({
                 definitions,
-                ref: item.schema.$ref,
+                ref: item.schema.$ref
             });
             if (checkParamsIn(value)) {
                 body[item.name] = value;
             }
         }
-        else {
-            if (checkParamsIn(item)) {
-                body[item.name] = item;
-            }
+        else if (checkParamsIn(item)) {
+            body[item.name] = item;
         }
     });
     return body;
 }
 exports.default = parametersBody;
-;

@@ -1,4 +1,4 @@
-import { Query } from '../../typings/swagger';
+import type { Query } from '../../typings/swagger';
 export declare const validataQuery: (requestData: any, requestPath: string, options: Query) => boolean;
 export declare const dataType: string[];
 /**

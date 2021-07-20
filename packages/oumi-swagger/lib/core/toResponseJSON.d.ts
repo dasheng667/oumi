@@ -3,4 +3,4 @@
  * @param data
  * @returns
  */
-export default function toResponseJSON(data: any): {};
+export default function toResponseJSON(resData: any): {};

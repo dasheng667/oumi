@@ -8,18 +8,18 @@ const chalk_1 = __importDefault(require("chalk"));
 const validataQuery = function (requestData, requestPath, options) {
     const { tags, description } = requestData;
     const { keyword, tag, path } = options;
-    if (keyword && description.indexOf(keyword) == -1) {
+    if (keyword && description.indexOf(keyword) === -1) {
         return false;
     }
-    if (typeof path === 'string' && requestPath.indexOf(path) == -1) {
+    if (typeof path === 'string' && requestPath.indexOf(path) === -1) {
         return false;
     }
-    if (Array.isArray(path) && path.every(p => requestPath.indexOf(p) == -1)) {
+    if (Array.isArray(path) && path.every((p) => requestPath.indexOf(p) === -1)) {
         return false;
     }
     if (tag && Array.isArray(tags)) {
-        return tags.some((tag) => {
-            return tag.toLocaleUpperCase().indexOf(tag.toLocaleUpperCase()) === -1;
+        return tags.some((t) => {
+            return t.toLocaleUpperCase().indexOf(t.toLocaleUpperCase()) === -1;
         });
     }
     return true;
@@ -39,7 +39,7 @@ function verifyNodeIsDeclarationType(node) {
 exports.verifyNodeIsDeclarationType = verifyNodeIsDeclarationType;
 function findResponseRef(request) {
     try {
-        const { responses: { '200': { schema: { '$ref': ref } } } } = request;
+        const { responses: { '200': { schema: { $ref: ref } } } } = request;
         return ref;
     }
     catch (e) {
@@ -49,7 +49,7 @@ function findResponseRef(request) {
 }
 exports.findResponseRef = findResponseRef;
 function isObject(val) {
-    return Object.prototype.toString.call(val) === "[object Object]";
+    return Object.prototype.toString.call(val) === '[object Object]';
 }
 exports.isObject = isObject;
 function stringCase(str) {
@@ -65,7 +65,7 @@ exports.stringCase = stringCase;
  * @returns
  */
 function transformPath(path, filterPrefix = '') {
-    let ret = path.split('/');
+    const ret = path.split('/');
     const nameIdx = filterPrefix ? ret.indexOf(filterPrefix) : -1;
     const newArr = ret.filter((item, index) => {
         return index > nameIdx && item !== '/' && item !== '';
@@ -100,5 +100,5 @@ exports.log = {
     },
     gray(...args) {
         console.log(chalk_1.default.gray(...args));
-    },
+    }
 };

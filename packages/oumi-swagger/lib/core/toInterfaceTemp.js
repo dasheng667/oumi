@@ -8,7 +8,7 @@ const template_1 = require("../template");
  */
 function toInterfaceTemp(data) {
     let str = '';
-    Object.keys(data).forEach(key => {
+    Object.keys(data).forEach((key) => {
         const val = data[key];
         str += template_1.interfaceTemp(key, val);
     });

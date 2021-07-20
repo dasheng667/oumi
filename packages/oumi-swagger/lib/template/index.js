@@ -26,7 +26,6 @@ function getInterfaceType(value) {
     }
     return 'any';
 }
-;
 /**
  * ts接口模板
  * @param name interface的名称
@@ -41,11 +40,11 @@ const interfaceTemp = (name, data) => {
     let str = `export type ${utils_1.stringCase(name)} = { \n`;
     interArr.forEach((key) => {
         const val = data[key];
-        const name = val.name || key || "";
+        const kname = val.name || key || '';
         const description = val.description
-            ? `  /** 备注：${val.description} ${val.example ? `示例：${val.example}` : ""} */ \n`
-            : "";
-        const content = ` ${name}${val.required === false ? "?" : ""}: ${getInterfaceType(val)}; \n`;
+            ? `  /** 备注：${val.description} ${val.example ? `示例：${val.example}` : ''} */ \n`
+            : '';
+        const content = ` ${kname}${val.required === false ? '?' : ''}: ${getInterfaceType(val)}; \n`;
         str += description;
         str += content;
     });
@@ -54,7 +53,7 @@ const interfaceTemp = (name, data) => {
 };
 exports.interfaceTemp = interfaceTemp;
 const requestTemp = (options) => {
-    let { method = "GET", url, params, fileType } = options;
+    const { method = 'GET', url, params, fileType } = options;
     if (fileType === 'ts') {
         return `export default function(params: Props, options?: {[key: string]: any}){
   return request<Result>({

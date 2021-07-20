@@ -18,16 +18,16 @@ const fetch_1 = __importDefault(require("../fetch"));
  */
 class Swagger {
     constructor(body) {
-        if (typeof body === "object") {
+        if (typeof body === 'object') {
             this.body = body;
         }
         this.queryList = {};
         this.responseData = {};
         this.typescriptData = {};
-        this.step = "";
+        this.step = '';
     }
     async fetchApi(url) {
-        if (typeof url === "string" && url.startsWith("http")) {
+        if (typeof url === 'string' && url.startsWith('http')) {
             try {
                 const body = await fetch_1.default(url);
                 this.body = body;
@@ -37,10 +37,12 @@ class Swagger {
                 return Promise.reject(e);
             }
         }
+        return Promise.resolve();
     }
     query(options, callback) {
         const { paths, definitions } = this.body;
         const queryList = {};
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         Object.keys(paths).forEach((path) => {
             const apiData = paths[path];
             const { post, get, put } = apiData;
@@ -52,15 +54,15 @@ class Swagger {
             if (!ref)
                 return;
             const res = eachDefinitions_1.default({ definitions, ref });
-            console.log("query: ", path);
+            console.log('query: ', path);
             queryList[path] = {
                 request: parametersData,
                 response: res,
-                methods: Object.keys(apiData)[0],
+                methods: Object.keys(apiData)[0]
             };
         });
         this.queryList = queryList;
-        if (typeof callback === "function") {
+        if (typeof callback === 'function') {
             callback(this.queryList);
         }
         return this;
@@ -71,17 +73,17 @@ class Swagger {
      * @returns
      */
     toResponseJSON(callback) {
-        this.step = "mock";
+        this.step = 'mock';
         const keys = Object.keys(this.queryList);
         if (keys.length === 0)
             return this;
         const json = {};
-        keys.forEach((path) => {
-            const { response } = this.queryList[path];
-            json[path] = toResponseJSON_1.default(response);
+        keys.forEach((key) => {
+            const { response } = this.queryList[key];
+            json[key] = toResponseJSON_1.default(response);
         });
         this.responseData = json;
-        if (typeof callback === "function") {
+        if (typeof callback === 'function') {
             callback(json);
         }
         return this;
@@ -92,21 +94,21 @@ class Swagger {
      * @returns
      */
     toTypeScript(callback) {
-        this.step = "typescript";
+        this.step = 'typescript';
         const keys = Object.keys(this.queryList);
         if (keys.length === 0)
             return this;
         const json = {};
-        keys.forEach((path) => {
-            const { request, response, methods } = this.queryList[path];
-            json[path] = {
-                request: toTypeScript_1.default(request, "props"),
-                response: toTypeScript_1.default(response, "result"),
-                methods,
+        keys.forEach((key) => {
+            const { request, response, methods } = this.queryList[key];
+            json[key] = {
+                request: toTypeScript_1.default(request, 'props'),
+                response: toTypeScript_1.default(response, 'result'),
+                methods
             };
         });
         this.typescriptData = json;
-        if (typeof callback === "function") {
+        if (typeof callback === 'function') {
             callback(json);
         }
         return this;
@@ -118,23 +120,23 @@ class Swagger {
         const keys = Object.keys(this.typescriptData);
         if (keys.length === 0)
             return this;
-        let propsString = "";
-        let resultString = "";
-        keys.forEach((path) => {
-            const { request, response, methods } = this.typescriptData[path];
+        let propsString = '';
+        let resultString = '';
+        keys.forEach((key) => {
+            const { request, response, methods } = this.typescriptData[key];
             propsString += toInterfaceTemp_1.default(request);
             resultString += toInterfaceTemp_1.default(response);
-            if (typeof callback === "function") {
+            if (typeof callback === 'function') {
                 callback({
-                    [path]: {
+                    [key]: {
                         propsString,
                         resultString,
-                        methods,
-                    },
+                        methods
+                    }
                 });
             }
-            propsString = "";
-            resultString = "";
+            propsString = '';
+            resultString = '';
         });
         return this;
     }
@@ -142,19 +144,19 @@ class Swagger {
      * 生成模拟的json文件
      */
     buildMockJSON(options) {
-        const { outputPath, fileType = "dir", filterPathPrefix } = options || {};
-        if (!outputPath || typeof outputPath !== "string") {
+        const { outputPath, fileType = 'dir', filterPathPrefix } = options || {};
+        if (!outputPath || typeof outputPath !== 'string') {
             throw new Error(`outputPath: 格式不合法 ${outputPath}`);
         }
         const data = this.responseData;
         Object.keys(data).forEach((key) => {
             const file = key;
             // 写入目录
-            if (fileType === "dir") {
+            if (fileType === 'dir') {
                 const fileName = path_1.default.join(outputPath, `${file}.json`);
                 fs_1.writeJSON(fileName, data[file]);
             }
-            else if (fileType === "hump") {
+            else if (fileType === 'hump') {
                 const fileData = utils_1.transformPath(key, filterPathPrefix);
                 const fileName = path_1.default.join(outputPath, `${fileData.key}.json`);
                 fs_1.writeJSON(fileName, data[file]);
@@ -168,24 +170,25 @@ class Swagger {
      */
     buildApi(options) {
         const { outputPath, requestLibPath, fileType, filterPathPrefix } = options || {};
-        if (!outputPath || typeof outputPath !== "string") {
+        if (!outputPath || typeof outputPath !== 'string') {
             throw new Error(`outputPath: 格式不合法 ${outputPath}`);
         }
         const keys = Object.keys(this.typescriptData);
         if (keys.length === 0)
             return this;
         this.toInterfaceTemp((data) => {
+            // eslint-disable-next-line @typescript-eslint/no-shadow
             Object.keys(data).forEach((path) => {
                 const { propsString, resultString, methods } = data[path];
                 if (outputPath) {
                     const pathData = utils_1.transformPath(path, filterPathPrefix);
-                    let requestLibContent = `${requestLibPath} \n`;
+                    const requestLibContent = `${requestLibPath} \n`;
                     const requestContent = index_1.requestTemp({
                         method: methods,
-                        url: '/' + pathData.path,
-                        fileType,
+                        url: `/${pathData.path}`,
+                        fileType
                     });
-                    if (fileType === "js") {
+                    if (fileType === 'js') {
                         fs_1.writeTS(`${outputPath}/${pathData.path}.js`, `${requestLibContent} \n ${requestContent}`);
                     }
                     else {

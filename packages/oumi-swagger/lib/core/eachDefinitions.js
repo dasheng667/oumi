@@ -4,15 +4,15 @@ let refTotal;
 function eachDefinitions(params) {
     const { definitions = {}, firstFlag = true, isArray } = params || {};
     let { ref } = params;
-    let data = {};
+    const data = {};
     if (firstFlag === true) {
         refTotal = [];
     }
     ref = ref.replace('#/definitions/', '');
-    const findRefIndex = refTotal.findIndex(item => {
+    const findRefIndex = refTotal.findIndex((item) => {
         return item.ref === ref;
     });
-    if (findRefIndex == -1) {
+    if (findRefIndex === -1) {
         refTotal.push({ ref, count: 1 });
     }
     else {
@@ -22,7 +22,7 @@ function eachDefinitions(params) {
         refTotal[findRefIndex].count++;
     }
     if (ref === 'String') {
-        return data = {
+        return {
             type: 'string'
         };
     }
@@ -34,18 +34,29 @@ function eachDefinitions(params) {
     if (isArray) {
         data['isArray'] = true;
     }
-    if (type == 'object') {
+    if (type === 'object') {
         Object.keys(properties).forEach((key) => {
             const childData = properties[key];
+            // eslint-disable-next-line @typescript-eslint/no-shadow
             const { type } = childData;
             if (childData['$ref']) {
                 data[key] = eachDefinitions({ definitions, ref: childData['$ref'], firstFlag: false });
             }
             else if (childData['items'] && childData['items']['$ref']) {
-                data[key] = eachDefinitions({ definitions, ref: childData['items']['$ref'], isArray: type == 'array', firstFlag: false });
+                data[key] = eachDefinitions({
+                    definitions,
+                    ref: childData['items']['$ref'],
+                    isArray: type === 'array',
+                    firstFlag: false
+                });
             }
             else if (childData['schema'] && childData['schema']['$ref']) {
-                data[key] = eachDefinitions({ definitions, ref: childData['schema']['$ref'], isArray: type == 'array', firstFlag: false });
+                data[key] = eachDefinitions({
+                    definitions,
+                    ref: childData['schema']['$ref'],
+                    isArray: type === 'array',
+                    firstFlag: false
+                });
             }
             else {
                 data[key] = childData;

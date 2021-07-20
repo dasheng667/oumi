@@ -11,13 +11,13 @@ function fetch(url) {
     return new Promise((resolve, reject) => {
         request_1.default({
             url,
-            method: "GET",
+            method: 'GET',
             json: true,
             headers: {
-                "content-type": "application/json",
-            },
-        }, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
+                'content-type': 'application/json'
+            }
+        }, (error, response, body) => {
+            if (!error && response.statusCode === 200) {
                 resolve(body);
             }
         });
