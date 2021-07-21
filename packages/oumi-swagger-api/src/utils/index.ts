@@ -4,18 +4,22 @@ import type { Query } from '../../typings/swagger';
 export const validataQuery = function (requestData: any, requestPath: string, options: Query) {
   const { tags, description } = requestData;
   const { keyword, tag, path } = options;
-  if (keyword && description.indexOf(keyword) === -1) {
-    return false;
+  if (keyword) {
+    if (!description) return false;
+    if (description.indexOf(keyword) === -1) return false;
   }
-  if (typeof path === 'string' && requestPath.indexOf(path) === -1) {
-    return false;
-  }
-  if (Array.isArray(path) && path.every((p) => requestPath.indexOf(p) === -1)) {
-    return false;
+  if (path) {
+    if (!requestPath) return false;
+    if (typeof path === 'string' && requestPath.indexOf(path) === -1) {
+      return false;
+    }
+    if (Array.isArray(path) && path.every((p) => requestPath.indexOf(p) === -1)) {
+      return false;
+    }
   }
   if (tag && Array.isArray(tags)) {
     return tags.some((t) => {
-      return t.toLocaleUpperCase().indexOf(t.toLocaleUpperCase()) === -1;
+      return t.toLocaleUpperCase().indexOf(tag.toLocaleUpperCase()) > -1;
     });
   }
   return true;

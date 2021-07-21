@@ -54,10 +54,11 @@ class Swagger {
             if (!ref)
                 return;
             const res = eachDefinitions_1.default({ definitions, ref });
-            console.log('query: ', path);
+            // console.log('query: ', path);
             queryList[path] = {
                 request: parametersData,
                 response: res,
+                description: request.description || request.summary,
                 methods: Object.keys(apiData)[0]
             };
         });

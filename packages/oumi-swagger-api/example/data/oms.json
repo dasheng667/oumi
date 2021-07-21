@@ -14,7 +14,7 @@
   "paths": {
     "/api/export": {
       "get": {
-        "tags": ["管理"],
+        "tags": ["V1.0.0"],
         "summary": "批量导出列表",
         "description": "",
         "operationId": "exportUsingGET",

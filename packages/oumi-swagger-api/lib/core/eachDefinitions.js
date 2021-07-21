@@ -27,7 +27,7 @@ function eachDefinitions(params) {
         };
     }
     if (!definitions[ref]) {
-        console.log(`没有找到ref: ${ref}`);
+        console.log(`未知的ref: ${ref}`);
         return null;
     }
     const { type, properties = {} } = definitions[ref];

@@ -69,7 +69,7 @@ export default () => {
         <h2>配置</h2>
       </div>
 
-      <div className="ui-config-container">
+      <div className="ui-config-container ui-content-container">
         <Tabs type="card">
           <TabPane tab="Swagger 配置" key="1">
             <Form name="customized_form_controls" form={form} layout="inline" onFinish={onFinish}>

@@ -1,27 +1,4 @@
-const request = require('request');
-
-function fetch(url) {
-  if (!url) {
-    throw new Error('url 不能为空');
-  }
-  return new Promise((resolve, reject) => {
-    request(
-      {
-        url,
-        method: 'GET',
-        json: true,
-        headers: {
-          'content-type': 'application/json'
-        }
-      },
-      (error, response, body) => {
-        if (!error && response.statusCode === 200) {
-          resolve(body);
-        }
-      }
-    );
-  });
-}
+const fetch = require('../utils/fetch');
 
 const getUserConfig = (ctx) => {
   const data = ctx.model.userConfig.get();
@@ -61,8 +38,14 @@ const SwaggerRemove = (ctx) => {
   return ctx.returnSuccess(data);
 };
 
+const getConfigSwagger = (ctx) => {
+  const data = ctx.model.userConfig.swagger.get();
+  return ctx.returnSuccess(data);
+};
+
 module.exports = {
   'POST /api/config/get': getUserConfig,
+  'POST /api/config/swagger/get': getConfigSwagger,
   'POST /api/config/swagger/add': SwaggerAdd,
   'POST /api/config/swagger/remove': SwaggerRemove
 };

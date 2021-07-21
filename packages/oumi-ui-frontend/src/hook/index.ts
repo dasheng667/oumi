@@ -27,27 +27,31 @@ export const useRequest = <T>(url: string, options?: Options) => {
   const fetch = useCallback(
     (urlParams?: any, options2?: any) => {
       setLoading(true);
-      return request[methods](url, { ...params, ...urlParams })
-        .then((res: any) => {
-          setLoading(false);
-          setData(res);
-          if (typeof onSuccess === 'function') {
-            onSuccess(res);
-          }
-          if (options2 && typeof options2.onSuccess === 'function') {
-            options2.onSuccess(res);
-          }
-        })
-        .catch((err) => {
-          setLoading(false);
-          setError(err);
-          if (typeof onError === 'function') {
-            onError(err);
-          }
-          if (options2 && typeof options2.onError === 'function') {
-            options2.onError(err);
-          }
-        });
+      return new Promise((resolve, reject) => {
+        request[methods](url, { ...params, ...urlParams })
+          .then((res: any) => {
+            setLoading(false);
+            setData(res);
+            if (typeof onSuccess === 'function') {
+              onSuccess(res);
+            }
+            if (options2 && typeof options2.onSuccess === 'function') {
+              options2.onSuccess(res);
+            }
+            resolve(res);
+          })
+          .catch((err) => {
+            setLoading(false);
+            setError(err);
+            if (typeof onError === 'function') {
+              onError(err);
+            }
+            if (options2 && typeof options2.onError === 'function') {
+              options2.onError(err);
+            }
+            reject(err);
+          });
+      });
     },
     [params]
   );

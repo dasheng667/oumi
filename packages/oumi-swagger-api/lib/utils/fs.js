@@ -11,14 +11,13 @@ const index_1 = require("./index");
  * @param filePath
  * @param callback
  */
-const createFileSync = (filePath, callback) => {
+exports.createFileSync = (filePath, callback) => {
     fs_extra_1.default.ensureFile(filePath, (err, data) => {
         if (typeof callback === 'function') {
             callback(err, data);
         }
     });
 };
-exports.createFileSync = createFileSync;
 function writeJSON(filePath, data, callback) {
     fs_extra_1.default.createFileSync(filePath);
     fs_extra_1.default.writeFile(filePath, JSON.stringify(data, null, '\t'), null, (err, data2) => {

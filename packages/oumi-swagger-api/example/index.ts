@@ -6,7 +6,7 @@ import OMS from './data/oms.json';
 const swagger = new Swagger(OMS);
 
 swagger
-  .query({ path: ['api'] }, (queryList) => {
+  .query({ tag: 'V1.0.0' }, (queryList) => {
     writeFile(`./example/build/queryList.json`, queryList);
   })
   .toResponseJSON((json) => {

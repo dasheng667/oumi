@@ -1,0 +1,143 @@
+.swagger-error{
+  padding: 30px 10px;
+}
+
+.ui-swagger-container{
+  min-height: auto;
+  > .ant-tabs{
+    .ant-tabs-tab{
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+  }
+
+  .tabs-content{
+    position: relative;
+  }
+
+  .body-flex{
+    display: flex;
+    padding-top: 15px;
+    > div{
+      height: calc(100vh - 235px);
+      overflow: hidden;
+      overflow-y: auto;
+      padding: 5px;
+      border: 1px solid #f0f0f0;
+      border-radius: 2px;
+    }
+    .swagger-list{
+      width: 60%;
+      margin-right: 20px;
+    }
+    .dir{
+      width: 40%;
+    }
+  }
+}
+
+.swagger-list{
+  
+  .swagger-list-item{
+    border-bottom: 1px solid #e9e9e9;
+    .heading{
+      border: 1px solid transparent;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      padding: 0 10px;
+      color: #666;
+      h3 {
+        color: inherit;
+        padding: 10px 0;
+        padding-left: 0;
+        display: block;
+        clear: none;
+        float: left;
+        font-family: Droid Sans,sans-serif;
+        font-weight: 700;
+      }
+      .options{
+        font-size: 12px;
+        margin-right: 10px;
+        .all{
+          padding-left: 10px;
+        }
+      }
+      &:hover{
+        color: #1890ff;
+      }
+    }
+
+    .content{
+      .content-list{
+        margin-bottom: 0;
+        padding: 0 10px;
+        > div{
+          width: 100%;
+        }
+        li{
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 5px;
+          padding-left: 0;
+          font-size: 14px;
+          line-height: 30px;
+          border-radius: 2px;
+
+          .checkbox{
+            margin-right: 10px;
+          }
+          .methods{
+            width: 55px;
+            flex: 0 0 auto;
+            background: #dcdcdc;
+            text-align: center;
+            border-radius: 2px;
+          }
+          .path{
+            flex: 1;
+            padding-left: 15px;
+            background: #f1f1f1;
+            border-radius: 2px;
+          }
+          .desc{
+            flex: 0 0 auto;
+            font-size: 12px;
+            padding-right: 10px;
+            background: #f1f1f1;
+            border-radius: 2px;
+            max-width: 200px;
+            text-overflow:ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            white-break:break-all;
+          }
+
+          &.get{
+            .methods{
+              background-color: #0f6ab4;
+              // border: 1px solid #c3d9ec;
+              color: #fff;
+            }
+            .path, .desc{
+              background-color: #e7f0f7;
+            }
+          }
+
+          &.post{
+            .methods{
+              background-color: #10a54a;
+              color: #fff;
+            }
+            .path, .desc{
+              background-color: #e7f6ec;
+              // border: 1px solid #c3e8d1;
+            }
+          }
+
+        }
+      }
+    }
+  }
+}

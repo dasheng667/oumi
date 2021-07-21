@@ -45,7 +45,7 @@ const modelDb = {
       db.get(this.KEY).push(data).write();
     },
     find(findParams) {
-      return db.get(this.KEY).find(findParams);
+      return db.get(this.KEY).find(findParams).value();
     },
     remove({ id, name }) {
       return db
@@ -87,6 +87,9 @@ const modelDb = {
             .write();
         }
         return null;
+      },
+      findById(id) {
+        return db.get(this.KEY).find({ id }).value();
       }
     }
   }

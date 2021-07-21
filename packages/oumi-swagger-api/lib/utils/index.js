@@ -5,26 +5,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.log = exports.transformPath = exports.stringCase = exports.isObject = exports.findResponseRef = exports.verifyNodeIsDeclarationType = exports.dataType = exports.validataQuery = void 0;
 const chalk_1 = __importDefault(require("chalk"));
-const validataQuery = function (requestData, requestPath, options) {
+exports.validataQuery = function (requestData, requestPath, options) {
     const { tags, description } = requestData;
     const { keyword, tag, path } = options;
-    if (keyword && description.indexOf(keyword) === -1) {
-        return false;
+    if (keyword) {
+        if (!description)
+            return false;
+        if (description.indexOf(keyword) === -1)
+            return false;
     }
-    if (typeof path === 'string' && requestPath.indexOf(path) === -1) {
-        return false;
-    }
-    if (Array.isArray(path) && path.every((p) => requestPath.indexOf(p) === -1)) {
-        return false;
+    if (path) {
+        if (!requestPath)
+            return false;
+        if (typeof path === 'string' && requestPath.indexOf(path) === -1) {
+            return false;
+        }
+        if (Array.isArray(path) && path.every((p) => requestPath.indexOf(p) === -1)) {
+            return false;
+        }
     }
     if (tag && Array.isArray(tags)) {
         return tags.some((t) => {
-            return t.toLocaleUpperCase().indexOf(t.toLocaleUpperCase()) === -1;
+            return t.toLocaleUpperCase().indexOf(tag.toLocaleUpperCase()) > -1;
         });
     }
     return true;
 };
-exports.validataQuery = validataQuery;
 exports.dataType = ['string', 'number', 'array', 'object', 'integer', 'boolean'];
 /**
  * 校验节点是不是声明类型，声明数据必有type
