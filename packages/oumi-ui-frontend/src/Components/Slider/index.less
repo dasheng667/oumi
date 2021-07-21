@@ -1,0 +1,47 @@
+.ui-slider{
+  width: 220px;
+  background: #fff;
+  box-shadow: 2px 0 10px rgb(0 0 0 / 10%);
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  header{
+    line-height: 50px;
+    font-size: 14px;
+    text-align: center;
+    border-bottom: 1px solid #f1f1f1;
+    cursor: pointer;
+  }
+  .select{
+    padding: 10px;
+    border-bottom: 1px solid #f1f1f1;
+  }
+
+  .slider-list{
+    padding-top: 10px;
+    &-item{
+      line-height: 44px;
+      font-size: 14px;
+      cursor: pointer;
+      > a {
+        display: block;
+        padding-left: 20px;
+        color: #333;
+      }
+      span.anticon{
+        width: 26px;
+      }
+      svg{
+        font-size: 18px;
+      }
+      &.active{
+        background: #e3f1ff;
+        a {
+          color: #2496ff;
+        }
+      }
+    }
+  }
+}
+

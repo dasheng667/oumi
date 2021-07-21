@@ -20,7 +20,7 @@ yarn-error.log
 CNAME
 /build
 /public
-/packages/cli-shared-utils
-/packages/oumi-ui/public
 locals.json
-/packages/oumi-swagger/lib
+/packages/cli-shared-utils
+/packages/oumi-cli-ui/public
+/packages/oumi-swagger-api/lib

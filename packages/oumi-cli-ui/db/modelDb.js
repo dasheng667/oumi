@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const path = require('path');
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
@@ -28,6 +29,7 @@ const modelDb = {
     }
   },
 
+  // 项目列表
   projectList: {
     KEY: 'projectList',
     get() {
@@ -38,7 +40,6 @@ const modelDb = {
         db.set(this.KEY, []).write();
       }
       if (!data.id) {
-        // eslint-disable-next-line no-param-reassign
         data.id = utils.createId();
       }
       db.get(this.KEY).push(data).write();
@@ -53,6 +54,40 @@ const modelDb = {
           return item.name === name || item.id === id;
         })
         .write();
+    }
+  },
+
+  // 用户配置
+  userConfig: {
+    KEY: 'userConfig',
+    get() {
+      return db.get(this.KEY).value();
+    },
+    swagger: {
+      KEY: 'userConfig.swagger',
+      get() {
+        return db.get(this.KEY).value();
+      },
+      add(data) {
+        if (!this.get()) {
+          db.set(this.KEY, []).write();
+        }
+        if (!data.id) {
+          data.id = utils.createId();
+        }
+        return db.get(this.KEY).push(data).write();
+      },
+      remove(id) {
+        if (id) {
+          return db
+            .get(this.KEY)
+            .remove((item) => {
+              return item.id === id;
+            })
+            .write();
+        }
+        return null;
+      }
     }
   }
 };

@@ -179,7 +179,7 @@ export default () => {
   const { request: goDashboard, loading: loadingD } = useRequest('/api/project/dashboard', {
     lazy: true,
     onSuccess: () => {
-      history.push('/dashboard');
+      history.push('/');
     }
   });
 
