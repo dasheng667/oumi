@@ -67,6 +67,7 @@ export const useRequest = <T>(url: string, options?: Options) => {
   return {
     error,
     data,
+    setData,
     loading,
     request: fetch
   };

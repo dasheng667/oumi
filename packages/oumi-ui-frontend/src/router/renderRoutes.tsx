@@ -1,8 +1,6 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-export type { Router } from '../global';
-
 export default function renderRoutes(routes: any, extraProps = {}, switchProps = {}) {
   return routes ? (
     <Switch {...switchProps}>

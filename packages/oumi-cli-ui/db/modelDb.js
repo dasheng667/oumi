@@ -47,6 +47,12 @@ const modelDb = {
     find(findParams) {
       return db.get(this.KEY).find(findParams).value();
     },
+    findCurrent() {
+      return db
+        .get(this.KEY)
+        .find({ id: db.get('dashboardId').value() })
+        .value();
+    },
     remove({ id, name }) {
       return db
         .get(this.KEY)

@@ -1,4 +1,6 @@
+import React from 'react';
 import asyncComponent from './asyncComponent';
+import { Redirect } from 'react-router-dom';
 import App from './Root';
 import type { IRouter } from '../global';
 
@@ -10,7 +12,7 @@ const router: IRouter[] = [
         path: '/',
         label: '首页',
         exact: true,
-        component: asyncComponent(() => import(`../pages/Dashboard`))
+        component: () => <Redirect to="/dashboard/swagger" />
       },
 
       {
