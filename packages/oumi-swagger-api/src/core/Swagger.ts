@@ -12,9 +12,10 @@ import parameters from './parameters';
 import toResponseJSON from './toResponseJSON';
 import toTypeScript from './toTypeScript';
 import toInterfaceTemp from './toInterfaceTemp';
-import { requestTemp } from '../template/index';
-import { validataQuery, findResponseRef, transformPath, log } from '../utils';
-import { writeTS, writeJSON } from '../utils/fs';
+import { requestTemp, namespaceTempHead, namespaceTempFoot } from '../template/index';
+import mockTemp, { mockExportHeaderTemp, mockExportFooterTemp } from '../template/mockjs';
+import { validataQuery, findResponseRef, transformPath, stringCase } from '../utils';
+import { writeFile, writeJSON } from '../utils/fs';
 import fetch from '../fetch';
 
 /**
@@ -123,8 +124,8 @@ export default class Swagger {
     keys.forEach((key) => {
       const { request, response, methods } = this.queryList[key];
       json[key] = {
-        request: toTypeScript(request, 'props'),
-        response: toTypeScript(response, 'result'),
+        request: toTypeScript(request, 'Props'),
+        response: toTypeScript(response, 'Result'),
         methods
       };
     });
@@ -193,11 +194,51 @@ export default class Swagger {
   }
 
   /**
+   * 生成 mockjs 的模拟数据
+   * @param options
+   * @options outputPath 输出路径
+   * @returns
+   */
+  buildMockJS(options, callback?: () => void) {
+    const { outputPath } = options || {};
+
+    if (!outputPath || typeof outputPath !== 'string') {
+      throw new Error(`outputPath: 格式不合法 ${outputPath}`);
+    }
+
+    const keys = Object.keys(this.queryList);
+    if (keys.length === 0) return this;
+
+    let mockStr = '';
+    keys.forEach((key) => {
+      const { response, methods } = this.queryList[key];
+      mockStr += mockTemp(key, methods, response);
+    });
+
+    mockStr = [mockExportHeaderTemp, mockStr, mockExportFooterTemp].join('\n');
+
+    writeFile(`${outputPath}/_mock.ts`, mockStr);
+
+    if (typeof callback === 'function') {
+      callback();
+    }
+
+    return this;
+  }
+
+  /**
    *
    * @returns 生成api文件
    */
   buildApi(options: BuildApiOption) {
-    const { outputPath, requestLibPath, fileType, filterPathPrefix } = options || {};
+    const {
+      outputPath,
+      requestLibPath,
+      fileType,
+      filterPathPrefix,
+      outputFileName = 'serve.ts',
+      outputFileType
+    } = options || {};
 
     if (!outputPath || typeof outputPath !== 'string') {
       throw new Error(`outputPath: 格式不合法 ${outputPath}`);
@@ -206,30 +247,68 @@ export default class Swagger {
     const keys = Object.keys(this.typescriptData);
     if (keys.length === 0) return this;
 
-    this.toInterfaceTemp((data) => {
-      // eslint-disable-next-line @typescript-eslint/no-shadow
-      Object.keys(data).forEach((path) => {
-        const { propsString, resultString, methods } = data[path];
-        if (outputPath) {
-          const pathData = transformPath(path, filterPathPrefix);
-          const requestLibContent = `${requestLibPath} \n`;
-          const requestContent = requestTemp({
-            method: methods,
-            url: `/${pathData.path}`,
-            fileType
-          });
+    let mergeTemp = ``;
 
-          if (fileType === 'js') {
-            writeTS(`${outputPath}/${pathData.path}.js`, `${requestLibContent} \n ${requestContent}`);
-          } else {
-            writeTS(
-              `${outputPath}/${pathData.path}.ts`,
-              `\n ${requestLibContent} \n ${propsString} \n ${resultString} \n ${requestContent}`
-            );
-          }
+    // 多个文件合并输出，需要标注命名空间
+    const mergeOutput = (data: InterfaceTempCallback) => {
+      Object.keys(data).forEach((filePath) => {
+        const { propsString, resultString, methods } = data[filePath];
+        const pathData = transformPath(filePath, filterPathPrefix);
+        const requestContent = requestTemp({
+          method: methods,
+          url: `/${pathData.path}`,
+          fileType,
+          namespace: pathData.key
+        });
+
+        if (fileType === 'js') {
+          mergeTemp += [requestContent].join('\n');
+        } else {
+          mergeTemp += [
+            namespaceTempHead(pathData.key),
+            propsString,
+            resultString,
+            namespaceTempFoot,
+            requestContent
+          ].join('\n');
         }
       });
+    };
+
+    // 每个接口生成一个文件
+    const outputFile = (data: InterfaceTempCallback) => {
+      Object.keys(data).forEach((filePath) => {
+        const { propsString, resultString, methods } = data[filePath];
+        const pathData = transformPath(filePath, filterPathPrefix);
+        const requestLibContent = `${requestLibPath} \n`;
+        const requestContent = requestTemp({
+          method: methods,
+          url: `/${pathData.path}`,
+          fileType
+        });
+
+        if (fileType === 'js') {
+          writeFile(`${outputPath}/${pathData.path}.js`, [requestLibContent, requestContent].join('\n'));
+        } else {
+          writeFile(
+            `${outputPath}/${pathData.path}.ts`,
+            [requestLibContent, propsString, resultString, requestContent].join('\n')
+          );
+        }
+      });
+    };
+
+    this.toInterfaceTemp((data) => {
+      if (outputFileType === 'merge') {
+        mergeOutput(data);
+      } else {
+        outputFile(data);
+      }
     });
+
+    if (outputFileType === 'merge' && mergeTemp && outputFileName) {
+      writeFile(`${outputPath}/${outputFileName}`, `${requestLibPath} \n ${mergeTemp}`);
+    }
 
     return this;
   }

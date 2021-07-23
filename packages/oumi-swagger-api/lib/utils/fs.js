@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.writeTS = exports.writeJSON = exports.createFileSync = void 0;
+exports.writeFile = exports.writeJSON = exports.createFileSync = void 0;
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const index_1 = require("./index");
 /**
@@ -33,8 +33,9 @@ function writeJSON(filePath, data, callback) {
     });
 }
 exports.writeJSON = writeJSON;
-function writeTS(filePath, content) {
+function writeFile(filePath, content) {
     fs_extra_1.default.createFileSync(filePath);
     fs_extra_1.default.writeFile(filePath, content, null, () => { });
+    index_1.log.green(`writeFile: ${filePath}`);
 }
-exports.writeTS = writeTS;
+exports.writeFile = writeFile;

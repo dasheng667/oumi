@@ -1,5 +1,5 @@
 import definitionsData from './mock/definitions1';
-import { requestParams1, requestParams2, requestParams3 } from './mock/params';
+import { requestParams1, requestParams2, requestParams3 } from './mock/params.test';
 import parametersBody from '../src/core/parameters';
 
 describe('测试 params', () => {

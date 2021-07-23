@@ -25,7 +25,7 @@ export const validataQuery = function (requestData: any, requestPath: string, op
   return true;
 };
 
-export const dataType = ['string', 'number', 'array', 'object', 'integer', 'boolean'];
+export const dataType = ['string', 'number', 'array', 'object', 'integer', 'boolean', 'int32', 'int64'];
 
 /**
  * 校验节点是不是声明类型，声明数据必有type

@@ -2,6 +2,7 @@ import { stringCase, dataType } from '../utils';
 
 function getType(value) {
   const { type } = value;
+  if (typeof type === 'string' && type.indexOf('int') > -1) return 'number';
   if (type === 'integer') return 'number';
   if (type === 'file') return 'any';
   if (type === 'ref') return 'any';
@@ -25,6 +26,14 @@ function getInterfaceType(value) {
   return 'any';
 }
 
+// 主要兼容 name 存在'-'的情况
+function getInterfaceName(name) {
+  if (typeof name === 'string' && name.indexOf('-') > -1) {
+    return `'${name}'`;
+  }
+  return name;
+}
+
 /**
  * ts接口模板
  * @param name interface的名称
@@ -43,7 +52,7 @@ export const interfaceTemp = (name: string, data: any) => {
     const description = val.description
       ? `  /** 备注：${val.description} ${val.example ? `示例：${val.example}` : ''} */ \n`
       : '';
-    const content = ` ${kname}${val.required === false ? '?' : ''}: ${getInterfaceType(val)}; \n`;
+    const content = ` ${getInterfaceName(kname)}${val.required === false ? '?' : ''}: ${getInterfaceType(val)}; \n`;
     str += description;
     str += content;
   });
@@ -51,17 +60,39 @@ export const interfaceTemp = (name: string, data: any) => {
   return str;
 };
 
-export const requestTemp = (options: { method: string; url: string; params?: any; fileType?: 'js' | 'ts' }) => {
-  const { method = 'GET', url, params, fileType } = options;
+const getNameSpace = (namespace: string) => {
+  if (namespace) {
+    return `${stringCase(namespace)}.`;
+  }
+  return '';
+};
+
+const getFunExportNameSpace = (namespace: string) => {
+  if (namespace) {
+    return `export const ${namespace} = `;
+  }
+  return 'export default ';
+};
+
+export const requestTemp = (options: {
+  method: string;
+  url: string;
+  params?: any;
+  fileType?: 'js' | 'ts';
+  namespace?: string;
+}) => {
+  const { method = 'GET', url, params, fileType, namespace = '' } = options;
   if (fileType === 'ts') {
-    return `export default function(params: Props, options?: {[key: string]: any}){
-  return request<Result>({
+    return `${getFunExportNameSpace(namespace)}(params: ${getNameSpace(
+      namespace
+    )}Props, options?: {[key: string]: any}) => {
+  return request<${getNameSpace(namespace)}Result>({
     url: '${url}',
     methods: '${method.toLocaleUpperCase()}',
     data: params,
     ...(options || {})
   })
-}`;
+} \n`;
   }
 
   return `export default function(params, options){
@@ -71,5 +102,14 @@ export const requestTemp = (options: { method: string; url: string; params?: any
     data: params,
     ...(options || {})
   })
-}`;
+} \n`;
 };
+
+export const namespaceTempHead = (name: string) => {
+  return `\n
+export declare namespace ${stringCase(name)} { \n`;
+};
+
+export const namespaceTempFoot = `} \n`;
+
+export const mockJSTemp = () => {};

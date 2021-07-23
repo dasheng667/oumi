@@ -32,6 +32,13 @@ export default class Swagger {
      */
     buildMockJSON(options: BuildMockOption): this;
     /**
+     * 生成 mockjs 的模拟数据
+     * @param options
+     * @options outputPath 输出路径
+     * @returns
+     */
+    buildMockJS(options: any, callback?: () => void): this;
+    /**
      *
      * @returns 生成api文件
      */

@@ -14,7 +14,7 @@ import Swagger from '@oumi/swagger-api';
 const swagger = new Swagger(params);
 
 swagger()
-  .query({path: 'activity'})
+  .query({path: 'api/get', tag: 'V1.0.0'})
   .toResponseJSON()
   .toTypeScript()
   .toInterfaceTemp()
@@ -23,18 +23,18 @@ swagger()
 ## params参数
 `type: string | object` 
 
-`string`: swagger的http地址；
+`string`：swagger的http地址；
 
-`object`: swagger的json数据；
+`object`：swagger的json数据；
 
 
 ## 方法
 
 ### query
 模糊匹配api，参数：
-+ path 【api路径】
-+ tag 【版本号】
-+ keyword 【api接口描述关键字】
++ path: `type: string | string[]`  【api路径】
++ tag: `string` 【版本号】
++ keyword: `string` 【api接口描述关键字】
 
 
 ### toResponseJSON
@@ -44,21 +44,6 @@ swagger()
 ```
 回调函数的参数类型：
 + [path: string] any
-```js
-toResponseJSON((data)=>{
-  /**
-   * { 
-     '/api/activity': {
-        code: '200',
-        data: {
-          ...
-        },
-        success: true
-   *  }
-   * }
-   * /
-})
-```
 
 
 ### toTypeScript
@@ -68,89 +53,117 @@ toResponseJSON((data)=>{
 ```
 回调函数的参数类型：
 + [path: string] {request: any; response: any;}
-```js
-toResponseJSON((data)=>{
-  /**
-   * { 
-     '/api/activity': {
-        request: {
-          props: {}
-        };
-        response: {
-          result: {}
-        };
-   *  }
-   * }
-   * /
-})
-```
 
 
 ### toInterfaceTemp
 将上一步的数据结构，转换成`typescript`字符串模板，可以在这的回调生成API的`.d.ts`文件。
 ```js
-.toInterfaceTemp(callbcak?: function);
+.toInterfaceTemp(callback?: function);
 ```
+> 注意：该方法是生成ts文件，每个文件开始时都会清空，所以 callback 回调会调用多次。
+
 回调函数的参数类型：
 + propsString: string;
 + resultString: string;
-```js
-toInterfaceTemp((data)=>{
-  /** data = 
-   * { [path]: {
-      propsString: string;
-      resultString: string;
-      methods: string
-    }
-   * }
-   * /
-})
-```
 
 
-### buildMock
+
+### buildMockJSON
 生成模拟数据
-+ distPath: string;
-+ fileType?: dir | hump;
-+ filterPathPrefix?: string
++ outputPath: string; 【（必填）输出本地路径。】
++ fileType?: dir | hump;  【生成的文件类型。dir表示多目录结构，hump表示驼峰命名结构】
++ filterPathPrefix?: string  【过滤路径前缀】
 
-distPath（必填）生成的路径。
-```js
-.buildMock({distPath: path.resolve('./dist/mock')}
-```
 
-fileType 生成的文件类型
-> dir 类型是目录
-
-> hump 生成驼峰命令类型
-
-filterPathPrefix 过滤路径前缀，
+filterPathPrefix：`filterPathPrefix` 过滤路径前缀，
 假设swagger的路径是 `oms/api/order/get`，我只需要 `order/get`，就可以这样写：
 ```js
-.buildMock({filterPathPrefix: 'api'}}
+.buildMockJSON({filterPathPrefix: 'api'}}
+```
+
+生成代码如下：
+```json
+// response.json
+{
+	"addTime": "string",
+	"myList": [
+		{
+			"key": "string"
+		}
+	],
+}
 ```
 
 
 ### buildApi
 生成api文件。
 
-+ distPath: string;
-+ apiContent: string;
-+ fileType?: js | ts;
-+ filterPathPrefix?: string
++ outputPath: string;  【输出本地路径】
++ requestLibPath: string;  【自定义生成的api头部】
++ fileType?: js | ts;  【生成是js或ts类型的api文件。】
++ filterPathPrefix?: string  【过滤的api前缀】
++ outputFileType?: 'merge' | undefined
++ outputFileName?: string
 
-参数`distPath` `filterPathPrefix`同 `buildMock`。
-
-fileType 生成是js或ts类型的api文件。
-
-apiContent 是自定义生成的api内容，示例:
+requestLibPath 示例:
 ```js
-.buildApi({ apiContent: 'export default axios.{methods}({url})' })
-```
-那么导出的文件就是这样的：
-```js
-export default axios.post('order/get')
+.buildApi({ requestLibPath: "import request from '@/api/request';" })
 ```
 
+outputFileType：`outputFileType` 输出的文件类型，merge 表示多个文件合并在一起，每个接口都有自己独立的命名空间。
 
-提示：以上两个生成文件的方法，都可以通过最上面方法的 `callback` 实现。
+outputFileName：`outputFileName` 若是合并输出则需要申明输出的文件名，默认`serve.ts`。
+
+
+生成代码如下：
+```js
+// serve.ts
+import request from '@/api/request';  
+export type Props = { 
+  /** 备注：请求id  */ 
+ requestId?: number; 
+} 
+export type Result = { 
+  /** 备注：添加时间  */ 
+ data: string[]; 
+} 
+export default (params: Props, options?: {[key: string]: any}) => {
+  return request<Result>({
+    url: '/api/getList',
+    methods: 'GET',
+    data: params,
+    ...(options || {})
+  })
+} 
+
+```
+
+
+
+
+### buildMockJS
+生成mockjs的模拟文件。
+
++ distPath: string;  【输出本地路径】
+
+生成代码如下：
+```js
+//_mock.ts
+import type { Request, Response } from 'express';
+import Mock from 'mockjs'; 
+
+export default { 
+  "GET /api/getList": function getList(req: Request, res: Response, u: string){
+    const data = {
+      "addTime": Mock.Random.date('yyyy-MM-dd'),
+      "addUserId|1-999": 1,
+      "myList|1-10": [
+        {
+          "key|3-10": "1",
+        }
+      ],
+    };
+    return res.send({ code: 200, data, success: true });
+  }, 
+}
+```

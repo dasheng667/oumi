@@ -1,9 +1,8 @@
-import definitionsData from './mock/definitions1';
-import { requestParams1 } from './mock/params';
 import toResponseJSON from '../src/core/toResponseJSON';
+import { response1, response2, response3 } from './mock/response.test';
 
 describe('测试 response', () => {
-  it('params.test', () => {
-    // expect({}).toEqual(null);
+  it('response1', () => {
+    expect(toResponseJSON(response1)).toEqual({});
   });
 });

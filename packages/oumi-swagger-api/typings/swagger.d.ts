@@ -49,4 +49,10 @@ export interface BuildApiOption {
 
   /* import 头部 */
   requestLibPath: string;
+
+  /** 输出文件类型 merge=表示所以接口文件合并在一起 */
+  outputFileType?: 'merge' | undefined;
+
+  /** 若 outputFileType = 'merge'，这里必填 */
+  outputFileName?: string;
 }

@@ -31,7 +31,7 @@ exports.validataQuery = function (requestData, requestPath, options) {
     }
     return true;
 };
-exports.dataType = ['string', 'number', 'array', 'object', 'integer', 'boolean'];
+exports.dataType = ['string', 'number', 'array', 'object', 'integer', 'boolean', 'int32', 'int64'];
 /**
  * 校验节点是不是声明类型，声明数据必有type
  * @param node 节点

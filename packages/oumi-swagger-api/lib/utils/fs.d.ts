@@ -5,4 +5,4 @@
  */
 export declare const createFileSync: (filePath: string, callback?: (err: any, data: any) => void) => void;
 export declare function writeJSON(filePath: string, data: any, callback?: (err: any, data: any) => void): void;
-export declare function writeTS(filePath: string, content: string): void;
+export declare function writeFile(filePath: string, content: string): void;

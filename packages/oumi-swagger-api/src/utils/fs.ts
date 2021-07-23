@@ -28,7 +28,8 @@ export function writeJSON(filePath: string, data, callback?: (err, data) => void
   });
 }
 
-export function writeTS(filePath: string, content: string) {
+export function writeFile(filePath: string, content: string) {
   fs.createFileSync(filePath);
   fs.writeFile(filePath, content, null, () => {});
+  log.green(`writeFile: ${filePath}`);
 }

@@ -19,13 +19,17 @@ function toResponseJSON(resData) {
                 const value = { ...data[key] };
                 if (value.isArray) {
                     delete value.isArray;
-                    res[key] = [value];
+                    const arrChild = {};
+                    each(arrChild, value);
+                    res[key] = [arrChild];
                 }
                 else if (utils_1.verifyNodeIsDeclarationType(value)) {
                     // 是一个正常的数据声明格式
                     res[key] = transformDataResult(value);
                 }
                 else {
+                    if (Number(key) === 0)
+                        return; // 防止不识别的类型导致死循环
                     res[key] = {};
                     each(res[key], value);
                 }

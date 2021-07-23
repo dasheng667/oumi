@@ -41,7 +41,7 @@ export default function toTypeScript(data: any, interfaceName: string = 'props')
     Object.keys(data).forEach((key) => {
       const value = data[key];
       if (value.isArray) {
-        console.log('isArray: ', value);
+        console.log('toTypeScript.isArray: ', value);
       } else if (verifyNodeIsDeclarationType(value)) {
         // 是一个正常的数据声明格式
         props[key] = value;

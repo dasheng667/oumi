@@ -10,4 +10,8 @@ export declare const requestTemp: (options: {
     url: string;
     params?: any;
     fileType?: 'js' | 'ts';
+    namespace?: string;
 }) => string;
+export declare const namespaceTempHead: (name: string) => string;
+export declare const namespaceTempFoot = "} \n";
+export declare const mockJSTemp: () => void;

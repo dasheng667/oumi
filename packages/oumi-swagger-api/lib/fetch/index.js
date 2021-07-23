@@ -17,8 +17,11 @@ function fetch(url) {
                 'content-type': 'application/json'
             }
         }, (error, response, body) => {
-            if (!error && response.statusCode === 200) {
+            if (!error && response.statusCode === 200 && typeof body === 'object') {
                 resolve(body);
+            }
+            else {
+                reject(new Error('错误的数据'));
             }
         });
     });

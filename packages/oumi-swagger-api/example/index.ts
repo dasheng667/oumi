@@ -5,8 +5,11 @@ import OMS from './data/oms.json';
 
 const swagger = new Swagger(OMS);
 
+/**
+ * 写法1，哪一种更好呢？
+ */
 swagger
-  .query({ tag: 'V1.0.0' }, (queryList) => {
+  .query({ path: '/api' }, (queryList) => {
     writeFile(`./example/build/queryList.json`, queryList);
   })
   .toResponseJSON((json) => {
@@ -20,10 +23,39 @@ swagger
   .toTypeScript((json) => {
     writeFile(`./example/build/typescript.json`, json);
   })
-  .toInterfaceTemp()
   .buildApi({
     outputPath: path.resolve('./example/build/api'),
     fileType: 'ts',
     requestLibPath: "import request from '@/api/request'; ",
     filterPathPrefix: 'api'
+  })
+  .buildMockJS({
+    outputPath: path.resolve('./example/build')
   });
+
+/**
+ * 写法2，哪一种更好呢？
+ */
+/* const queryList = swagger.query({ tag: 'V1.0.0' });
+writeFile(`./example/build/queryList.json`, queryList);
+
+const json = swagger.toResponseJSON();
+writeFile(`./example/build/response.json`, json);
+
+swagger.buildMockJSON({
+  outputPath: path.resolve('./example/build/mock'),
+  fileType: 'hump',
+  filterPathPrefix: 'api'
+})
+
+const json2 = swagger.toTypeScript()
+writeFile(`./example/build/typescript.json`, json2);
+
+swagger.toInterfaceTemp();
+
+swagger.buildApi({
+  outputPath: path.resolve('./example/build/api'),
+  fileType: 'ts',
+  requestLibPath: "import request from '@/api/request'; ",
+  filterPathPrefix: 'api'
+}); */
