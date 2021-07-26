@@ -20,7 +20,7 @@ export default (props: Props) => {
   // console.log('props', props)
 
   const history = useHistory();
-  const { data, error, loading } = useRequest<ProjectListItem>('/api/dashboard/get');
+  const { data, error, loading } = useRequest<ProjectListItem>('/api/dashboard/get', { errorMsg: false });
   // const { data: projectList = [] } = useRequest<ProjectListItem[]>('/api/project/list');
 
   const goProjectList = () => {

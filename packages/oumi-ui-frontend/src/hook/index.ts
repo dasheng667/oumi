@@ -7,6 +7,8 @@ type Options = {
   /** 默认不加载 */
   lazy?: boolean;
 
+  errorMsg?: boolean;
+
   onSuccess?: (res: any) => void;
   onError?: (err: any) => void;
 };
@@ -17,7 +19,7 @@ type Options = {
  * @returns
  */
 export const useRequest = <T>(url: string, options?: Options) => {
-  const { params, methods = 'post', lazy = false, onSuccess, onError } = options || {};
+  const { params, methods = 'post', lazy = false, errorMsg = true, onSuccess, onError } = options || {};
   const [flag, setFlag] = useState(lazy);
 
   const [error, setError] = useState(null);
@@ -28,7 +30,7 @@ export const useRequest = <T>(url: string, options?: Options) => {
     (urlParams?: any, options2?: any) => {
       setLoading(true);
       return new Promise((resolve, reject) => {
-        request[methods](url, { ...params, ...urlParams })
+        request[methods](url, { ...params, ...urlParams }, { errorMsg } as any)
           .then((res: any) => {
             setLoading(false);
             setData(res);

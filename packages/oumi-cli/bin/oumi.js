@@ -2,6 +2,8 @@
 
 const program = require('commander');
 
+program.version(`@oumi/cli ${require('../package').version}`).usage('<command> [options]');
+
 program
   .command('ui')
   .description('start and open the oumi ui')

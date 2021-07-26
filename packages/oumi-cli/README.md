@@ -7,6 +7,10 @@ npm install -g @oumi/cli
 yarn global add @oumi/cli
 ```
 
+## 使用
+```js
+oumi ui
+```
 
 
 ## 升级

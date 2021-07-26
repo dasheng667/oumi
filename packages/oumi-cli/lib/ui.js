@@ -1,5 +1,5 @@
 const { log, error, openBrowser } = require('@oumi/cli-shared-utils');
-const server = require('@oumi/oumi-ui');
+const server = require('@oumi/cli-ui');
 
 const ui = (options = {}, context = process.cwd()) => {
   const host = options.host || 'localhost';

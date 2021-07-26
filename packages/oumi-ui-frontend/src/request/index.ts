@@ -11,9 +11,14 @@ instance.interceptors.response.use(
     if (response && response.data && response.data.success === true) {
       return response.data.data;
     }
-    const msg = response.data && response.data.msg ? response.data.msg : '系统繁忙~';
-    message.destroy();
-    message.error(msg);
+    const { config, data }: any = response;
+    const msg = data && data.msg ? data.msg : '系统繁忙~';
+
+    if (config && config.errorMsg === true) {
+      message.destroy();
+      message.error(msg);
+    }
+
     return Promise.reject(response.data);
   },
   (error) => {

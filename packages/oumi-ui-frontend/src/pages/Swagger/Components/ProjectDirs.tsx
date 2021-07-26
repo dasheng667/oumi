@@ -44,10 +44,14 @@ export default (props: Props) => {
     return request.post('/api/project/dirs', params) as Promise<DataNode[]>;
   };
 
-  useEffect(() => {
+  const requestAndSetTree = () => {
     requestDirs().then((res) => {
       setTreeData(res);
     });
+  };
+
+  useEffect(() => {
+    requestAndSetTree();
   }, []);
 
   function onLoadData({ key, children, dirPath }: any) {
@@ -101,7 +105,13 @@ export default (props: Props) => {
 
         <Popconfirm
           selectNode={selectNode}
-          onSuccess={() => onLoadData({ key: selectNode && selectNode.key, dirPath: selectNode.key })}
+          onSuccess={() => {
+            if (selectNode && selectNode.key) {
+              onLoadData({ key: selectNode.key, dirPath: selectNode.key });
+            } else {
+              requestAndSetTree();
+            }
+          }}
         />
 
         <Tree showLine showIcon loadData={onLoadData} treeData={treeData} onSelect={onSelect} />
