@@ -4,7 +4,7 @@ import { writeFile } from './utils';
 
 const swagger = new Swagger();
 
-swagger.fetchApi('https://fedev.inn.sf-express.com:8442/boms/api/v2/api-docs').then((res) => {
+swagger.fetchApi('https://x-docs').then((res) => {
   swagger
     .query({ path: [, , /* 'boms/api/earmarks/pool' */ /* 'supplierBankInfo' */ 'timingDistribute'] }, (queryList) => {
       writeFile(`./example/build/queryList.json`, queryList);
