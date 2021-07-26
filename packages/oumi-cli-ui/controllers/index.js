@@ -145,14 +145,20 @@ const createProjectDir = async (ctx) => {
     createPath = data.path;
   }
 
-  const dir = path.join(createPath, dirName);
+  const isDir = fs.statSync(createPath).isDirectory();
 
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
-    return ctx.returnSuccess('success');
+  if (!isDir) {
+    return ctx.returnError('必须是文件目录');
   }
 
-  return ctx.returnError('目录已存在');
+  const dir = path.join(createPath, dirName);
+
+  if (fs.existsSync(dir)) {
+    return ctx.returnError('目录已存在');
+  }
+
+  fs.mkdirSync(dir);
+  return ctx.returnSuccess('success');
 };
 
 module.exports = {

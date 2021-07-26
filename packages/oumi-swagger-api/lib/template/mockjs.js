@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.mockExportFooterTemp = exports.mockExportHeaderTemp = void 0;
+exports.buildMockStr = exports.mockExportFooterTemp = exports.mockExportHeaderTemp = void 0;
 const utils_1 = require("../utils");
 exports.mockExportHeaderTemp = `
 import type { Request, Response } from 'express';
@@ -26,7 +26,7 @@ const getMockKey = (item, key) => {
 const getMockValue = (item) => {
     const { format, type } = item;
     if (format && format.indexOf('time') > -1) {
-        return `#Mock.Random.date('yyyy-MM-dd')#`;
+        return `Mock.Random.date('yyyy-MM-dd')`;
     }
     if (type && type.indexOf('int') > -1) {
         return 1;
@@ -42,6 +42,12 @@ const getMockValue = (item) => {
 const eachMockTemp = function (data) {
     const resultData = {};
     const deep = (deepData, res) => {
+        if (utils_1.dataType.indexOf(deepData.type)) {
+            const mockKey = getMockKey(deepData, 'xx');
+            const mockVal = getMockValue(deepData);
+            res[mockKey] = mockVal;
+            return;
+        }
         Object.keys(deepData).forEach((key) => {
             const item = deepData[key];
             if (item.isArray === true) {
@@ -68,11 +74,46 @@ const eachMockTemp = function (data) {
     deep(data, resultData);
     return resultData;
 };
+exports.buildMockStr = function (data) {
+    if (utils_1.dataType.includes(data.type)) {
+        return data.type === 'boolean' ? true : '1';
+    }
+    if (data.isArray === true) {
+        const item2 = { ...data };
+        delete item2.isArray;
+        return `[{ \n ${deep(item2)} }] \n `;
+    }
+    function deep(deepData) {
+        let itemStr = '';
+        Object.keys(deepData).forEach((key) => {
+            const item = deepData[key];
+            if (item.isArray === true) {
+                const item2 = { ...item };
+                delete item2.isArray;
+                itemStr += `'${`${key}|1-10`}': [{ \n ${deep(item2)} }], \n`;
+            }
+            else if (item.type === undefined && Object.keys(item).length > 0) {
+                const item2 = { ...item };
+                delete item2.isArray;
+                itemStr += `'${key}': { \n ${deep(item2)} \n }, \n`;
+            }
+            else {
+                const mockKey = getMockKey(item, key);
+                const mockVal = getMockValue(item);
+                const description = item.description ? `/** ${item.description} */ \n` : '';
+                itemStr += `${description} '${mockKey}': ${mockVal}, \n`;
+            }
+        });
+        return itemStr;
+    }
+    return `{ \n ${deep(data)} } \n `;
+};
 function mockTemp(apiPath, methods, response) {
     const funName = utils_1.transformPath(apiPath).key;
-    const mockContent = eachMockTemp(response && response.code && response.data ? response.data : response);
+    // const mockContent = eachMockTemp(response && response.code && response.data ? response.data : response);
+    const mockContent = exports.buildMockStr(response && response.code && response.data ? response.data : response);
     const mockRequest = `function ${funName}(req: Request, res: Response, u: string){
-  const data = ${JSON.stringify(mockContent, null, 2).replace(/"#/g, '').replace(/#"/g, '')};
+  const data = ${mockContent};
   return res.send({ code: 200, data, success: true });
 }, \n\n\n`;
     const code = `"${methods.toLocaleUpperCase()} ${apiPath}": ${mockRequest}`;

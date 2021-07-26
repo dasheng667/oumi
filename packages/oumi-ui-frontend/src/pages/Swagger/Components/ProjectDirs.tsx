@@ -44,14 +44,10 @@ export default (props: Props) => {
     return request.post('/api/project/dirs', params) as Promise<DataNode[]>;
   };
 
-  const requestAndSetTreeDir = () => {
+  useEffect(() => {
     requestDirs().then((res) => {
       setTreeData(res);
     });
-  };
-
-  useEffect(() => {
-    requestAndSetTreeDir();
   }, []);
 
   function onLoadData({ key, children, dirPath }: any) {
@@ -103,7 +99,10 @@ export default (props: Props) => {
       <div className="dirs-box">
         <div className="dirs-head">当前项目目录：</div>
 
-        <Popconfirm currentPath={(selectNode && selectNode.dirPath) || null} onSuccess={requestAndSetTreeDir} />
+        <Popconfirm
+          selectNode={selectNode}
+          onSuccess={() => onLoadData({ key: selectNode && selectNode.key, dirPath: selectNode.key })}
+        />
 
         <Tree showLine showIcon loadData={onLoadData} treeData={treeData} onSelect={onSelect} />
       </div>

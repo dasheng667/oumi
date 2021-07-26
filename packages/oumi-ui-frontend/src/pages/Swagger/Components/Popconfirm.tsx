@@ -4,12 +4,13 @@ import { useRequest } from '../../../hook';
 
 type Props = {
   /** null 表示当前项目 */
-  currentPath: string | null;
+  selectNode: any | null;
   onSuccess: () => void;
 };
 
 export default (props: Props) => {
-  const { currentPath, onSuccess } = props;
+  const { selectNode, onSuccess } = props;
+  const { dirPath } = selectNode || {};
   const [form] = Form.useForm();
   const [visible, setVisible] = React.useState(false);
   const { data, request, loading } = useRequest('/api/project/createDir', { lazy: true });
@@ -21,7 +22,7 @@ export default (props: Props) => {
   const onOk = () => {
     form.validateFields().then((val) => {
       request({
-        currentPath,
+        currentPath: dirPath,
         ...val
       }).then((res) => {
         setVisible(false);
@@ -67,7 +68,7 @@ export default (props: Props) => {
       onCancel={() => showPopconfirm(false)}
       icon={false}
     >
-      <Button size="small" type="primary" onClick={() => showPopconfirm(true)}>
+      <Button size="small" type="primary" disabled={!selectNode} onClick={() => showPopconfirm(true)}>
         新建目录
       </Button>
     </Popconfirm>
