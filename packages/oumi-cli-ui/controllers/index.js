@@ -118,7 +118,10 @@ const getDashboardByProject = async (ctx) => {
       return ctx.returnError('没有这个项目');
     }
     const project = ctx.model.projectList.find({ id });
-    return ctx.returnSuccess(project);
+    if (project) {
+      return ctx.returnSuccess(project);
+    }
+    return ctx.returnError('没有这个项目');
   } catch (e) {
     return ctx.returnError(e);
   }

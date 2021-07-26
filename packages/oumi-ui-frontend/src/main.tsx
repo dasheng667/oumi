@@ -5,8 +5,10 @@ import App from './App';
 
 import './index.css';
 
+const host = import.meta.env.MODE === 'development' ? 'http://localhost:9000' : window.location.origin;
+
 const client = new ApolloClient({
-  uri: 'http://localhost:9000/graphql',
+  uri: `${host}/graphql`,
   cache: new InMemoryCache()
 });
 

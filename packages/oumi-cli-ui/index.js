@@ -4,6 +4,7 @@ const Koa = require('koa');
 const body = require('koa-bodyparser');
 const koaStatic = require('koa-static');
 const { ApolloServer } = require('apollo-server-koa');
+const portfinder = require('portfinder');
 
 const controller = require('./middleware/controllers');
 const cors = require('./middleware/cors');
@@ -38,8 +39,15 @@ module.exports = async (options, cb = null) => {
   });
 
   await new Promise((resolve) => {
-    app.listen({ port }, resolve);
-    cb();
+    portfinder.basePort = port;
+    portfinder.getPort((err, port2) => {
+      if (err) {
+        throw new Error(err);
+      } else {
+        app.listen({ port: port2 }, resolve);
+        cb({ port: port2 });
+      }
+    });
   });
 
   return { server, app };

@@ -57,7 +57,9 @@ export default (props: Props) => {
               <div className="top-header">
                 <h2>模版</h2>
               </div>
-              <div className="ui-content-container ui-main-container">main-container</div>
+              <div className="ui-content-container ui-main-container">
+                <p>开发中。敬请期待！！！</p>
+              </div>
             </div>
           </div>
         )}
