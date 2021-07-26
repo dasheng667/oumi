@@ -13,13 +13,15 @@ function getInterfaceType(value) {
   const { items } = value;
   const type = getType(value);
 
+  if (type === 'any') {
+    return 'any';
+  }
   if (type === 'array' && items && items.type) {
     return `${getType(items)}[]`;
   }
   if (dataType.includes(type)) {
     return type;
   }
-
   if (type) {
     return stringCase(type);
   }

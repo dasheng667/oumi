@@ -17,6 +17,9 @@ function getType(value) {
 function getInterfaceType(value) {
     const { items } = value;
     const type = getType(value);
+    if (type === 'any') {
+        return 'any';
+    }
     if (type === 'array' && items && items.type) {
         return `${getType(items)}[]`;
     }
@@ -98,5 +101,4 @@ exports.namespaceTempHead = (name) => {
 export declare namespace ${utils_1.stringCase(name)} { \n`;
 };
 exports.namespaceTempFoot = `} \n`;
-exports.mockJSTemp = () => {
-};
+exports.mockJSTemp = () => { };

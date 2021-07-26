@@ -7,6 +7,22 @@ const utils = require('../utils');
 const adapter = new FileSync(path.resolve(__dirname, './locals.json'));
 const db = low(adapter);
 
+// swagger有默认的数据
+const defaultData = {
+  userConfig: {
+    swaggerConfig: {
+      json_checked: false,
+      mock_checked: true,
+      requestLibPath: "import request from '@/api/request';",
+      api_fileType: 'ts',
+      outputFileType: 'merge',
+      outputFileName: 'serve.ts'
+    }
+  }
+};
+
+db.defaults(defaultData).write();
+
 const modelDb = {
   lastImportPath: {
     KEY: 'lastImportPath',
@@ -96,6 +112,15 @@ const modelDb = {
       },
       findById(id) {
         return db.get(this.KEY).find({ id }).value();
+      }
+    },
+    swaggerConfig: {
+      KEY: 'userConfig.swaggerConfig',
+      get() {
+        return db.get(this.KEY).value();
+      },
+      set(data) {
+        return db.set(this.KEY, data).write();
       }
     }
   }

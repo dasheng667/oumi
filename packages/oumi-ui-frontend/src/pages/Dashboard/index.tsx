@@ -21,7 +21,7 @@ export default (props: Props) => {
 
   const history = useHistory();
   const { data, error, loading } = useRequest<ProjectListItem>('/api/dashboard/get');
-  const { data: projectList = [] } = useRequest<ProjectListItem[]>('/api/project/list');
+  // const { data: projectList = [] } = useRequest<ProjectListItem[]>('/api/project/list');
 
   const goProjectList = () => {
     history.push(projectListPath);
@@ -47,11 +47,20 @@ export default (props: Props) => {
 
   return (
     <div className="dashboard-main">
-      <Slider goProjectList={goProjectList} projectList={projectList} selectItem={data} />
+      <Slider goProjectList={goProjectList} selectItem={data} />
 
       <div className="dashboard-body">
         {renderRoutes(route.routes)}
-        {history.location.pathname === '/dashboard' && <div className="content">模版</div>}
+        {history.location.pathname === '/dashboard' && (
+          <div className="content">
+            <div className="ui-swagger-content">
+              <div className="top-header">
+                <h2>模版</h2>
+              </div>
+              <div className="ui-content-container ui-main-container">main-container</div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

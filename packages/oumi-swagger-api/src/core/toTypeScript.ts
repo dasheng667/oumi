@@ -25,6 +25,7 @@ export default function toTypeScript(data: any, interfaceName: string = 'props')
         } else if (verifyNodeIsDeclarationType(val)) {
           res[key] = val;
         } else {
+          if (Number(key) === 0) return; // 防止不识别的类型导致死循环
           res[key] = {
             type: key
           };

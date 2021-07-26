@@ -192,7 +192,7 @@ export default () => {
             expandData={expandData}
             onClickSwaggerHead={onClickSwaggerHead}
           />
-          <ProjectDirs />
+          <ProjectDirs selectId={selectId} configId={tabsId} />
         </div>
       </div>
     </Container>

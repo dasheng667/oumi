@@ -10,13 +10,13 @@ const { Option } = Select;
 
 type Props = {
   goProjectList: () => void;
-  projectList: ProjectListItem[];
+  // projectList: ProjectListItem[];
   selectItem: ProjectListItem;
 };
 
 export default (props: Props) => {
   const history = useHistory();
-  const { goProjectList, projectList, selectItem } = props;
+  const { goProjectList, selectItem } = props;
 
   const menuList = [
     {
@@ -39,7 +39,7 @@ export default (props: Props) => {
   return (
     <div className="ui-slider">
       <header onClick={goProjectList}>Oumi UI 管理器</header>
-      <div className="select flex-center">
+      {/* <div className="select flex-center">
         <Select style={{ width: 180 }} value={selectItem.id}>
           {projectList &&
             projectList.map((item) => (
@@ -48,7 +48,7 @@ export default (props: Props) => {
               </Option>
             ))}
         </Select>
-      </div>
+      </div> */}
       <div className="slider-list">
         {menuList.map((item) => {
           return (

@@ -70,7 +70,7 @@ const eachMockTemp = function (data) {
 };
 function mockTemp(apiPath, methods, response) {
     const funName = utils_1.transformPath(apiPath).key;
-    const mockContent = eachMockTemp((response && response.code && response.data) ? response.data : response);
+    const mockContent = eachMockTemp(response && response.code && response.data ? response.data : response);
     const mockRequest = `function ${funName}(req: Request, res: Response, u: string){
   const data = ${JSON.stringify(mockContent, null, 2).replace(/"#/g, '').replace(/#"/g, '')};
   return res.send({ code: 200, data, success: true });

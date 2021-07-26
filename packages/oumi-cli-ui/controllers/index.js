@@ -124,6 +124,37 @@ const getDashboardByProject = async (ctx) => {
   }
 };
 
+/**
+ * 创建项目文件夹
+ * @param {*} ctx
+ */
+const createProjectDir = async (ctx) => {
+  const { currentPath, dirName } = ctx.request.body;
+
+  if (!dirName || typeof dirName !== 'string') {
+    return ctx.returnError(`参数异常`);
+  }
+
+  let createPath = currentPath;
+
+  if (!createPath) {
+    const data = await ctx.model.projectList.findCurrent();
+    if (!data) {
+      return ctx.returnError(`项目数据异常`);
+    }
+    createPath = data.path;
+  }
+
+  const dir = path.join(createPath, dirName);
+
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+    return ctx.returnSuccess('success');
+  }
+
+  return ctx.returnError('目录已存在');
+};
+
 module.exports = {
   'GET /api/hello/:name': fn_hello,
   'POST /api/find/dirs': findDirs,
@@ -131,6 +162,8 @@ module.exports = {
   'POST /api/project/remove': removeProject,
   'POST /api/project/dashboard': setProjectDashboard,
   'POST /api/project/import': importToProject,
+
+  'POST /api/project/createDir': createProjectDir,
 
   'POST /api/dashboard/get': getDashboardByProject
 };

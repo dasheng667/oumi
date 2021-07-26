@@ -7,6 +7,7 @@
     "oumi": "bin/oumi.js"
   },
   "scripts": {
+    "start": "oumi ui",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "dasheng",

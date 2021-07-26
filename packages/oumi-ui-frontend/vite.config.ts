@@ -19,7 +19,7 @@ export default defineConfig({
     }
   },
   build: {
-    outDir: '../oumi-ui/public'
+    outDir: '../oumi-cli-ui/public'
   },
   resolve: {
     alias: {
