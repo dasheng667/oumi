@@ -1,7 +1,8 @@
+const fetch = require('node-fetch');
+
 exports.request = {
   get (url, opts) {
     // lazy require
-    const fetch = require('node-fetch')
     const reqOpts = {
       method: 'GET',
       timeout: 30000,

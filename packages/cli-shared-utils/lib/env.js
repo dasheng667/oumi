@@ -17,7 +17,7 @@ const _gitProjects = new LRU({
 
 // env detection
 exports.hasYarn = () => {
-  if (process.env.VUE_CLI_TEST) {
+  if (process.env.OUMI_CLI_TEST) {
     return true
   }
   if (_hasYarn != null) {
@@ -48,7 +48,7 @@ function checkYarn (result) {
 }
 
 exports.hasGit = () => {
-  if (process.env.VUE_CLI_TEST) {
+  if (process.env.OUMI_CLI_TEST) {
     return true
   }
   if (_hasGit != null) {
@@ -102,7 +102,7 @@ function getPnpmVersion () {
 }
 
 exports.hasPnpmVersionOrLater = (version) => {
-  if (process.env.VUE_CLI_TEST) {
+  if (process.env.OUMI_CLI_TEST) {
     return true
   }
   return semver.gte(getPnpmVersion(), version)

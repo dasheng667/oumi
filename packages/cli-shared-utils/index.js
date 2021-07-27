@@ -1,18 +1,18 @@
 [
   'env',
   'exit',
-  'ipc',
   'logger',
-  'module',
   'object',
   'openBrowser',
   'pkg',
-  'pluginResolution',
-  'pluginOrder',
   'launch',
   'request',
   'spinner',
-  'validate'
+  'validate',
+  'got',
+  'file',
+  'base64',
+  'cross-spawn'
 ].forEach(m => {
   Object.assign(exports, require(`./lib/${m}`))
 })

@@ -5,7 +5,7 @@ const spinner = ora()
 let lastMsg = null
 let isPaused = false
 
-exports.logWithSpinner = (symbol, msg) => {
+exports.startSpinner = (symbol, msg) => {
   if (!msg) {
     msg = symbol
     symbol = chalk.green('✔')
@@ -58,7 +58,3 @@ exports.failSpinner = (text) => {
   spinner.fail(text)
 }
 
-// silent all logs except errors during tests and keep record
-if (process.env.VUE_CLI_TEST) {
-  require('./_silence')('spinner', exports)
-}

@@ -1,3 +1,3 @@
 # @oumi/cli-shared-utils
 
-> shared-utils for vue-cli
+> shared-utils for oumi-cli

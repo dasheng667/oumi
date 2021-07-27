@@ -17,7 +17,7 @@ exports.validate = (obj, schema, cb) => {
   if (error) {
     cb(error.details[0].message)
 
-    if (process.env.VUE_CLI_TEST) {
+    if (process.env.OUMI_CLI_TEST) {
       throw error
     } else {
       exit(1)

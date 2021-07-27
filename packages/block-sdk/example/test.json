@@ -1,0 +1,254 @@
+[
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/AccountCenter",
+		"type": "block",
+		"path": "AccountCenter",
+		"isPage": true,
+		"defaultPath": "/AccountCenter",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/AccountCenter/snapshot.png",
+		"name": "AccountCenter"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/AccountSettings",
+		"type": "block",
+		"path": "AccountSettings",
+		"isPage": true,
+		"defaultPath": "/AccountSettings",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/AccountSettings/snapshot.png",
+		"name": "AccountSettings"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/DashboardAnalysis",
+		"type": "block",
+		"path": "DashboardAnalysis",
+		"isPage": true,
+		"defaultPath": "/DashboardAnalysis",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/DashboardAnalysis/snapshot.png",
+		"name": "DashboardAnalysis"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/DashboardMonitor",
+		"type": "block",
+		"path": "DashboardMonitor",
+		"isPage": true,
+		"defaultPath": "/DashboardMonitor",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/DashboardMonitor/snapshot.png",
+		"name": "DashboardMonitor"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/DashboardWorkplace",
+		"type": "block",
+		"path": "DashboardWorkplace",
+		"isPage": true,
+		"defaultPath": "/DashboardWorkplace",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/DashboardWorkplace/snapshot.png",
+		"name": "DashboardWorkplace"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/EditorFlow",
+		"type": "block",
+		"path": "EditorFlow",
+		"isPage": true,
+		"defaultPath": "/EditorFlow",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/EditorFlow/snapshot.png",
+		"name": "EditorFlow"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/EditorKoni",
+		"type": "block",
+		"path": "EditorKoni",
+		"isPage": true,
+		"defaultPath": "/EditorKoni",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/EditorKoni/snapshot.png",
+		"name": "EditorKoni"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/EditorMind",
+		"type": "block",
+		"path": "EditorMind",
+		"isPage": true,
+		"defaultPath": "/EditorMind",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/EditorMind/snapshot.png",
+		"name": "EditorMind"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/EmptyPage",
+		"type": "block",
+		"path": "EmptyPage",
+		"isPage": true,
+		"defaultPath": "/EmptyPage",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/EmptyPage/snapshot.png",
+		"name": "EmptyPage"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/Exception403",
+		"type": "block",
+		"path": "Exception403",
+		"isPage": true,
+		"defaultPath": "/Exception403",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/Exception403/snapshot.png",
+		"name": "Exception403"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/Exception404",
+		"type": "block",
+		"path": "Exception404",
+		"isPage": true,
+		"defaultPath": "/Exception404",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/Exception404/snapshot.png",
+		"name": "Exception404"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/Exception500",
+		"type": "block",
+		"path": "Exception500",
+		"isPage": true,
+		"defaultPath": "/Exception500",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/Exception500/snapshot.png",
+		"name": "Exception500"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/FormAdvancedForm",
+		"type": "block",
+		"path": "FormAdvancedForm",
+		"isPage": true,
+		"defaultPath": "/FormAdvancedForm",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/FormAdvancedForm/snapshot.png",
+		"name": "FormAdvancedForm"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/FormBasicForm",
+		"type": "block",
+		"path": "FormBasicForm",
+		"isPage": true,
+		"defaultPath": "/FormBasicForm",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/FormBasicForm/snapshot.png",
+		"name": "FormBasicForm"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/FormStepForm",
+		"type": "block",
+		"path": "FormStepForm",
+		"isPage": true,
+		"defaultPath": "/FormStepForm",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/FormStepForm/snapshot.png",
+		"name": "FormStepForm"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/ListBasicList",
+		"type": "block",
+		"path": "ListBasicList",
+		"isPage": true,
+		"defaultPath": "/ListBasicList",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/ListBasicList/snapshot.png",
+		"name": "ListBasicList"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/ListCardList",
+		"type": "block",
+		"path": "ListCardList",
+		"isPage": true,
+		"defaultPath": "/ListCardList",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/ListCardList/snapshot.png",
+		"name": "ListCardList"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/ListSearch",
+		"type": "block",
+		"path": "ListSearch",
+		"isPage": true,
+		"defaultPath": "/ListSearch",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/ListSearch/snapshot.png",
+		"name": "ListSearch"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/ListSearchApplications",
+		"type": "block",
+		"path": "ListSearchApplications",
+		"isPage": true,
+		"defaultPath": "/ListSearchApplications",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/ListSearchApplications/snapshot.png",
+		"name": "ListSearchApplications"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/ListSearchArticles",
+		"type": "block",
+		"path": "ListSearchArticles",
+		"isPage": true,
+		"defaultPath": "/ListSearchArticles",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/ListSearchArticles/snapshot.png",
+		"name": "ListSearchArticles"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/ListSearchProjects",
+		"type": "block",
+		"path": "ListSearchProjects",
+		"isPage": true,
+		"defaultPath": "/ListSearchProjects",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/ListSearchProjects/snapshot.png",
+		"name": "ListSearchProjects"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/ListTableList",
+		"type": "block",
+		"path": "ListTableList",
+		"isPage": true,
+		"defaultPath": "/ListTableList",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/ListTableList/snapshot.png",
+		"name": "ListTableList"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/ProfileAdvanced",
+		"type": "block",
+		"path": "ProfileAdvanced",
+		"isPage": true,
+		"defaultPath": "/ProfileAdvanced",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/ProfileAdvanced/snapshot.png",
+		"name": "ProfileAdvanced"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/ProfileBasic",
+		"type": "block",
+		"path": "ProfileBasic",
+		"isPage": true,
+		"defaultPath": "/ProfileBasic",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/ProfileBasic/snapshot.png",
+		"name": "ProfileBasic"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/ResultFail",
+		"type": "block",
+		"path": "ResultFail",
+		"isPage": true,
+		"defaultPath": "/ResultFail",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/ResultFail/snapshot.png",
+		"name": "ResultFail"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/ResultSuccess",
+		"type": "block",
+		"path": "ResultSuccess",
+		"isPage": true,
+		"defaultPath": "/ResultSuccess",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/ResultSuccess/snapshot.png",
+		"name": "ResultSuccess"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/UserRegister",
+		"type": "block",
+		"path": "UserRegister",
+		"isPage": true,
+		"defaultPath": "/UserRegister",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/UserRegister/snapshot.png",
+		"name": "UserRegister"
+	},
+	{
+		"url": "https://github.com/ant-design/pro-blocks/tree/master/UserRegisterResult",
+		"type": "block",
+		"path": "UserRegisterResult",
+		"isPage": true,
+		"defaultPath": "/UserRegisterResult",
+		"img": "https://github.com/ant-design/pro-blocks/raw/master/UserRegisterResult/snapshot.png",
+		"name": "UserRegisterResult"
+	}
+]
