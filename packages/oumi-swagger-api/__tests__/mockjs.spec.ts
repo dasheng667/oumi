@@ -7,7 +7,7 @@ import { mockDataList, mockObject, mockRootBoolean } from './mock/mockTemp.test'
 //   });
 // });
 
-// console.log(buildMockStr(mockObject))
+console.log(buildMockStr(mockObject));
 
 console.log(buildMockStr(mockDataList));
 

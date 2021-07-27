@@ -39,10 +39,12 @@ const Project = ({
   removeProject: (item: ProjectListItem) => void;
   goDashboard: ({ id }: { id: string }) => void;
 }) => {
+  const [current, setCurrent] = useState<ProjectListItem | null>(null);
   const [openEditor, { data, error, loading }] = useMutation(GQL.FILE_OPEN_IN_EDITOR);
 
   const onClickOpen = (item: ProjectListItem) => {
     if (loading) return;
+    setCurrent(item);
     openEditor({ variables: { input: { file: item.path } } });
   };
 
@@ -62,7 +64,7 @@ const Project = ({
                 </div>
                 <div className="content-right">
                   <span className="open" onClick={() => onClickOpen(item)}>
-                    <CodeOutlined /> 在编辑器中打开 {loading && <LoadingOutlined />}
+                    <CodeOutlined /> 在编辑器中打开 {loading && item === current && <LoadingOutlined />}
                   </span>
                   <span className="delete" onClick={() => removeProject(item)}>
                     <CloseOutlined />
@@ -168,7 +170,11 @@ const RenderFiles = ({ files, goNextFile }: any) => {
 export default () => {
   const [activeKey, setActiveKey] = useState<'1' | '2'>('1');
   const history = useHistory();
-  const { request: requestFindDirs, data: projectData, loading: loading1 } = useRequest<ProjectData>('/api/find/dirs');
+  const {
+    request: requestFindDirs,
+    data: projectData,
+    loading: loading1
+  } = useRequest<ProjectData>('/api/user/folder', { errorMsg: false });
 
   const {
     request: getProjectList,

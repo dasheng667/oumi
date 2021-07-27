@@ -21,7 +21,7 @@ function fetch(url) {
                 resolve(body);
             }
             else {
-                reject(new Error('错误的数据'));
+                reject(body || error || new Error('错误的数据'));
             }
         });
     });

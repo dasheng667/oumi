@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Tabs, Form, Input, Button, Checkbox, Spin, Tooltip, message } from 'antd';
-import { CaretDownOutlined, CaretRightOutlined, LoadingOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { Tabs, Spin, message } from 'antd';
 import { useRequest } from '../../hook';
 import { createId } from './utils';
 import Search from './Components/Search';

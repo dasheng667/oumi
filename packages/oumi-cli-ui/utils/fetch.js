@@ -18,7 +18,7 @@ module.exports = function fetch(url) {
         if (!error && response.statusCode === 200 && typeof body === 'object') {
           resolve(body);
         } else {
-          reject(new Error('错误的数据'));
+          reject(body || error || new Error('错误的数据'));
         }
       }
     );

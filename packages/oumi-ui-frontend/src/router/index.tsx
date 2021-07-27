@@ -29,15 +29,17 @@ const router: IRouter[] = [
 
         routes: [
           {
-            name: 'Config',
-            path: '/dashboard/config',
-            component: asyncComponent(() => import(`../pages/Config`))
+            name: 'Swagger',
+            path: '/dashboard/swagger',
+            exact: true,
+            component: asyncComponent(() => import(`../pages/Swagger`))
           },
 
           {
-            name: 'Swagger',
-            path: '/dashboard/swagger',
-            component: asyncComponent(() => import(`../pages/Swagger`))
+            name: 'Config',
+            path: '/dashboard/config',
+            exact: true,
+            component: asyncComponent(() => import(`../pages/Config`))
           }
         ]
       }

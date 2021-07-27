@@ -82,15 +82,15 @@ filterPathPrefix：`filterPathPrefix` 过滤路径前缀，
 ```
 
 生成代码如下：
-```json
+```js
 // response.json
 {
-	"addTime": "string",
-	"myList": [
-		{
-			"key": "string"
-		}
-	],
+  "addTime": "string",
+  "myList": [
+    {
+      "key": "string"
+    }
+  ],
 }
 ```
 

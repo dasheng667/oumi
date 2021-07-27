@@ -11,50 +11,75 @@ const fn_hello = async (ctx, next) => {
 };
 
 /**
- * 查找目录
+ * 查找用户目录
  * @param {*} ctx
  * @param {*} next
  */
-const findDirs = async (ctx, next) => {
+const getUserFolder = async (ctx, next) => {
   const postData = ctx.request.body;
-  const { rootPathArr } = postData;
-  let currentPath;
-  if (Array.isArray(rootPathArr)) {
-    currentPath = path.join(rootPathArr.join(path.sep));
-  } else {
-    const lastPath = ctx.model.lastImportPath.get();
-    currentPath = lastPath ? path.join(lastPath.join(path.sep)) : resolve('../');
+  const lastImportPath = ctx.model.lastImportPath.get();
+
+  function getFolder(paramsPath) {
+    let folder = '';
+    if (Array.isArray(paramsPath)) {
+      const dir = paramsPath.join(path.sep);
+      if (paramsPath.length === 1) {
+        return `${paramsPath}${path.sep}`;
+      }
+      folder = path.join(dir);
+      if (fs.existsSync(folder)) {
+        return folder;
+      }
+      return resolve('../');
+    }
+    if (paramsPath) {
+      if (fs.existsSync(paramsPath)) {
+        return paramsPath;
+      }
+    }
+    return resolve('../');
   }
 
-  try {
-    const files = fs.readdirSync(currentPath);
-    const isPackage = files.includes('package.json');
-    const dir_files = files.filter((f) => {
-      if (f === 'package.json') return true;
-      if (f === 'LICENSE') return false;
-      return f.indexOf('.') === -1 && f !== 'node_modules';
-    });
+  const currentPath = getFolder(postData.rootPathArr || lastImportPath);
+  const files = fs.readdirSync(currentPath);
+  const isPackage = files.includes('package.json');
+  const dir_files = files.filter((f) => {
+    if (f === 'package.json') return true;
+    if (f === 'LICENSE') return false;
+    return f.indexOf('.') === -1 && f !== 'node_modules';
+  });
 
-    const currentPath2 = currentPath.split(path.sep);
+  // 路径转数组存本地
+  const currentPathArr = currentPath.split(path.sep);
 
-    // 记录最后一次路径
-    ctx.model.lastImportPath.set(currentPath2);
+  // 记录最后一次路径
+  ctx.model.lastImportPath.set(currentPathArr);
 
-    ctx.returnSuccess({
-      currentPath: currentPath2,
-      files: dir_files,
-      isPackage
-    });
-  } catch (e) {
-    ctx.returnError(`该路径不是目录 ${currentPath}`);
-  }
+  ctx.returnSuccess({
+    currentPath: currentPathArr,
+    files: dir_files,
+    isPackage
+  });
 };
 
 /**
  * 项目列表
  */
 const getProjectList = async (ctx, next) => {
-  ctx.returnSuccess(ctx.model.projectList.get() || []);
+  const list = ctx.model.projectList.get();
+  if (Array.isArray(list)) {
+    for (let i = 0; i < list.length; i++) {
+      const item = list[i];
+      if (item.path) {
+        // 删除错误的目录结构
+        if (!fs.existsSync(item.path)) {
+          ctx.model.projectList.remove({ id: item.id });
+          ctx.model.dashboard.set('');
+        }
+      }
+    }
+  }
+  ctx.returnSuccess(list || []);
 };
 /**
  * 移除某个项目
@@ -119,7 +144,11 @@ const getDashboardByProject = async (ctx) => {
     }
     const project = ctx.model.projectList.find({ id });
     if (project) {
-      return ctx.returnSuccess(project);
+      if (fs.existsSync(project.path)) {
+        return ctx.returnSuccess(project);
+      }
+      ctx.model.projectList.remove({ id: project.id });
+      return ctx.returnError('目录错误');
     }
     return ctx.returnError('没有这个项目');
   } catch (e) {
@@ -166,7 +195,7 @@ const createProjectDir = async (ctx) => {
 
 module.exports = {
   'GET /api/hello/:name': fn_hello,
-  'POST /api/find/dirs': findDirs,
+  'POST /api/user/folder': getUserFolder,
   'POST /api/project/list': getProjectList,
   'POST /api/project/remove': removeProject,
   'POST /api/project/dashboard': setProjectDashboard,

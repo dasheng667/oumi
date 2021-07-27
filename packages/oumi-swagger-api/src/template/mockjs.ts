@@ -95,10 +95,14 @@ export const buildMockStr = function (data: any): string | boolean | number {
   if (data.isArray === true) {
     const item2 = { ...data };
     delete item2.isArray;
-    return `[{ \n ${deep(item2)} }] \n `;
+    return `[{ \n ${deep(item2, 0)} }] \n `;
   }
 
-  function deep(deepData: any) {
+  function space(number) {
+    return Array.from(new Array(number)).join(' ');
+  }
+
+  function deep(deepData: any, level: number) {
     let itemStr = '';
     Object.keys(deepData).forEach((key: string) => {
       const item = deepData[key];
@@ -107,22 +111,22 @@ export const buildMockStr = function (data: any): string | boolean | number {
         const item2 = { ...item };
         delete item2.isArray;
 
-        itemStr += `'${`${key}|1-10`}': [{ \n ${deep(item2)} }], \n`;
+        itemStr += `${space(level)}'${`${key}|1-10`}': [{ \n ${deep(item2, level + 1)} ${space(level)}}], \n`;
       } else if (item.type === undefined && Object.keys(item).length > 0) {
         const item2 = { ...item };
         delete item2.isArray;
-        itemStr += `'${key}': { \n ${deep(item2)} \n }, \n`;
+        itemStr += `${space(level)}'${key}': { \n ${deep(item2, level + 1)} \n ${space(level)}}, \n`;
       } else {
         const mockKey = getMockKey(item, key);
         const mockVal = getMockValue(item);
-        const description = item.description ? `/** ${item.description} */ \n` : '';
-        itemStr += `${description} '${mockKey}': ${mockVal}, \n`;
+        const description = item.description ? `${space(level)} /** ${item.description} */` : '';
+        itemStr += `${description} \n ${space(level)}'${mockKey}': ${mockVal}, \n`;
       }
     });
     return itemStr;
   }
 
-  return `{ \n ${deep(data)} } \n `;
+  return `{ \n ${deep(data, 0)} } \n `;
 };
 
 export default function mockTemp(apiPath: string, methods: string, response: any) {
