@@ -5,6 +5,8 @@ const spinner = ora()
 let lastMsg = null
 let isPaused = false
 
+exports.spinner = spinner;
+
 exports.startSpinner = (symbol, msg) => {
   if (!msg) {
     msg = symbol
@@ -22,6 +24,10 @@ exports.startSpinner = (symbol, msg) => {
     text: msg
   }
   spinner.start()
+}
+
+exports.successSpinner = (text) => {
+  spinner.success(text);
 }
 
 exports.stopSpinner = (persist) => {

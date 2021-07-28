@@ -1,5 +1,5 @@
 import { getBlockListFromGit, downloadFromGit, downloadGitFolder } from '../src';
-import { writeJSON } from '@oumi/cli-shared-utils';
+import { writeJSON, got } from '@oumi/cli-shared-utils';
 import GitUrlParse from 'git-url-parse';
 
 (async () => {
@@ -9,21 +9,18 @@ import GitUrlParse from 'git-url-parse';
   // console.log('2:', await getBlockListFromGit('https://github.com/umijs/umi'))
 })();
 
-// (async ()=>{
-
-//   const url = 'https://github.com/ant-design/pro-blocks/tree/master/AccountCenter';
-
-//   const { filepath, source, owner, resource, name }  = GitUrlParse(url);
-
-//   const tree = await getBlockListFromGit(url);
-
-//   console.log('component', tree.find((item: any) => item.path === filepath))
-
-// })();
+(async () => {
+  // const url = 'https://github.com/ant-design/pro-blocks/tree/master/AccountCenter';
+  // const urlParse  = GitUrlParse(url);
+  // console.log('urlParse', urlParse);
+  // const { filepath, source, owner, resource, name, ref }  = GitUrlParse(url);
+  // const tree = await getBlockListFromGit(url);
+  // console.log('component', tree.find((item: any) => item.path === filepath))
+})();
 
 // download
 (async () => {
   const url = 'https://github.com/ant-design/pro-blocks/tree/master/AccountCenter';
 
-  const tree = downloadGitFolder(url);
+  const tree = downloadGitFolder(url, { recursive: true });
 })();

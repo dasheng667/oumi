@@ -1,18 +1,24 @@
 import { Chalk } from 'chalk';
+import { Ora } from 'ora';
 
 export function got (url: string): any;
 
 export function launch (text: string): any;
 
 export const request: {
-  get: (url: string, opt?: any) => string;
+  getJSON: (url: string, opt?: any) => Promise<object>;
+  get: (url: string, opt?: any) => Promise<any>;
 }
+
+export const spinner: Ora;
 
 export function startSpinner(symbol: any, msg: string): void;
 
 export function stopSpinner(persist?: any): void;
 
 export function failSpinner(text?: string): void;
+
+export function successSpinner(text?: string): void;
 
 export function pauseSpinner(): void;
 

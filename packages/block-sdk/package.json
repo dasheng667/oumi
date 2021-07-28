@@ -27,7 +27,6 @@
     "npm": ">= 4.0.0"
   },
   "dependencies": {
-    "@octokit/core": "^3.5.1",
     "git-url-parse": "^11.5.0"
   },
   "devDependencies": {

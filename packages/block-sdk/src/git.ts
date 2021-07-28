@@ -2,6 +2,11 @@ import { got, chalk, startSpinner, stopSpinner, failSpinner } from '@oumi/cli-sh
 import token from './token';
 import GitUrlParse from 'git-url-parse';
 
+export type DownloadOptions = {
+  useBuiltJSON?: boolean;
+  recursive?: boolean;
+};
+
 /**
  * * 预览专用 *
  * 从文件数组映射为 pro 的路由
@@ -13,14 +18,17 @@ export const genBlockName = (name) =>
     .map((p) => p.toLowerCase())
     .join('/');
 
-export const getBlockListFromGit = async (gitUrl, useBuiltJSON?) => {
+export const getBlockListFromGit = async (gitUrl, options?: DownloadOptions) => {
   const ignoreFile = ['_scripts', 'tests'];
+  const {
+    useBuiltJSON = false, // 使用内置的json配置
+    recursive = false // git递归
+  } = options || {};
 
-  const { name, owner, resource } = GitUrlParse(gitUrl);
+  const { name, owner, resource, ref = 'master' } = GitUrlParse(gitUrl);
 
-  // 使用内置的json配置
   if (useBuiltJSON) {
-    const url = `https://raw.githubusercontent.com/${owner}/${name}/master/umi-block.json`;
+    const url = `https://raw.githubusercontent.com/${owner}/${name}/${ref}/umi-block.json`;
 
     startSpinner('🔍', `find block list form ${chalk.yellow(url)}`);
     try {
@@ -39,20 +47,30 @@ export const getBlockListFromGit = async (gitUrl, useBuiltJSON?) => {
   }
 
   // 一个 github 的 api,可以获得文件树
-  const url = `https://api.github.com/repos/${owner}/${name}/git/trees/master`;
+  const recursiveParams = recursive ? 'recursive=1' : '';
+  const url = `https://api.github.com/repos/${owner}/${name}/git/trees/${ref}?${recursiveParams}`;
   startSpinner('🔍', `find block list form ${chalk.yellow(url)}`);
 
   try {
     const { body } = await got(`${url}?${token}`);
-    const filesTree = JSON.parse(body)
-      .tree.filter((file) => file.type === 'tree' && !ignoreFile.includes(file.path) && file.path.indexOf('.') !== 0)
+    const filesTree = JSON.parse(body);
+
+    if (recursive) {
+      return filesTree.tree.map((item) => ({
+        ...item,
+        img: `https://github.com/${owner}/${name}/raw/${ref}/${item.path}/snapshot.png`
+      }));
+    }
+
+    const filterTree = filesTree.tree
+      .filter((file) => file.type === 'tree' && !ignoreFile.includes(file.path) && file.path.indexOf('.') !== 0)
       .map(({ path, type, url: shaUrl }) => ({
-        url: `${gitUrl}/tree/master/${path}`,
+        url: `${gitUrl}/tree/${ref}/${path}`,
         type,
         path,
         isPage: true,
         defaultPath: `/${path}`,
-        img: `https://github.com/${owner}/${name}/raw/master/${path}/snapshot.png`,
+        img: `https://github.com/${owner}/${name}/raw/${ref}/${path}/snapshot.png`,
         // tags: [''],
         name: path,
         shaUrl
@@ -60,7 +78,7 @@ export const getBlockListFromGit = async (gitUrl, useBuiltJSON?) => {
       }));
 
     stopSpinner();
-    return filesTree;
+    return filterTree;
   } catch (error) {
     console.error(error.body);
     failSpinner('404');
