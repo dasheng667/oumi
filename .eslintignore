@@ -11,4 +11,5 @@ _mock.js
 .scss
 /packages/cli-shared-utils
 /packages/oumi-swagger-api/lib
+/packages/block-sdk/lib
 /packages/oumi-swagger-api/example

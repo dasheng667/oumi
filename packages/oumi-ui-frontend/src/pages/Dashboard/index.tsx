@@ -1,14 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, useHistory, Link, Switch, Route } from 'react-router-dom';
-import { Spin, Select } from 'antd';
+import { Tabs, Spin } from 'antd';
 import Slider from '../../Components/Slider';
 import { useRequest } from '../../hook';
-import type { ProjectListItem, IRouter } from '../../global';
+import type { ListItem, IRouter } from '../../global';
 import renderRoutes from '../../router/renderRoutes';
+import Blocks from './Components/Blocks';
 
 import './index.less';
 
 const projectListPath = '/project/select';
+
+const { TabPane } = Tabs;
 
 type Props = {
   route: IRouter;
@@ -18,24 +21,35 @@ type Props = {
 export default (props: Props) => {
   const { route = {} } = props;
   // console.log('props', props)
-
+  // const [tabsId, setTabsId] = useState('');
   const history = useHistory();
-  const { data, error, loading } = useRequest<ProjectListItem>('/api/dashboard/get', { errorMsg: false });
-  // const { data: projectList = [] } = useRequest<ProjectListItem[]>('/api/project/list');
+  const isCurrentPath = history.location.pathname === '/dashboard';
+
+  const {
+    data,
+    error,
+    request: requestGet
+  } = useRequest<ListItem>('/api/dashboard/get', { errorMsg: false, lazy: true });
+  const { data: blockList = [], request: requestBlockList } = useRequest<ListItem[]>('/api/block/getList', {
+    lazy: true
+  });
 
   const goProjectList = () => {
     history.push(projectListPath);
   };
 
   useEffect(() => {
+    if (isCurrentPath) {
+      requestGet();
+      requestBlockList();
+    }
+  }, [history, history.location]);
+
+  useEffect(() => {
     if (error) {
       history.replace(projectListPath);
     }
   }, [error]);
-
-  if (loading || !data) {
-    return <Spin />;
-  }
 
   if (error) {
     return (
@@ -48,17 +62,26 @@ export default (props: Props) => {
   return (
     <div className="dashboard-main">
       <Slider goProjectList={goProjectList} selectItem={data} />
-
       <div className="dashboard-body">
         {renderRoutes(route.routes)}
-        {history.location.pathname === '/dashboard' && (
+
+        {isCurrentPath && (
           <div className="content">
-            <div className="ui-swagger-content">
+            <div className="ui-dashboard-content">
               <div className="top-header">
                 <h2>模版</h2>
               </div>
               <div className="ui-content-container ui-main-container">
-                <p>开发中。敬请期待！！！</p>
+                <Tabs type="card" defaultActiveKey={'1'} tabPosition="left">
+                  {blockList &&
+                    blockList.map((item) => {
+                      return (
+                        <TabPane forceRender={false} tab={item.name} key={item.id}>
+                          <Blocks item={item} />
+                        </TabPane>
+                      );
+                    })}
+                </Tabs>
               </div>
             </div>
           </div>

@@ -17,7 +17,15 @@ const defaultData = {
       api_fileType: 'ts',
       outputFileType: 'merge',
       outputFileName: 'serve.ts'
-    }
+    },
+    block: [
+      {
+        id: '1',
+        name: 'pro-blocks',
+        href: 'https://github.com/ant-design/pro-blocks/blob/master/umi-block.json',
+        default: true
+      }
+    ]
   }
 };
 
@@ -85,6 +93,8 @@ const modelDb = {
     get() {
       return db.get(this.KEY).value();
     },
+
+    // 用户的swagger列表
     swagger: {
       KEY: 'userConfig.swagger',
       get() {
@@ -114,6 +124,39 @@ const modelDb = {
         return db.get(this.KEY).find({ id }).value();
       }
     },
+
+    // 资产列表
+    block: {
+      KEY: 'userConfig.block',
+      get() {
+        return db.get(this.KEY).value();
+      },
+      add(data) {
+        if (!this.get()) {
+          db.set(this.KEY, []).write();
+        }
+        if (!data.id) {
+          data.id = utils.createId();
+        }
+        return db.get(this.KEY).push(data).write();
+      },
+      remove(id) {
+        if (id) {
+          return db
+            .get(this.KEY)
+            .remove((item) => {
+              return item.id === id;
+            })
+            .write();
+        }
+        return null;
+      },
+      findById(id) {
+        return db.get(this.KEY).find({ id }).value();
+      }
+    },
+
+    // 用户的swagger配置
     swaggerConfig: {
       KEY: 'userConfig.swaggerConfig',
       get() {

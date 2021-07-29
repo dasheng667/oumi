@@ -22,5 +22,5 @@ import GitUrlParse from 'git-url-parse';
 (async () => {
   const url = 'https://github.com/ant-design/pro-blocks/tree/master/AccountCenter';
 
-  const tree = downloadGitFolder(url, { recursive: true });
+  const tree = downloadGitFolder(url, './GIT', { recursive: true, downloadSource: 'api' });
 })();

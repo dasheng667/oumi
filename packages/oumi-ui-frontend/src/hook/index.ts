@@ -9,7 +9,12 @@ type Options = {
 
   errorMsg?: boolean;
 
-  onSuccess?: (res: any) => void;
+  onSuccess?: <T>(res: T) => void;
+  onError?: (err: any) => void;
+};
+
+type Options2<T> = {
+  onSuccess?: (res: T) => void;
   onError?: (err: any) => void;
 };
 
@@ -27,7 +32,7 @@ export const useRequest = <T>(url: string, options?: Options) => {
   const [loading, setLoading] = useState(false);
 
   const fetch = useCallback(
-    (urlParams?: any, options2?: any) => {
+    (urlParams?: any, options2?: Options2<T>) => {
       setLoading(true);
       return new Promise((resolve, reject) => {
         request[methods](url, { ...params, ...urlParams }, { errorMsg } as any)

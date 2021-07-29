@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { Select } from 'antd';
 import { ShoppingOutlined, ApiOutlined, SettingOutlined } from '@ant-design/icons';
-import type { ProjectListItem, IRouter } from '../../global';
+import type { ListItem, IRouter } from '../../global';
 
 import './index.less';
 
@@ -10,8 +10,8 @@ const { Option } = Select;
 
 type Props = {
   goProjectList: () => void;
-  // projectList: ProjectListItem[];
-  selectItem: ProjectListItem;
+  // projectList: ListItem[];
+  selectItem: ListItem;
 };
 
 export default (props: Props) => {
@@ -20,7 +20,7 @@ export default (props: Props) => {
 
   const menuList = [
     {
-      name: '模版',
+      name: '资产',
       path: '/dashboard',
       icon: <ShoppingOutlined />
     },

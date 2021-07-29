@@ -18,7 +18,7 @@ import { useRequest } from '../../hook';
 
 import { gql, useQuery, useMutation } from '@apollo/client';
 import * as GQL from '../../graphql';
-import type { ProjectListItem } from '../../global';
+import type { ListItem } from '../../global';
 
 import './index.less';
 
@@ -35,14 +35,14 @@ const Project = ({
   removeProject,
   goDashboard
 }: {
-  projectList: ProjectListItem[];
-  removeProject: (item: ProjectListItem) => void;
+  projectList: ListItem[];
+  removeProject: (item: ListItem) => void;
   goDashboard: ({ id }: { id: string }) => void;
 }) => {
-  const [current, setCurrent] = useState<ProjectListItem | null>(null);
+  const [current, setCurrent] = useState<ListItem | null>(null);
   const [openEditor, { data, error, loading }] = useMutation(GQL.FILE_OPEN_IN_EDITOR);
 
-  const onClickOpen = (item: ProjectListItem) => {
+  const onClickOpen = (item: ListItem) => {
     if (loading) return;
     setCurrent(item);
     openEditor({ variables: { input: { file: item.path } } });
@@ -180,7 +180,7 @@ export default () => {
     request: getProjectList,
     data: projectList = [],
     loading: loading2
-  } = useRequest<ProjectListItem[]>('/api/project/list');
+  } = useRequest<ListItem[]>('/api/project/list');
 
   const { request: goDashboard, loading: loadingD } = useRequest('/api/project/dashboard', {
     lazy: true,

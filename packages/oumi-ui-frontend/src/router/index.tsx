@@ -12,7 +12,7 @@ const router: IRouter[] = [
         path: '/',
         label: '首页',
         exact: true,
-        component: () => <Redirect to="/dashboard/swagger" />
+        component: () => <Redirect to="/dashboard" />
       },
 
       {

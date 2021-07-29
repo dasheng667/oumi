@@ -1,23 +1,27 @@
+'use strict';
+var __importDefault =
+  (this && this.__importDefault) ||
+  function (mod) {
+    return mod && mod.__esModule ? mod : { default: mod };
+  };
+Object.defineProperty(exports, '__esModule', { value: true });
+exports.downloadFromGit = exports.downloadGitFolder = void 0;
 /* eslint-disable no-bitwise */
-import { join, extname, sep } from 'path';
-import { existsSync, createWriteStream } from 'fs';
-import { spawn, chalk, spinner, writeJSON, ensureDirSync, writeFile, request, base64 } from '@oumi/cli-shared-utils';
-import type { DownloadOptions } from './git';
-import { getBlockListFromGit } from './git';
-import GitUrlParse from 'git-url-parse';
-import { Octokit } from '@octokit/core';
-
-const spawnSync = spawn.sync;
+const path_1 = require('path');
+const fs_1 = require('fs');
+const cli_shared_utils_1 = require('@oumi/cli-shared-utils');
+const git_1 = require('./git');
+const git_url_parse_1 = __importDefault(require('git-url-parse'));
+const core_1 = require('@octokit/core');
+const spawnSync = cli_shared_utils_1.spawn.sync;
 const { log } = console;
-const octokit = new Octokit({});
-
+const octokit = new core_1.Octokit({});
 function downloadFile(owner, repo, ref, repoPath, destPath, onComplete, onError, retryCount = 0) {
   const url = `https://raw.githubusercontent.com/${owner}/${repo}/${ref}/${repoPath}`;
-
-  request
+  cli_shared_utils_1.request
     .get(encodeURI(url))
     .then((res) => {
-      const dest = createWriteStream(destPath);
+      const dest = fs_1.createWriteStream(destPath);
       res.body.pipe(dest);
       onComplete(retryCount);
     })
@@ -28,14 +32,13 @@ function downloadFile(owner, repo, ref, repoPath, destPath, onComplete, onError,
       return onError();
     });
 }
-
-async function downloadFileFormOC(url: string, destPath: string, onComplete, onError) {
+async function downloadFileFormOC(url, destPath, onComplete, onError) {
   if (!url) throw new Error('url 无效');
   try {
     const { data } = await octokit.request(`GET ${url}`);
-    const content = base64.decode(data.content);
+    const content = cli_shared_utils_1.base64.decode(data.content);
     onComplete();
-    writeFile(destPath, content);
+    cli_shared_utils_1.writeFile(destPath, content);
   } catch (e) {
     const {
       response: { data }
@@ -47,62 +50,48 @@ async function downloadFileFormOC(url: string, destPath: string, onComplete, onE
     }
   }
 }
-
 /**
  * 下载git项目中的其中一个目录
  */
-export async function downloadGitFolder(url: string, outputPath: string, options?: DownloadOptions) {
-  const { filepath, source, owner, resource, name: repo, ref = 'master' } = GitUrlParse(url);
+async function downloadGitFolder(url, outputPath, options) {
+  const { filepath, source, owner, resource, name: repo, ref = 'master' } = git_url_parse_1.default(url);
   const { downloadSource } = options || {};
-
-  if (existsSync(outputPath)) {
+  if (fs_1.existsSync(outputPath)) {
     throw new Error(`${outputPath} 必须是一个目录`);
   }
-
   // 不是github的
   if (resource !== 'github.com') {
     return null;
   }
-
-  spinner.start(`🗃️ start download File: ${url}`);
-  const tree = await getBlockListFromGit(url, options);
-
+  cli_shared_utils_1.spinner.start(`🗃️ start download File: ${url}`);
+  const tree = await git_1.getBlockListFromGit(url, options);
   if (tree.length === 0) {
-    spinner.fail('length === 0');
+    cli_shared_utils_1.spinner.fail('length === 0');
     return null;
   }
-
   let tasks = 0;
   let count = 0;
-
   tree.forEach((item) => {
-    const destPath = join(outputPath, item.path);
-
+    const destPath = path_1.join(outputPath, item.path);
     // 只下载其中一个目录
     if (filepath && !item.path.startsWith(filepath)) return;
-
     if (item.type === 'tree') {
-      ensureDirSync(destPath);
+      cli_shared_utils_1.ensureDirSync(destPath);
     }
-
     if (item.type === 'blob') {
       tasks++;
-
       const onComplete = (retryCount) => {
         count++;
-        spinner.succeed(item.path);
-        spinner.start(retryCount > 0 ? ` retryCount ${retryCount}` : ` downloading...`);
-
+        cli_shared_utils_1.spinner.succeed(item.path);
+        cli_shared_utils_1.spinner.start(retryCount > 0 ? ` retryCount ${retryCount}` : ` downloading...`);
         if (tasks === count) {
-          spinner.stop();
-          log(chalk.green('\n  Download complete.\n'));
+          cli_shared_utils_1.spinner.stop();
+          log(cli_shared_utils_1.chalk.green('\n  Download complete.\n'));
         }
       };
-
       const onError = (reason) => {
-        spinner.fail(reason || item.path);
+        cli_shared_utils_1.spinner.fail(reason || item.path);
       };
-
       if (downloadSource === 'api') {
         downloadFileFormOC(item.url, destPath, onComplete, onError);
       } else {
@@ -110,10 +99,9 @@ export async function downloadGitFolder(url: string, outputPath: string, options
       }
     }
   });
-
   return null;
 }
-
+exports.downloadGitFolder = downloadGitFolder;
 /**
  * 从 url git 中下载到本地临时目录
  * @param url
@@ -122,14 +110,12 @@ export async function downloadGitFolder(url: string, outputPath: string, options
  * @param log
  * @param args
  */
-export function downloadFromGit(url, id, branch = 'master', args?) {
+function downloadFromGit(url, id, branch = 'master', args) {
   const { dryRun } = args || {};
   const blocksTempPath = './';
-  const templateTmpDirPath = join(blocksTempPath, id);
-
-  spinner.start(`👇 ${url} start pull from git to update...`);
-
-  if (existsSync(templateTmpDirPath)) {
+  const templateTmpDirPath = path_1.join(blocksTempPath, id);
+  cli_shared_utils_1.spinner.start(`👇 ${url} start pull from git to update...`);
+  if (fs_1.existsSync(templateTmpDirPath)) {
     // git repo already exist, pull it
     // cd id && git pull
     if (dryRun) {
@@ -150,6 +136,7 @@ export function downloadFromGit(url, id, branch = 'master', args?) {
       cwd: blocksTempPath
     });
   }
-  spinner.stop();
+  cli_shared_utils_1.spinner.stop();
   return templateTmpDirPath;
 }
+exports.downloadFromGit = downloadFromGit;
