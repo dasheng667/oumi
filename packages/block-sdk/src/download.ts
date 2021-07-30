@@ -1,7 +1,7 @@
 /* eslint-disable no-bitwise */
-import { join, extname, sep } from 'path';
+import { join } from 'path';
 import { existsSync, createWriteStream } from 'fs';
-import { spawn, chalk, spinner, writeJSON, ensureDirSync, writeFile, request, base64 } from '@oumi/cli-shared-utils';
+import { spawn, chalk, spinner, ensureDirSync, writeFile, request, base64 } from '@oumi/cli-shared-utils';
 import type { DownloadOptions } from './git';
 import { getBlockListFromGit } from './git';
 import GitUrlParse from 'git-url-parse';
@@ -11,7 +11,7 @@ const spawnSync = spawn.sync;
 const { log } = console;
 const octokit = new Octokit({});
 
-function downloadFile(owner, repo, ref, repoPath, destPath, onComplete, onError, retryCount = 0) {
+function downloadFile({ owner, repo, ref, repoPath, destPath, onComplete, onError, retryCount = 0 }) {
   const url = `https://raw.githubusercontent.com/${owner}/${repo}/${ref}/${repoPath}`;
 
   request
@@ -23,23 +23,44 @@ function downloadFile(owner, repo, ref, repoPath, destPath, onComplete, onError,
     })
     .catch((err) => {
       if (retryCount <= 2) {
-        return downloadFile(owner, repo, ref, repoPath, destPath, onComplete, onError, retryCount + 1);
+        return downloadFile({
+          owner,
+          repo,
+          ref,
+          repoPath,
+          destPath,
+          onComplete,
+          onError,
+          retryCount: retryCount + 1
+        });
       }
       return onError();
     });
 }
 
-async function downloadFileFormOC(url: string, destPath: string, onComplete, onError) {
+async function downloadFileFormOC({
+  url,
+  destPath,
+  onComplete,
+  onError,
+  token
+}: {
+  url: string;
+  destPath: string;
+  onComplete;
+  onError;
+  token;
+}) {
   if (!url) throw new Error('url 无效');
   try {
-    const { data } = await octokit.request(`GET ${url}`);
+    const access_token = token ? `access_token=${token}` : '';
+    const { data } = await octokit.request(`GET ${url}?${access_token}`);
     const content = base64.decode(data.content);
     onComplete();
     writeFile(destPath, content);
   } catch (e) {
-    const {
-      response: { data }
-    } = e;
+    const { response } = e;
+    const { data } = response || {};
     if (data && data.message) {
       onError(data.message);
     } else {
@@ -51,11 +72,11 @@ async function downloadFileFormOC(url: string, destPath: string, onComplete, onE
 /**
  * 下载git项目中的其中一个目录
  */
-export async function downloadGitFolder(url: string, outputPath: string, options?: DownloadOptions) {
+export async function downloadFileToLocal(url: string, outputPath: string, options?: DownloadOptions) {
   const { filepath, source, owner, resource, name: repo, ref = 'master' } = GitUrlParse(url);
-  const { downloadSource } = options || {};
+  const { downloadSource, token } = options || {};
 
-  if (existsSync(outputPath)) {
+  if (!existsSync(outputPath)) {
     throw new Error(`${outputPath} 必须是一个目录`);
   }
 
@@ -72,46 +93,67 @@ export async function downloadGitFolder(url: string, outputPath: string, options
     return null;
   }
 
-  let tasks = 0;
-  let count = 0;
+  return new Promise((resolve, reject) => {
+    let tasks = 0;
+    let count = 0;
 
-  tree.forEach((item) => {
-    const destPath = join(outputPath, item.path);
+    tree.forEach((item) => {
+      const destPath = join(outputPath, item.path);
 
-    // 只下载其中一个目录
-    if (filepath && !item.path.startsWith(filepath)) return;
+      // 只下载其中一个目录
+      if (filepath && !item.path.startsWith(filepath)) return;
 
-    if (item.type === 'tree') {
-      ensureDirSync(destPath);
-    }
-
-    if (item.type === 'blob') {
-      tasks++;
-
-      const onComplete = (retryCount) => {
-        count++;
-        spinner.succeed(item.path);
-        spinner.start(retryCount > 0 ? ` retryCount ${retryCount}` : ` downloading...`);
-
-        if (tasks === count) {
-          spinner.stop();
-          log(chalk.green('\n  Download complete.\n'));
-        }
-      };
-
-      const onError = (reason) => {
-        spinner.fail(reason || item.path);
-      };
-
-      if (downloadSource === 'api') {
-        downloadFileFormOC(item.url, destPath, onComplete, onError);
-      } else {
-        downloadFile(owner, repo, ref, item.path, destPath, onComplete, onError);
+      if (item.type === 'tree') {
+        ensureDirSync(destPath);
       }
-    }
-  });
 
-  return null;
+      if (item.type === 'blob') {
+        tasks++;
+
+        const onComplete = (retryCount) => {
+          count++;
+          spinner.succeed(item.path);
+          spinner.start(retryCount > 0 ? ` retryCount ${retryCount}` : ` downloading...`);
+
+          if (tasks === count) {
+            spinner.stop();
+            log(chalk.green('\n  Download complete.\n'));
+            resolve(true);
+          }
+        };
+
+        const onError = (reason) => {
+          count++;
+          spinner.fail(reason || item.path);
+
+          if (tasks === count) {
+            reject(reason || item.path);
+            spinner.stop();
+          }
+        };
+
+        if (downloadSource === 'api') {
+          downloadFileFormOC({
+            url: item.url,
+            destPath,
+            token,
+            onComplete,
+            onError
+          });
+        } else {
+          downloadFile({
+            owner,
+            repo,
+            ref,
+            repoPath: item.path,
+            destPath,
+            onComplete,
+            onError
+          });
+        }
+      }
+    });
+  });
 }
 
 /**

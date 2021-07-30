@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, useHistory, Link, Switch, Route } from 'react-router-dom';
-import { Tabs, Spin } from 'antd';
+import { useHistory, Link } from 'react-router-dom';
+import { ShoppingOutlined } from '@ant-design/icons';
+import { Tabs, Spin, Modal } from 'antd';
 import Slider from '../../Components/Slider';
 import { useRequest } from '../../hook';
-import type { ListItem, IRouter } from '../../global';
+import type { ListItem, IRouter, Blocks as IBlocks } from '../../global';
 import renderRoutes from '../../router/renderRoutes';
 import Blocks from './Components/Blocks';
+import DownloadModal from './Components/DownloadModal';
 
 import './index.less';
 
@@ -21,15 +23,12 @@ type Props = {
 export default (props: Props) => {
   const { route = {} } = props;
   // console.log('props', props)
-  // const [tabsId, setTabsId] = useState('');
+
+  const [modalData, setModalData] = useState<IBlocks | null>(null);
   const history = useHistory();
   const isCurrentPath = history.location.pathname === '/dashboard';
 
-  const {
-    data,
-    error,
-    request: requestGet
-  } = useRequest<ListItem>('/api/dashboard/get', { errorMsg: false, lazy: true });
+  const { data, error, request: requestGet } = useRequest<ListItem>('/api/dashboard/init', { errorMsg: false });
   const { data: blockList = [], request: requestBlockList } = useRequest<ListItem[]>('/api/block/getList', {
     lazy: true
   });
@@ -40,7 +39,6 @@ export default (props: Props) => {
 
   useEffect(() => {
     if (isCurrentPath) {
-      requestGet();
       requestBlockList();
     }
   }, [history, history.location]);
@@ -50,6 +48,10 @@ export default (props: Props) => {
       history.replace(projectListPath);
     }
   }, [error]);
+
+  const addToProject = (block: IBlocks) => {
+    setModalData(block);
+  };
 
   if (error) {
     return (
@@ -69,15 +71,25 @@ export default (props: Props) => {
           <div className="content">
             <div className="ui-dashboard-content">
               <div className="top-header">
-                <h2>模版</h2>
+                <h2>资产</h2>
               </div>
               <div className="ui-content-container ui-main-container">
-                <Tabs type="card" defaultActiveKey={'1'} tabPosition="left">
+                <Tabs type="line" defaultActiveKey={'1'} tabPosition="left">
                   {blockList &&
                     blockList.map((item) => {
                       return (
-                        <TabPane forceRender={false} tab={item.name} key={item.id}>
-                          <Blocks item={item} />
+                        <TabPane
+                          forceRender={false}
+                          tab={
+                            <span>
+                              {' '}
+                              <ShoppingOutlined /> {item.name}{' '}
+                            </span>
+                          }
+                          key={item.id}
+                          closable={false}
+                        >
+                          <Blocks item={item} addToProject={addToProject} />
                         </TabPane>
                       );
                     })}
@@ -86,6 +98,8 @@ export default (props: Props) => {
             </div>
           </div>
         )}
+
+        <DownloadModal modalData={modalData} setModalVisible={setModalData} />
       </div>
     </div>
   );

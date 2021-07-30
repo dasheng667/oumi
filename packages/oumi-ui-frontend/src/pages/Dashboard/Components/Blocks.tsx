@@ -8,10 +8,11 @@ const { TabPane } = Tabs;
 
 type Props = {
   item: ListItem;
+  addToProject: (block: Blocks) => void;
 };
 
 export default (props: Props) => {
-  const { item } = props;
+  const { item, addToProject } = props;
 
   const [blockData, setBlockData] = useState<Record<string, Blocks[]>>({});
   const {
@@ -23,8 +24,8 @@ export default (props: Props) => {
 
   useEffect(() => {
     if (item && item.href) {
-      setData(blocksJSON.list as any);
-      // requestBlocks({url: item.href});
+      // setData(blocksJSON.list as any);
+      requestBlocks({ url: item.href, useBuiltJSON: true });
     }
   }, []);
 
@@ -41,7 +42,7 @@ export default (props: Props) => {
         }
       });
     });
-    console.log('blocks', blocks);
+    // console.log('blocks', blocks);
     setBlockData(blocks);
   }, [data]);
 
@@ -54,8 +55,6 @@ export default (props: Props) => {
       <Tabs type="card">
         {blockData &&
           Object.keys(blockData).map((tag) => {
-            if (tag === '空白页') return null;
-
             const children = blockData[tag];
             return (
               <TabPane forceRender={false} tab={tag} key={tag}>
@@ -64,6 +63,9 @@ export default (props: Props) => {
                     children.map((cItem) => {
                       return (
                         <div className="blocks-list__item" key={cItem.path}>
+                          <div className="handler">
+                            <span onClick={() => addToProject(cItem)}>添加到项目</span>
+                          </div>
                           <div className="img">
                             <img src={cItem.img} alt="" />
                           </div>

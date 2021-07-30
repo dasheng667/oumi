@@ -1,5 +1,4 @@
 import { got, chalk, startSpinner, stopSpinner, failSpinner } from '@oumi/cli-shared-utils';
-import token from './token';
 import GitUrlParse from 'git-url-parse';
 
 export type DownloadOptions = {
@@ -24,7 +23,8 @@ export const getBlockListFromGit = async (gitUrl, options?: DownloadOptions) => 
   const ignoreFile = ['_scripts', 'tests'];
   const {
     useBuiltJSON = false, // 使用内置的json配置
-    recursive = false // git递归
+    recursive = false, // git递归
+    token = ''
   } = options || {};
 
   const { name, owner, resource, ref = 'master' } = GitUrlParse(gitUrl);
@@ -54,7 +54,8 @@ export const getBlockListFromGit = async (gitUrl, options?: DownloadOptions) => 
   startSpinner('🔍', `find block list form ${chalk.yellow(url)}`);
 
   try {
-    const { body } = await got(`${url}?${token}`);
+    const access_token = token ? `access_token=${token}` : '';
+    const { body } = await got(`${url}?${access_token}`);
     const filesTree = JSON.parse(body);
 
     if (recursive) {

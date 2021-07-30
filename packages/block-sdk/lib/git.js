@@ -7,7 +7,6 @@ var __importDefault =
 Object.defineProperty(exports, '__esModule', { value: true });
 exports.getBlockListFromGit = exports.genBlockName = void 0;
 const cli_shared_utils_1 = require('@oumi/cli-shared-utils');
-const token_1 = __importDefault(require('./token'));
 const git_url_parse_1 = __importDefault(require('git-url-parse'));
 /**
  * * 预览专用 *
@@ -23,7 +22,8 @@ exports.getBlockListFromGit = async (gitUrl, options) => {
   const ignoreFile = ['_scripts', 'tests'];
   const {
     useBuiltJSON = false, // 使用内置的json配置
-    recursive = false // git递归
+    recursive = false, // git递归
+    token = ''
   } = options || {};
   const { name, owner, resource, ref = 'master' } = git_url_parse_1.default(gitUrl);
   if (useBuiltJSON) {
@@ -47,7 +47,8 @@ exports.getBlockListFromGit = async (gitUrl, options) => {
   const url = `https://api.github.com/repos/${owner}/${name}/git/trees/${ref}?${recursiveParams}`;
   cli_shared_utils_1.startSpinner('🔍', `find block list form ${cli_shared_utils_1.chalk.yellow(url)}`);
   try {
-    const { body } = await cli_shared_utils_1.got(`${url}?${token_1.default}`);
+    const access_token = token ? `access_token=${token}` : '';
+    const { body } = await cli_shared_utils_1.got(`${url}?${access_token}`);
     const filesTree = JSON.parse(body);
     if (recursive) {
       return filesTree.tree.map((item) => ({

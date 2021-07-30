@@ -43,9 +43,17 @@ const getConfigSwagger = (ctx) => {
   return ctx.returnSuccess(data);
 };
 
+const SavePrivateConfig = (ctx) => {
+  const data = ctx.request.body;
+  const res = ctx.model.userConfig.private.set(data);
+  return ctx.returnSuccess(res);
+};
+
 module.exports = {
   'POST /api/config/get': getUserConfig,
   'POST /api/config/swagger/get': getConfigSwagger,
   'POST /api/config/swagger/add': SwaggerAdd,
-  'POST /api/config/swagger/remove': SwaggerRemove
+  'POST /api/config/swagger/remove': SwaggerRemove,
+
+  'POST /api/config/savePrivateConfig': SavePrivateConfig
 };

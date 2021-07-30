@@ -1,20 +1,31 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tabs, Form, Input, Button, Table, Switch, Radio, Row, Col, message } from 'antd';
-// import { InfoCircleOutlined } from '@ant-design/icons';
-import { useRequest } from '../../hook';
+import { useHistory } from 'react-router-dom';
+import { useRequest, useLocation } from '../../hook';
 import type { ListItem } from '../../global';
 import SwaggerConfig from './Components/SwaggerConfig';
+import PrivateConfig from './Components/PrivateConfig';
 
 import './index.less';
 
 const { TabPane } = Tabs;
 
+type IConfigData = {
+  swagger: ListItem[];
+  swaggerConfig: any;
+  block: ListItem[];
+  private: any;
+};
+
 export default () => {
   const [formAdd] = Form.useForm();
   const [formBlock] = Form.useForm();
   const [formConfig] = Form.useForm();
-  const { data, request: requestConfig } =
-    useRequest<{ swagger: ListItem[]; swaggerConfig: any; block: ListItem[] }>('/api/config/get');
+
+  const { query } = useLocation();
+  const [currentTag, setCurrentTag] = useState('1');
+
+  const { data, request: requestConfig } = useRequest<IConfigData>('/api/config/get');
 
   const { request: requestSwaggerAdd, loading: loadingAdd } = useRequest('/api/config/swagger/add', { lazy: true });
 
@@ -24,9 +35,14 @@ export default () => {
     lazy: true
   });
 
-  // const { request: requestGetBlockList, data: blockData } = useRequest('/api/block/getList', { lazy: true });
   const { request: requestSaveBlock, loading: loadingAddBlock } = useRequest('/api/block/pushItem', { lazy: true });
   const { request: requestRemoveBlock } = useRequest('/api/block/removeItem', { lazy: true });
+
+  useEffect(() => {
+    if (query && query.key) {
+      setCurrentTag(query.key);
+    }
+  }, []);
 
   useEffect(() => {
     if (data && data.swaggerConfig) {
@@ -140,7 +156,7 @@ export default () => {
       </div>
 
       <div className="ui-config-container ui-content-container">
-        <Tabs type="card">
+        <Tabs type="card" activeKey={currentTag} onChange={(key) => setCurrentTag(key)}>
           <TabPane tab="Swagger" key="1">
             <Row>
               <Col span={12}>
@@ -220,7 +236,7 @@ export default () => {
           </TabPane>
 
           <TabPane tab="私有配置" key="3">
-            Content of Tab Pane 3
+            <PrivateConfig data={data && data.private} />
           </TabPane>
         </Tabs>
       </div>

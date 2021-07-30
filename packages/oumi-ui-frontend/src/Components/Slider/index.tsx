@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { Select } from 'antd';
-import { ShoppingOutlined, ApiOutlined, SettingOutlined } from '@ant-design/icons';
+import { ShoppingOutlined, ApiOutlined, SettingOutlined, HomeFilled } from '@ant-design/icons';
 import type { ListItem, IRouter } from '../../global';
 
 import './index.less';
@@ -38,7 +38,12 @@ export default (props: Props) => {
 
   return (
     <div className="ui-slider">
-      <header onClick={goProjectList}>Oumi UI 管理器</header>
+      <header onClick={goProjectList}>
+        <div className="icon" title="Oumi 项目过滤器">
+          <HomeFilled style={{ fontSize: 18 }} />
+        </div>
+        <div className="project-name">{selectItem && selectItem.name}</div>
+      </header>
       {/* <div className="select flex-center">
         <Select style={{ width: 180 }} value={selectItem.id}>
           {projectList &&

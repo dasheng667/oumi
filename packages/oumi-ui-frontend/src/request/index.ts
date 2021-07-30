@@ -4,7 +4,7 @@ import { message } from 'antd';
 import 'antd/lib/message/style/index.css';
 
 const instance = axios.create({
-  timeout: 10000
+  timeout: 15000
 });
 
 // 添加响应拦截器

@@ -1,4 +1,4 @@
-import { getBlockListFromGit, downloadFromGit, downloadGitFolder } from '../src';
+import { getBlockListFromGit, downloadFromGit, downloadFileToLocal } from '../src';
 import { writeJSON, got } from '@oumi/cli-shared-utils';
 import GitUrlParse from 'git-url-parse';
 
@@ -22,5 +22,5 @@ import GitUrlParse from 'git-url-parse';
 (async () => {
   const url = 'https://github.com/ant-design/pro-blocks/tree/master/AccountCenter';
 
-  const tree = downloadGitFolder(url, './GIT', { recursive: true, downloadSource: 'api' });
+  downloadFileToLocal(url, './GIT', { recursive: true, downloadSource: 'api' });
 })();

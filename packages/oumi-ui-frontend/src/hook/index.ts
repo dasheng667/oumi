@@ -1,4 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import querystring from 'querystring';
+import { useState, useCallback, useEffect } from 'react';
+import { useLocation as useRouterLocation, useRouteMatch as useRouterMatch } from 'react-router-dom';
 import request from '../request';
 
 type Options = {
@@ -78,4 +80,12 @@ export const useRequest = <T>(url: string, options?: Options) => {
     loading,
     request: fetch
   };
+};
+
+export const useLocation = () => {
+  const location: any = useRouterLocation();
+  const match = useRouterMatch();
+  Object.assign(location, match);
+  location.query = querystring.parse(location.search.substr(1));
+  return location;
 };

@@ -165,6 +165,17 @@ const modelDb = {
       set(data) {
         return db.set(this.KEY, data).write();
       }
+    },
+
+    // 其他私有配置
+    private: {
+      KEY: 'userConfig.private',
+      get() {
+        return db.get(this.KEY).value();
+      },
+      set(data) {
+        return db.set(this.KEY, data).write();
+      }
     }
   }
 };

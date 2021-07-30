@@ -1,6 +1,7 @@
+const fs = require('fs');
 const fetch = require('../utils/fetch');
 const GitUrlParse = require('git-url-parse');
-const { getBlockListFromGit } = require('@oumi/block-sdk');
+const { getBlockListFromGit, downloadFileToLocal } = require('@oumi/block-sdk');
 
 /**
  * 资产控制器
@@ -50,14 +51,14 @@ const removeBlockItem = (ctx) => {
 };
 
 const getBlockListFormGit = async (ctx) => {
-  const { url } = ctx.request.body;
+  const { url, useBuiltJSON = true } = ctx.request.body;
 
   if (!url || typeof url !== 'string') {
     return ctx.returnError(`参数异常`);
   }
 
   try {
-    const data = await getBlockListFromGit(url, { useBuiltJSON: true });
+    const data = await getBlockListFromGit(url, { useBuiltJSON });
     if (data && data.list) {
       return ctx.returnSuccess(data.list);
     }
@@ -67,10 +68,39 @@ const getBlockListFormGit = async (ctx) => {
   }
 };
 
+const downloadFile = async (ctx) => {
+  const { destPath, url } = ctx.request.body;
+
+  if (!destPath || typeof destPath !== 'string') {
+    return ctx.returnError(`参数异常`);
+  }
+
+  if (!fs.existsSync(destPath)) {
+    return ctx.returnError(`必须是一个有效的目录`);
+  }
+
+  try {
+    const config = ctx.model.userConfig.private.get();
+    let token = '';
+    if (config && config.access_token) {
+      token = config.access_token;
+    }
+    const data = await downloadFileToLocal(url, destPath, { recursive: true, downloadSource: 'api', token });
+    return ctx.returnSuccess(data);
+  } catch (e) {
+    if (typeof e === 'string' && e.indexOf('API rate limit exceeded') > -1) {
+      return ctx.returnError({ msg: '因 github api 有下载次数限制，可配置 access_token 无限制下载！！！', code: 999 });
+    }
+    return ctx.returnError(e);
+  }
+};
+
 module.exports = {
   'POST /api/block/getList': getUserBlockList,
   'POST /api/block/pushItem': pushBlockItem,
   'POST /api/block/removeItem': removeBlockItem,
 
-  'POST /api/block/getListFormGit': getBlockListFormGit
+  'POST /api/block/getListFormGit': getBlockListFormGit,
+
+  'POST /api/block/downloadFile': downloadFile
 };

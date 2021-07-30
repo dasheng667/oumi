@@ -203,5 +203,5 @@ module.exports = {
 
   'POST /api/project/createDir': createProjectDir,
 
-  'POST /api/dashboard/get': getDashboardByProject
+  'POST /api/dashboard/init': getDashboardByProject
 };

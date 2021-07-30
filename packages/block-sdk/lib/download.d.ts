@@ -2,7 +2,11 @@ import type { DownloadOptions } from './git';
 /**
  * 下载git项目中的其中一个目录
  */
-export declare function downloadGitFolder(url: string, outputPath: string, options?: DownloadOptions): Promise<any>;
+export declare function downloadFileToLocal(
+  url: string,
+  outputPath: string,
+  options?: DownloadOptions
+): Promise<unknown>;
 /**
  * 从 url git 中下载到本地临时目录
  * @param url
