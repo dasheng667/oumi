@@ -10,17 +10,17 @@ const publishVersion = [
   {
     name: '@oumi/block-sdk',
     packagePath: path.resolve('./packages/block-sdk/package.json'),
-    version: '1.0.0-beta'
+    version: '1.0.3-beta'
   },
   {
     name: '@oumi/cli',
     packagePath: path.resolve('./packages/oumi-cli/package.json'),
-    version: '1.0.1-beta'
+    version: '1.1.0-beta'
   },
   {
     name: '@oumi/cli-ui',
     packagePath: path.resolve('./packages/oumi-cli-ui/package.json'),
-    version: '1.0.1-beta'
+    version: '1.1.0-beta'
   },
   {
     name: '@oumi/swagger-api',

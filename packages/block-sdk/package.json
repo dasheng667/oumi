@@ -1,6 +1,6 @@
 {
 	"name": "@oumi/block-sdk",
-	"version": "1.0.0-beta",
+	"version": "1.0.3-beta",
 	"description": "",
 	"author": "dasheng <345263463@qq.com> (http://www.yuque.com/qqhh)",
 	"license": "none",
@@ -27,6 +27,7 @@
 		"npm": ">= 4.0.0"
 	},
 	"dependencies": {
+		"@octokit/core": "^3.5.1",
 		"git-url-parse": "^11.5.0"
 	},
 	"devDependencies": {
