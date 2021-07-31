@@ -69,7 +69,7 @@ export default (props: Props) => {
       icon={false}
     >
       <Button size="small" type="primary" disabled={!selectNode} onClick={() => showPopconfirm(true)}>
-        新建目录
+        新建文件夹
       </Button>
     </Popconfirm>
   );

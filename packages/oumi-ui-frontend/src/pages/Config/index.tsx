@@ -13,7 +13,7 @@ const { TabPane } = Tabs;
 type IConfigData = {
   swagger: ListItem[];
   swaggerConfig: any;
-  block: ListItem[];
+  blocks: ListItem[];
   private: any;
 };
 
@@ -228,7 +228,7 @@ export default () => {
                 rowKey="id"
                 title={() => '资产列表'}
                 bordered
-                dataSource={data && data.block ? data.block : []}
+                dataSource={data && data.blocks ? data.blocks : []}
                 columns={columnsBlock}
                 pagination={false}
               />

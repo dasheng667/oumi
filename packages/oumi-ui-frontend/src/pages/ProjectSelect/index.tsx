@@ -213,7 +213,7 @@ export default () => {
 
   return (
     <section className="ui-container">
-      <div className="title">Aimi UI 项目管理器</div>
+      <div className="title">Oumi UI 项目管理器</div>
       <div className="ui-tabs">
         <Tabs defaultActiveKey="1" activeKey={activeKey} onChange={(key) => setActiveKey(key as any)}>
           <TabPane

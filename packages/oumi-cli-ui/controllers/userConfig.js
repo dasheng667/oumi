@@ -1,8 +1,9 @@
 const fetch = require('../utils/fetch');
 
 const getUserConfig = (ctx) => {
-  const data = ctx.model.userConfig.get();
-
+  const data = ctx.model.userConfig.get() || {};
+  const blocks = ctx.model.userBlocks.get() || [];
+  data.blocks = blocks;
   return ctx.returnSuccess(data);
 };
 

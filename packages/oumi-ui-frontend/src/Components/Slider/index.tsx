@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { Select } from 'antd';
-import { ShoppingOutlined, ApiOutlined, SettingOutlined, HomeFilled } from '@ant-design/icons';
+import { ShoppingOutlined, ApiOutlined, SettingOutlined, HomeFilled, MailOutlined } from '@ant-design/icons';
 import type { ListItem, IRouter } from '../../global';
 
 import './index.less';
@@ -68,6 +68,11 @@ export default (props: Props) => {
             </div>
           );
         })}
+      </div>
+      <div className="contact-me">
+        <a href="mailto:345263463@qq.com">
+          <MailOutlined /> 联系我
+        </a>
       </div>
     </div>
   );

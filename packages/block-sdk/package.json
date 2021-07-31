@@ -1,39 +1,39 @@
 {
-  "name": "@oumi/block-sdk",
-  "version": "0.0.1-beta",
-  "description": "",
-  "author": "dasheng <345263463@qq.com> (http://www.yuque.com/qqhh)",
-  "license": "none",
-  "main": "lib/index.js",
-  "files": [
-    "lib"
-  ],
-  "scripts": {
-    "start": "ts-node ./example/index.ts"
-  },
-  "keywords": [
-    "oumi",
-    "block",
-    "sdk"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dasheng91/oumi.git",
-    "directory": "packages/block-sdk"
-  },
-  "licenses": "(MIT OR Apache-2.0)",
-  "engines": {
-    "node": ">= 10.0.0",
-    "npm": ">= 4.0.0"
-  },
-  "dependencies": {
-    "git-url-parse": "^11.5.0"
-  },
-  "devDependencies": {
-    "@types/node": "^15.3.0",
-    "typescript": "^4.3.4"
-  },
-  "publishConfig": {
-    "access": "public"
-  }
+	"name": "@oumi/block-sdk",
+	"version": "1.0.0-beta",
+	"description": "",
+	"author": "dasheng <345263463@qq.com> (http://www.yuque.com/qqhh)",
+	"license": "none",
+	"main": "lib/index.js",
+	"files": [
+		"lib"
+	],
+	"scripts": {
+		"start": "ts-node ./example/index.ts"
+	},
+	"keywords": [
+		"oumi",
+		"block",
+		"sdk"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/dasheng91/oumi.git",
+		"directory": "packages/block-sdk"
+	},
+	"licenses": "(MIT OR Apache-2.0)",
+	"engines": {
+		"node": ">= 10.0.0",
+		"npm": ">= 4.0.0"
+	},
+	"dependencies": {
+		"git-url-parse": "^11.5.0"
+	},
+	"devDependencies": {
+		"@types/node": "^15.3.0",
+		"typescript": "^4.3.4"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
 }

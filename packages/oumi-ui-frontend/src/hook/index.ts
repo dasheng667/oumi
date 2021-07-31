@@ -1,3 +1,4 @@
+import axios from 'axios';
 import querystring from 'querystring';
 import { useState, useCallback, useEffect } from 'react';
 import { useLocation as useRouterLocation, useRouteMatch as useRouterMatch } from 'react-router-dom';
@@ -28,7 +29,7 @@ type Options2<T> = {
 export const useRequest = <T>(url: string, options?: Options) => {
   const { params, methods = 'post', lazy = false, errorMsg = true, onSuccess, onError } = options || {};
   const [flag, setFlag] = useState(lazy);
-
+  const [source] = useState(axios.CancelToken.source());
   const [error, setError] = useState(null);
   const [data, setData] = useState<T>(null as any);
   const [loading, setLoading] = useState(false);
@@ -37,7 +38,7 @@ export const useRequest = <T>(url: string, options?: Options) => {
     (urlParams?: any, options2?: Options2<T>) => {
       setLoading(true);
       return new Promise((resolve, reject) => {
-        request[methods](url, { ...params, ...urlParams }, { errorMsg } as any)
+        request[methods](url, { ...params, ...urlParams }, { errorMsg, cancelToken: source.token } as any)
           .then((res: any) => {
             setLoading(false);
             setData(res);
@@ -76,6 +77,7 @@ export const useRequest = <T>(url: string, options?: Options) => {
   return {
     error,
     data,
+    source,
     setData,
     loading,
     request: fetch

@@ -16,7 +16,7 @@ instance.interceptors.response.use(
     const { config, data }: any = response;
     const msg = data && data.msg ? data.msg : '系统繁忙~';
 
-    if (config && config.errorMsg === true) {
+    if (config && (config.errorMsg === undefined || config.errorMsg === true)) {
       message.destroy();
       message.error(msg);
     }

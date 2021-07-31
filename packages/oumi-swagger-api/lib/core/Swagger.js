@@ -37,6 +37,11 @@ const fetch_1 = __importDefault(require("../fetch"));
  * Swagger 拉取工具
  */
 class Swagger {
+    body;
+    responseData;
+    typescriptData;
+    queryList;
+    step;
     constructor(body) {
         if (typeof body === 'object') {
             this.body = body;
@@ -205,7 +210,7 @@ class Swagger {
             mockStr += mockjs_1.default(key, methods, response);
         });
         mockStr = [mockjs_1.mockExportHeaderTemp, mockStr, mockjs_1.mockExportFooterTemp].join('\n');
-        fs_1.writeFile(`${outputPath}/_mock.ts`, mockStr);
+        fs_1.writeFile(`${outputPath}/_mock.ts`, mockStr, { allowRepeat: false });
         if (typeof callback === 'function') {
             callback();
         }
@@ -277,7 +282,7 @@ class Swagger {
             }
         });
         if (outputFileType === 'merge' && mergeTemp && outputFileName) {
-            fs_1.writeFile(`${outputPath}/${outputFileName}`, `${requestLibPath} \n ${mergeTemp}`);
+            fs_1.writeFile(`${outputPath}/${outputFileName}`, `${requestLibPath} \n ${mergeTemp}`, { allowRepeat: false });
         }
         return this;
     }

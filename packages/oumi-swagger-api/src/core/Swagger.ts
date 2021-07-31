@@ -217,7 +217,7 @@ export default class Swagger {
 
     mockStr = [mockExportHeaderTemp, mockStr, mockExportFooterTemp].join('\n');
 
-    writeFile(`${outputPath}/_mock.ts`, mockStr);
+    writeFile(`${outputPath}/_mock.ts`, mockStr, { allowRepeat: false });
 
     if (typeof callback === 'function') {
       callback();
@@ -307,7 +307,7 @@ export default class Swagger {
     });
 
     if (outputFileType === 'merge' && mergeTemp && outputFileName) {
-      writeFile(`${outputPath}/${outputFileName}`, `${requestLibPath} \n ${mergeTemp}`);
+      writeFile(`${outputPath}/${outputFileName}`, `${requestLibPath} \n ${mergeTemp}`, { allowRepeat: false });
     }
 
     return this;

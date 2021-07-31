@@ -28,7 +28,11 @@ export default (props: Props) => {
   const history = useHistory();
   const isCurrentPath = history.location.pathname === '/dashboard';
 
-  const { data, error, request: requestGet } = useRequest<ListItem>('/api/dashboard/init', { errorMsg: false });
+  const {
+    data,
+    error: errorInit,
+    request: requestGet
+  } = useRequest<ListItem>('/api/dashboard/init', { errorMsg: false });
   const { data: blockList = [], request: requestBlockList } = useRequest<ListItem[]>('/api/block/getList', {
     lazy: true
   });
@@ -44,16 +48,16 @@ export default (props: Props) => {
   }, [history, history.location]);
 
   useEffect(() => {
-    if (error) {
+    if (errorInit) {
       history.replace(projectListPath);
     }
-  }, [error]);
+  }, [errorInit]);
 
   const addToProject = (block: IBlocks) => {
     setModalData(block);
   };
 
-  if (error) {
+  if (errorInit) {
     return (
       <div style={{ padding: 50 }}>
         <Link to={projectListPath}>选择项目</Link>

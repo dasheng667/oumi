@@ -74,7 +74,7 @@ const eachMockTemp = function (data) {
     deep(data, resultData);
     return resultData;
 };
-exports.buildMockStr = function (data) {
+const buildMockStr = function (data) {
     if (utils_1.dataType.includes(data.type)) {
         return data.type === 'boolean' ? true : '1';
     }
@@ -111,6 +111,7 @@ exports.buildMockStr = function (data) {
     }
     return `{ \n ${deep(data, 0)} } \n `;
 };
+exports.buildMockStr = buildMockStr;
 function mockTemp(apiPath, methods, response) {
     const funName = utils_1.transformPath(apiPath).key;
     // const mockContent = eachMockTemp(response && response.code && response.data ? response.data : response);

@@ -10,7 +10,7 @@ const { getBlockListFromGit, downloadFileToLocal } = require('@oumi/block-sdk');
  */
 
 const getUserBlockList = (ctx) => {
-  const data = ctx.model.userConfig.block.get();
+  const data = ctx.model.userBlocks.get();
   return ctx.returnSuccess(data || []);
 };
 
@@ -35,7 +35,7 @@ const pushBlockItem = (ctx) => {
     return ctx.returnError(`资产链接必须是json后缀`);
   }
 
-  const data = ctx.model.userConfig.block.add({ name, href });
+  const data = ctx.model.userBlocks.add({ name, href });
   return ctx.returnSuccess(data);
 };
 
@@ -46,7 +46,7 @@ const removeBlockItem = (ctx) => {
     return ctx.returnError(`参数异常`);
   }
 
-  const res = ctx.model.userConfig.block.remove(id);
+  const res = ctx.model.userBlocks.remove(id);
   return ctx.returnSuccess(res);
 };
 

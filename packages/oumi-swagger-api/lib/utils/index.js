@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.log = exports.transformPath = exports.stringCase = exports.isObject = exports.findResponseRef = exports.verifyNodeIsDeclarationType = exports.dataType = exports.validataQuery = void 0;
 const chalk_1 = __importDefault(require("chalk"));
-exports.validataQuery = function (requestData, requestPath, options) {
+const validataQuery = function (requestData, requestPath, options) {
     const { tags, description } = requestData;
     const { keyword, tag, path } = options;
     if (keyword) {
@@ -31,6 +31,7 @@ exports.validataQuery = function (requestData, requestPath, options) {
     }
     return true;
 };
+exports.validataQuery = validataQuery;
 exports.dataType = ['string', 'number', 'array', 'object', 'integer', 'boolean', 'int32', 'int64', 'ref'];
 /**
  * 校验节点是不是声明类型，声明数据必有type

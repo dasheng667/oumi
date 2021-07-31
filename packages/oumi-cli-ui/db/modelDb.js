@@ -7,7 +7,13 @@ const utils = require('../utils');
 const adapter = new FileSync(path.resolve(__dirname, './locals.json'));
 const db = low(adapter);
 
-// swagger有默认的数据
+// DB默认数据
+const defaultBlock = {
+  id: '1',
+  name: 'pro-blocks',
+  href: 'https://github.com/ant-design/pro-blocks/blob/master/umi-block.json',
+  default: true
+};
 const defaultData = {
   userConfig: {
     swaggerConfig: {
@@ -17,16 +23,9 @@ const defaultData = {
       api_fileType: 'ts',
       outputFileType: 'merge',
       outputFileName: 'serve.ts'
-    },
-    block: [
-      {
-        id: '1',
-        name: 'pro-blocks',
-        href: 'https://github.com/ant-design/pro-blocks/blob/master/umi-block.json',
-        default: true
-      }
-    ]
-  }
+    }
+  },
+  userBlocks: [defaultBlock]
 };
 
 db.defaults(defaultData).write();
@@ -93,41 +92,9 @@ const modelDb = {
     get() {
       return db.get(this.KEY).value();
     },
-
     // 用户的swagger列表
     swagger: {
       KEY: 'userConfig.swagger',
-      get() {
-        return db.get(this.KEY).value();
-      },
-      add(data) {
-        if (!this.get()) {
-          db.set(this.KEY, []).write();
-        }
-        if (!data.id) {
-          data.id = utils.createId();
-        }
-        return db.get(this.KEY).push(data).write();
-      },
-      remove(id) {
-        if (id) {
-          return db
-            .get(this.KEY)
-            .remove((item) => {
-              return item.id === id;
-            })
-            .write();
-        }
-        return null;
-      },
-      findById(id) {
-        return db.get(this.KEY).find({ id }).value();
-      }
-    },
-
-    // 资产列表
-    block: {
-      KEY: 'userConfig.block',
       get() {
         return db.get(this.KEY).value();
       },
@@ -176,6 +143,37 @@ const modelDb = {
       set(data) {
         return db.set(this.KEY, data).write();
       }
+    }
+  },
+
+  // 资产列表
+  userBlocks: {
+    KEY: 'userBlocks',
+    get() {
+      return db.get(this.KEY).value();
+    },
+    add(data) {
+      if (!this.get()) {
+        db.set(this.KEY, []).write();
+      }
+      if (!data.id) {
+        data.id = utils.createId();
+      }
+      return db.get(this.KEY).push(data).write();
+    },
+    remove(id) {
+      if (id) {
+        return db
+          .get(this.KEY)
+          .remove((item) => {
+            return item.id === id;
+          })
+          .write();
+      }
+      return null;
+    },
+    findById(id) {
+      return db.get(this.KEY).find({ id }).value();
     }
   }
 };

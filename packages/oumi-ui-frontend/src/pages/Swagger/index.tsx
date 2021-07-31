@@ -35,16 +35,15 @@ const NoSwagger = () => {
 export default () => {
   const [tabsId, setTabsId] = useState('');
   const { data, error, loading: loadingGet } = useRequest<any[]>('/api/config/swagger/get');
+
   const {
     data: swaggerData,
     loading: loadingSwagger,
-    request: requestSwagger
+    request: requestSwagger,
+    source
   } = useRequest<any>('/api/swagger/info', { lazy: true });
-  const {
-    data: swaggerSearchData,
-    loading: loadingSearch,
-    request: requestSearchSwagger
-  } = useRequest<any>('/api/swagger/search', { lazy: true });
+
+  const { request: requestSearchSwagger } = useRequest<any>('/api/swagger/search', { lazy: true });
 
   const [swaggerList, setSwaggerList] = useState<{ name: string; description: string; id: string }[]>([]);
   const [expandData, setExpandData] = useState<Record<string, any>>({});
@@ -68,6 +67,9 @@ export default () => {
     if (tabsId) {
       requestSwagger({ id: tabsId });
     }
+    return () => {
+      source.cancel();
+    };
   }, [tabsId]);
 
   const onTabClick = (key: string) => {

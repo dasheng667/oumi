@@ -29,18 +29,18 @@ export default ({ data }: { data: any }) => {
           <p>
             因github的下载文件api有次数限制，可配置access_token无限制下载。 <br />
             <a href="https://api.github.com/users/octocat" target="_blank">
-              查询是否限制
+              【查询是否限制】
             </a>{' '}
             &nbsp;&nbsp;&nbsp;
             <a
               href={`https://api.github.com/rate_limit?access_token=${token || (data && data.access_token) || ''}`}
               target="_blank"
             >
-              查看我的次数
+              【查看我的次数】
             </a>{' '}
             &nbsp;&nbsp;&nbsp;
             <a href="https://www.yuque.com/qqhh/cuq2ci/hzv2kt" target="_blank">
-              如何配置token
+              【如何配置token】
             </a>
           </p>
         </div>

@@ -1,3 +1,4 @@
+import path from 'path';
 import fs from 'fs-extra';
 import { log } from './index';
 
@@ -28,8 +29,28 @@ export function writeJSON(filePath: string, data, callback?: (err, data) => void
   });
 }
 
-export function writeFile(filePath: string, content: string) {
+export function writeFile(filePath: string, content: string, options?: { allowRepeat: boolean }) {
+  const { allowRepeat = true } = options || {};
   fs.createFileSync(filePath);
-  fs.writeFile(filePath, content, null, () => {});
-  log.green(`writeFile: ${filePath}`);
+  // 不允许文件重复
+  if (!allowRepeat && fs.existsSync(filePath)) {
+    // eslint-disable-next-line no-inner-declarations
+    function testFile(filePath1: string, count: number) {
+      const basename = path.basename(filePath1);
+      const [name, ext] = basename.split('.');
+      const newname = `${name}_${count}.${ext}`;
+      const newPath = filePath1.replace(basename, newname);
+
+      if (!fs.existsSync(newPath)) {
+        fs.writeFile(newPath, content, null, () => {});
+        log.green(`writeFile: ${newPath}`);
+      } else {
+        testFile(filePath1, count + 1);
+      }
+    }
+    testFile(filePath, 1);
+  } else {
+    fs.writeFile(filePath, content, null, () => {});
+    log.green(`writeFile: ${filePath}`);
+  }
 }

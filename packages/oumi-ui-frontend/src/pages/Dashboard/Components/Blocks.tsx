@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Spin, Tabs } from 'antd';
 import type { ListItem, Blocks } from '../../../global';
 import { useRequest } from '../../../hook';
-import blocksJSON from './blocks.json';
 
 const { TabPane } = Tabs;
 
@@ -18,15 +17,24 @@ export default (props: Props) => {
   const {
     data,
     loading,
+    error,
     request: requestBlocks,
+    source,
     setData
   } = useRequest<Blocks[]>('/api/block/getListFormGit', { lazy: true });
 
-  useEffect(() => {
+  const runRequestBlocks = () => {
     if (item && item.href) {
       // setData(blocksJSON.list as any);
       requestBlocks({ url: item.href, useBuiltJSON: true });
     }
+  };
+
+  useEffect(() => {
+    runRequestBlocks();
+    return () => {
+      source.cancel();
+    };
   }, []);
 
   useEffect(() => {
@@ -47,7 +55,19 @@ export default (props: Props) => {
   }, [data]);
 
   if (loading) {
-    return <Spin />;
+    return (
+      <div className="loading-blocks">
+        <Spin />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="error-blocks">
+        请求失败，<a>https://raw.githubusercontent.com</a>域名有波动，<a onClick={runRequestBlocks}>稍后重试</a>。
+      </div>
+    );
   }
 
   return (

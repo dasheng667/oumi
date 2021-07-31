@@ -1,54 +1,55 @@
 {
-  "name": "@oumi/swagger-api",
-  "version": "0.0.5-beta",
-  "description": "远程拉取swagger内容，生成json模拟数据、typescript文件",
-  "author": "dasheng <345263463@qq.com> (http://www.yuque.com/qqhh)",
-  "license": "none",
-  "main": "lib/index.js",
-  "files": [
-    "lib",
-    "typings"
-  ],
-  "scripts": {
-    "start": "ts-node ./example/index.ts"
-  },
-  "keywords": [
-    "oumi",
-    "swagger"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dasheng91/oumi.git"
-  },
-  "licenses": "(MIT OR Apache-2.0)",
-  "engines": {
-    "node": ">= 10.0.0",
-    "npm": ">= 4.0.0"
-  },
-  "dependencies": {
-    "chalk": "^4.1.1",
-    "request": "^2.88.2",
-    "fs-extra": "^10.0.0"
-  },
-  "devDependencies": {
-    "@types/jest": "^26.0.23",
-    "@types/node": "^15.3.0",
-    "jest": "^27.0.6",
-    "ts-jest": "^27.0.3",
-    "typescript": "^4.3.4"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "transform": {
-      "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
-    },
-    "testRegex": "/__tests__/.*\\.(ts|tsx|js)$"
-  },
-  "publishConfig": {
-    "access": "public"
-  }
+	"name": "@oumi/swagger-api",
+	"version": "1.0.0-beta",
+	"description": "远程拉取swagger内容，生成json模拟数据、typescript文件",
+	"author": "dasheng <345263463@qq.com> (http://www.yuque.com/qqhh)",
+	"license": "none",
+	"main": "lib/index.js",
+	"files": [
+		"lib",
+		"typings"
+	],
+	"scripts": {
+		"tsc": "tsc",
+		"start": "ts-node ./example/index.ts"
+	},
+	"keywords": [
+		"oumi",
+		"swagger"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/dasheng91/oumi.git"
+	},
+	"licenses": "(MIT OR Apache-2.0)",
+	"engines": {
+		"node": ">= 10.0.0",
+		"npm": ">= 4.0.0"
+	},
+	"dependencies": {
+		"chalk": "^4.1.1",
+		"request": "^2.88.2",
+		"fs-extra": "^10.0.0"
+	},
+	"devDependencies": {
+		"@types/jest": "^26.0.23",
+		"@types/node": "^15.3.0",
+		"jest": "^27.0.6",
+		"ts-jest": "^27.0.3",
+		"typescript": "^4.3.4"
+	},
+	"jest": {
+		"moduleFileExtensions": [
+			"ts",
+			"tsx",
+			"js"
+		],
+		"transform": {
+			"\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+		},
+		"testRegex": "/__tests__/.*\\.(ts|tsx|js)$"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
 }

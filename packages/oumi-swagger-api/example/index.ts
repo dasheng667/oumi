@@ -27,6 +27,7 @@ swagger
     outputPath: path.resolve('./example/build/api'),
     fileType: 'ts',
     requestLibPath: "import request from '@/api/request'; ",
+    outputFileType: 'merge',
     filterPathPrefix: 'api'
   })
   .buildMockJS({
