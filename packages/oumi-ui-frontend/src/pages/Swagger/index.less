@@ -13,6 +13,13 @@
 
   .tabs-content{
     position: relative;
+    .selected{
+      .span{
+        font-weight: 700;
+        padding: 0 3px;
+        color: rgb(255, 89, 89);
+      }
+    }
   }
 
   .body-flex{
@@ -158,5 +165,24 @@
 .my-popconfirm-form{
   .ant-form-item{
     margin-bottom: 0;
+  }
+}
+
+.popover-selected{
+  max-height: 360px;
+  overflow: hidden;
+  overflow-y: auto;
+  p{
+    display: flex;
+    justify-content: space-between;
+    padding-right: 5px;
+    border-bottom: 1px dashed #ccc;
+    line-height: 28px;
+    > span{
+      cursor: pointer;
+    }
+    &:hover{
+      background: rgba(0, 0, 0, .06);
+    }
   }
 }

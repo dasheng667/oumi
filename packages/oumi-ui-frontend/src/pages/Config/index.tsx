@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Tabs, Form, Input, Button, Table, Switch, Radio, Row, Col, message } from 'antd';
+import { Tabs, Form, Input, Button, Table, Space, Row, Col, message } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { useRequest, useLocation } from '../../hook';
 import type { ListItem } from '../../global';
@@ -202,24 +202,24 @@ export default () => {
 
           <TabPane tab="资产配置" key="2">
             <h3>资产列表</h3>
-            <p></p>
             <Form name="form_block" form={formBlock} layout="inline" onFinish={onFinishBlock}>
               <Form.Item name="name" label="名称" rules={[{ required: true, message: '请输入资产名称' }]}>
                 <Input />
               </Form.Item>
 
-              <Form.Item
-                name="href"
-                label="Github资产路径"
-                rules={[{ required: true, message: '请输入一个正确的资产路径' }]}
-              >
+              <Form.Item name="href" label="资产路径" rules={[{ required: true, message: '请输入一个正确的资产路径' }]}>
                 <Input />
               </Form.Item>
 
               <Form.Item>
-                <Button type="primary" htmlType="submit" loading={loadingAddBlock}>
-                  新增
-                </Button>
+                <Space>
+                  <Button type="primary" htmlType="submit" loading={loadingAddBlock}>
+                    新增
+                  </Button>
+                  <a href="https://www.yuque.com/qqhh/cuq2ci/vpg4rw/edit" target="_blank">
+                    如何配置？
+                  </a>
+                </Space>
               </Form.Item>
             </Form>
 

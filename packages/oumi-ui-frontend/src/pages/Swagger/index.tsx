@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Tabs, Spin, message } from 'antd';
+import { CloseCircleOutlined } from '@ant-design/icons';
+import { Tabs, Spin, message, Popover } from 'antd';
 import { useRequest } from '../../hook';
 import { createId } from './utils';
 import Search from './Components/Search';
@@ -71,6 +72,7 @@ export default () => {
 
   useEffect(() => {
     if (tabsId) {
+      setSelectId([]);
       requestSwagger({ id: tabsId });
     }
   }, [tabsId]);
@@ -127,7 +129,7 @@ export default () => {
       setSwaggerList([{ name, description: '', id }]);
       setExpandCache([id]);
       setLoadingId(id);
-      setSelectId([]);
+      // setSelectId([]);
 
       const reg = /[\u4e00-\u9fa5]+/g;
       const query =
@@ -168,6 +170,29 @@ export default () => {
     return <NoSwagger />;
   }
 
+  const clearSelectId = (path?: string) => {
+    if (path) {
+      setSelectId(selectId.filter((p) => p !== path));
+    } else {
+      setSelectId([]);
+    }
+  };
+
+  const content = (
+    <div className="popover-selected">
+      <a onClick={() => clearSelectId()}>清空所有</a>
+      {selectId &&
+        selectId.map((path) => (
+          <p key={path}>
+            {path}{' '}
+            <span onClick={() => clearSelectId(path)} title="清除">
+              <CloseCircleOutlined />
+            </span>
+          </p>
+        ))}
+    </div>
+  );
+
   return (
     <Container>
       <Tabs type="card" defaultActiveKey={tabsId} onTabClick={onTabClick}>
@@ -181,9 +206,13 @@ export default () => {
           </div>
         )}
 
-        <div className="flex align-items">
+        <div className="selected flex align-items">
           <Search onFinish={onFinish} />
-          <div className="plp2">已选中{selectId.length}个</div>
+          <Popover content={content} title="已选中" placement="bottom">
+            <div className="plp2">
+              已选中<span className="span">{selectId.length}</span>个
+            </div>
+          </Popover>
         </div>
 
         <div className="body-flex">
