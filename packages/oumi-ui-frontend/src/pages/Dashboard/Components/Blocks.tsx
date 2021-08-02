@@ -10,10 +10,30 @@ type Props = {
   addToProject: (block: Blocks) => void;
 };
 
+const BLOCKS_KEY = 'OUMI_BLOCKS';
+
+function getSessionBlocks() {
+  const blocks = sessionStorage.getItem(BLOCKS_KEY);
+  if (blocks) {
+    return JSON.parse(blocks);
+  }
+  return null;
+}
+
+function pushSessionBlocks(data: object) {
+  const newData = { ...data };
+  const blocks = getSessionBlocks();
+  if (blocks) {
+    Object.assign(newData, blocks);
+  }
+  return sessionStorage.setItem(BLOCKS_KEY, JSON.stringify(newData));
+}
+
 export default (props: Props) => {
   const { item, addToProject } = props;
 
   const [blockData, setBlockData] = useState<Record<string, Blocks[]>>({});
+
   const {
     data,
     loading,
@@ -23,15 +43,22 @@ export default (props: Props) => {
     setData
   } = useRequest<Blocks[]>('/api/block/getListFormGit', { lazy: true });
 
-  const runRequestBlocks = () => {
+  const runGetBlocks = () => {
     if (item && item.href) {
-      // setData(blocksJSON.list as any);
+      const blocks = getSessionBlocks();
+      if (blocks) {
+        const block = blocks[item.href];
+        if (block) {
+          setData(block as any);
+          return;
+        }
+      }
       requestBlocks({ url: item.href, useBuiltJSON: true });
     }
   };
 
   useEffect(() => {
-    runRequestBlocks();
+    runGetBlocks();
     return () => {
       source.cancel();
     };
@@ -50,7 +77,9 @@ export default (props: Props) => {
         }
       });
     });
-    // console.log('blocks', blocks);
+    if (item.href) {
+      pushSessionBlocks({ [item.href]: data });
+    }
     setBlockData(blocks);
   }, [data]);
 
@@ -65,7 +94,7 @@ export default (props: Props) => {
   if (error) {
     return (
       <div className="error-blocks">
-        请求失败，<a>https://raw.githubusercontent.com</a>域名有波动，<a onClick={runRequestBlocks}>稍后重试</a>。
+        请求失败，<a>https://raw.githubusercontent.com</a>域名有波动，<a onClick={runGetBlocks}>稍后重试</a>。
       </div>
     );
   }

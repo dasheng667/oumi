@@ -71,7 +71,7 @@ export default (props: Props) => {
       </div>
       <div className="contact-me">
         <a href="mailto:345263463@qq.com">
-          <MailOutlined /> 联系我
+          <MailOutlined /> 向我反馈
         </a>
       </div>
     </div>

@@ -108,8 +108,8 @@
     .current-path{
       flex: 100% 1 1;
       display: flex;
-      border-radius: 3px;
       background: @primary;
+      position: relative;
       .path-part{
         padding: 0 10px;
         border-radius: 2px;
@@ -120,6 +120,20 @@
           background: #b5d5f5;
         }
       }
+      .edit-path{
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 3;
+      }
+    }
+    .edit{
+      width: 40px;
+      flex: 0 0 auto;
+      background: @primary;
+      cursor: pointer;
     }
   }
 

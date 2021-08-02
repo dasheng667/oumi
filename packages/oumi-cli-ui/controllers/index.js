@@ -193,6 +193,26 @@ const createProjectDir = async (ctx) => {
   return ctx.returnSuccess('success');
 };
 
+/**
+ * 直接跳转到某个目录
+ * @param {*} ctx
+ */
+const verifyDirs = async (ctx) => {
+  const { targetPath } = ctx.request.body;
+
+  if (!targetPath || !Array.isArray(targetPath)) {
+    return ctx.returnError(`参数异常`);
+  }
+
+  const strTargetPath = targetPath.join(path.sep);
+
+  if (!fs.existsSync(strTargetPath)) {
+    return ctx.returnError('目录不存在');
+  }
+
+  return ctx.returnSuccess('success');
+};
+
 module.exports = {
   'GET /api/hello/:name': fn_hello,
   'POST /api/user/folder': getUserFolder,
@@ -201,6 +221,7 @@ module.exports = {
   'POST /api/project/dashboard': setProjectDashboard,
   'POST /api/project/import': importToProject,
 
+  'POST /api/project/verifyDirs': verifyDirs,
   'POST /api/project/createDir': createProjectDir,
 
   'POST /api/dashboard/init': getDashboardByProject

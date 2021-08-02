@@ -2,7 +2,7 @@ export type ListItem = {
   path: string;
   name: string;
   id: string;
-  href?: boolean;
+  href?: string;
   default?: boolean;
 };
 

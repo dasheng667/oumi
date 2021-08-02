@@ -52,6 +52,12 @@ export default () => {
   const [selectId, setSelectId] = useState<string[]>([]); // 已选中的api
 
   useEffect(() => {
+    return () => {
+      source.cancel();
+    };
+  }, []);
+
+  useEffect(() => {
     if (data && data.length > 0) {
       setTabsId(data[0].id);
     }
@@ -67,9 +73,6 @@ export default () => {
     if (tabsId) {
       requestSwagger({ id: tabsId });
     }
-    return () => {
-      source.cancel();
-    };
   }, [tabsId]);
 
   const onTabClick = (key: string) => {

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Tabs, Spin } from 'antd';
+import { Tabs, Spin, Input } from 'antd';
 import {
   UnorderedListOutlined,
   CodeOutlined,
@@ -11,7 +11,9 @@ import {
   FolderOutlined,
   FolderOpenOutlined,
   FileOutlined,
-  LoadingOutlined
+  EditOutlined,
+  LoadingOutlined,
+  RightCircleOutlined
 } from '@ant-design/icons';
 import request from '../../request';
 import { useRequest } from '../../hook';
@@ -30,6 +32,11 @@ type ProjectData = {
   files: string;
 };
 
+/**
+ * 项目列表
+ * @param param0
+ * @returns
+ */
 const Project = ({
   projectList = [],
   removeProject,
@@ -79,6 +86,11 @@ const Project = ({
   );
 };
 
+/**
+ * 导入项目
+ * @param param0
+ * @returns
+ */
 const ImportProject = ({
   projectData,
   requestImportToProject,
@@ -88,7 +100,11 @@ const ImportProject = ({
   requestImportToProject: (data: any) => void;
   requestFiles: (data: any) => void;
 }) => {
+  const input = useRef(null);
+  const [isEdit, setISEdit] = useState(false);
   const { currentPath = [], isPackage = false, files = [] } = projectData || {};
+
+  const { request: requestVerifyDirs, loading } = useRequest('/api/project/verifyDirs', { lazy: true });
 
   const onClickPath = (path: string, index: number) => {
     if (index === currentPath.length - 1 || !path) return;
@@ -115,6 +131,27 @@ const ImportProject = ({
     }
   };
 
+  const onPressEnter = (e: any) => {
+    const arrPath = e.target.value.split('/');
+    requestVerifyDirs({ targetPath: arrPath })
+      .then(() => {
+        setISEdit(false);
+        requestFiles({ rootPathArr: arrPath });
+      })
+      .catch(() => {
+        setISEdit(false);
+      });
+  };
+
+  const onEnterJump = () => {
+    const $input = document.getElementById('search-input') as any;
+    if ($input && $input.value) {
+      const { value } = $input;
+      onPressEnter({ target: { value } });
+    }
+    setISEdit(!isEdit);
+  };
+
   return (
     <div className="project-import container-center tabs-content-auto">
       <div className="toolbar">
@@ -127,6 +164,15 @@ const ImportProject = ({
               {path}
             </div>
           ))}
+          {isEdit && (
+            <div className="edit-path">
+              <Input id="search-input" defaultValue={currentPath.join('/')} onPressEnter={onPressEnter} />
+            </div>
+          )}
+        </div>
+        <div className="edit flex-center" onClick={onEnterJump}>
+          {!isEdit && <EditOutlined />}
+          {isEdit && <RightCircleOutlined />}
         </div>
       </div>
       <div className="folders">

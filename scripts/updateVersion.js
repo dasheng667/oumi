@@ -15,12 +15,12 @@ const publishVersion = [
   {
     name: '@oumi/cli',
     packagePath: path.resolve('./packages/oumi-cli/package.json'),
-    version: '1.1.0-beta'
+    version: '1.2.0-beta'
   },
   {
     name: '@oumi/cli-ui',
     packagePath: path.resolve('./packages/oumi-cli-ui/package.json'),
-    version: '1.1.0-beta'
+    version: '1.2.0-beta'
   },
   {
     name: '@oumi/swagger-api',
@@ -36,10 +36,12 @@ function writeJSON(filePath, data) {
 publishVersion.forEach((item) => {
   const { packagePath, name, version } = item;
   const pkgJson = require(packagePath);
+  let flags = false;
 
   // 更新版本号
   if (pkgJson.version !== version) {
     pkgJson.version = version;
+    flags = true;
   }
 
   // 更新依赖
@@ -54,10 +56,13 @@ publishVersion.forEach((item) => {
       }
       const find = publishVersion.find((p) => p.name === depName);
       if (find && depVersion !== find.version) {
+        flags = true;
         pkgJson.dependencies[depName] = `${prefix}${find.version}`;
       }
     });
   }
 
-  writeJSON(packagePath, pkgJson);
+  if (flags) {
+    writeJSON(packagePath, pkgJson);
+  }
 });
