@@ -216,7 +216,7 @@ export default () => {
                   <Button type="primary" htmlType="submit" loading={loadingAddBlock}>
                     新增
                   </Button>
-                  <a href="https://www.yuque.com/qqhh/cuq2ci/vpg4rw/edit" target="_blank">
+                  <a href="https://www.yuque.com/qqhh/cuq2ci/vpg4rw" target="_blank">
                     如何配置？
                   </a>
                 </Space>

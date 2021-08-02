@@ -67,7 +67,7 @@ const Project = ({
                 </div>
                 <div className="content-left" onClick={() => goDashboard({ id: item.id })}>
                   <div className="name">{item.name}</div>
-                  <div className="path">{item.name}</div>
+                  <div className="path">{item.path}</div>
                 </div>
                 <div className="content-right">
                   <span className="open" onClick={() => onClickOpen(item)}>
