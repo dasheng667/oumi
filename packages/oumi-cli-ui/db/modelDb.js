@@ -19,6 +19,7 @@ const defaultData = {
     swaggerConfig: {
       json_checked: false,
       mock_checked: true,
+      mock_fileType: 'js',
       requestLibPath: "import request from '@/api/request';",
       api_fileType: 'ts',
       outputFileType: 'merge',

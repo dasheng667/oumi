@@ -31,7 +31,6 @@ export function writeJSON(filePath: string, data, callback?: (err, data) => void
 
 export function writeFile(filePath: string, content: string, options?: { allowRepeat: boolean }) {
   const { allowRepeat = true } = options || {};
-  fs.createFileSync(filePath);
   // 不允许文件重复
   if (!allowRepeat && fs.existsSync(filePath)) {
     // eslint-disable-next-line no-inner-declarations
@@ -42,6 +41,7 @@ export function writeFile(filePath: string, content: string, options?: { allowRe
       const newPath = filePath1.replace(basename, newname);
 
       if (!fs.existsSync(newPath)) {
+        fs.createFileSync(filePath);
         fs.writeFile(newPath, content, null, () => {});
         log.green(`writeFile: ${newPath}`);
       } else {
@@ -50,6 +50,7 @@ export function writeFile(filePath: string, content: string, options?: { allowRe
     }
     testFile(filePath, 1);
   } else {
+    fs.createFileSync(filePath);
     fs.writeFile(filePath, content, null, () => {});
     log.green(`writeFile: ${filePath}`);
   }

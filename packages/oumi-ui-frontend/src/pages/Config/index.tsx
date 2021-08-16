@@ -76,15 +76,18 @@ export default () => {
     {
       title: '名称',
       dataIndex: 'name',
-      key: 'name'
+      key: 'name',
+      width: 100
     },
     {
       title: '链接',
       dataIndex: 'href',
-      key: 'href'
+      key: 'href',
+      width: 200
     },
     {
       title: '操作',
+      width: 70,
       render: (text: string, item: ListItem) => {
         return (
           <a onClick={() => removeSwagger(item)} key={item.id}>
@@ -156,15 +159,15 @@ export default () => {
       </div>
 
       <div className="ui-config-container ui-content-container">
-        <Tabs type="card" activeKey={currentTag} onChange={(key) => setCurrentTag(key)}>
+        <Tabs className="tabs-oumi" type="card" activeKey={currentTag} onChange={(key) => setCurrentTag(key)}>
           <TabPane tab="Swagger" key="1">
             <Row>
-              <Col span={12}>
+              <Col span={11}>
                 <h3>Swagger配置</h3>
                 <SwaggerConfig formConfig={formConfig} onFinish={onFinishConfig} configLoading={configLoading} />
               </Col>
 
-              <Col span={12}>
+              <Col span={13}>
                 <h3>Swagger列表</h3>
                 <Form name="form_add" form={formAdd} layout="inline" onFinish={onFinish}>
                   <Form.Item name="name" label="名称" rules={[{ required: true, message: '请输入Swagger名称' }]}>

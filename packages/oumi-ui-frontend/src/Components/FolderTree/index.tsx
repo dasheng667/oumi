@@ -91,7 +91,7 @@ export default (props: Props) => {
   };
 
   return (
-    <div className="dirs">
+    <div className="dirs" style={{ maxHeight: 450, overflow: 'hidden', overflowY: 'auto' }}>
       <div className="dirs-box">
         <Popconfirm
           selectNode={selectNode}

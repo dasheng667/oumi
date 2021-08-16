@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import { ShoppingOutlined } from '@ant-design/icons';
-import { Tabs, Spin, Modal } from 'antd';
+import { Tabs } from 'antd';
 import Slider from '../../Components/Slider';
 import { useRequest } from '../../hook';
 import type { ListItem, IRouter, Blocks as IBlocks } from '../../global';

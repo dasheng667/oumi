@@ -29,6 +29,9 @@ h1, h2, h3, h4, h5, p{
 .plp2{
   padding-left: 20px;
 }
+.mbm5{
+  margin-bottom: 5px;
+}
 
 .rel{
   position: relative;
@@ -67,4 +70,12 @@ h1, h2, h3, h4, h5, p{
   border-radius: 0;
   background: rgba(240, 240, 240, 0.5);
   cursor: pointer;
+}
+
+
+.tabs-oumi .ant-tabs-tab-active{
+  background: #1890ff!important;
+}
+.tabs-oumi .ant-tabs-tab-active .ant-tabs-tab-btn{
+  color: #fff;
 }

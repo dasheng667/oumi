@@ -104,6 +104,7 @@
           font-size: 14px;
           line-height: 30px;
           border-radius: 2px;
+          cursor: pointer;
 
           .checkbox{
             margin-right: 10px;
@@ -140,7 +141,7 @@
               // border: 1px solid #c3d9ec;
               color: #fff;
             }
-            .path, .desc{
+            .path, .desc, .bg{
               background-color: #e7f0f7;
             }
           }
@@ -150,9 +151,35 @@
               background-color: #10a54a;
               color: #fff;
             }
-            .path, .desc{
+            .path, .desc, .bg{
               background-color: #e7f6ec;
               // border: 1px solid #c3e8d1;
+            }
+          }
+
+          &.delete{
+            .methods{
+              background-color:#a41e22;
+              color: #fff;
+            }
+            .path, .desc, .bg{
+              background-color: #f5e8e8;
+            }
+          }
+
+          &.put{
+            .methods{
+              background-color:#c5862b;
+              color: #fff;
+            }
+            .path, .desc, .bg{
+              background-color: #f9f2e9;
+            }
+          }
+
+          &:hover{
+            .path, .desc{
+              text-decoration: underline;
             }
           }
 

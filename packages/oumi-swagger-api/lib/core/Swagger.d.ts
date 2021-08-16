@@ -1,4 +1,4 @@
-import type { Query, QueryListItem, InterfaceTempCallback, ResponseCallback, BuildMockOption, BuildApiOption } from '../../typings/swagger';
+import type { Query, QueryListItem, InterfaceTempCallback, ResponseCallback, BuildMockOption, BuildApiOption, MockBuildAOption } from '../../typings/swagger';
 /**
  * Swagger 拉取工具
  */
@@ -37,7 +37,7 @@ export default class Swagger {
      * @options outputPath 输出路径
      * @returns
      */
-    buildMockJS(options: any, callback?: () => void): this;
+    buildMockJS(options: MockBuildAOption, callback?: () => void): this;
     /**
      *
      * @returns 生成api文件

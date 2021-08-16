@@ -6,7 +6,7 @@ const utils_1 = require("../utils");
  * @param data
  * @returns
  */
-function toResponseJSON(resData) {
+function toResponseJSON(resData, options) {
     const result = {};
     function each(res, data) {
         if (Array.isArray(data)) {
@@ -25,7 +25,7 @@ function toResponseJSON(resData) {
                 }
                 else if (utils_1.verifyNodeIsDeclarationType(value)) {
                     // 是一个正常的数据声明格式
-                    res[key] = transformDataResult(value);
+                    res[key] = transformDataResult(value, options);
                 }
                 else {
                     if (Number(key) === 0)
@@ -40,27 +40,35 @@ function toResponseJSON(resData) {
     return result;
 }
 exports.default = toResponseJSON;
-function transformDataResult(data) {
+const getResultDefaultVal = (data, defaultValue, options) => {
+    const { resultValueType = 'type' } = options || {};
+    const { explame, description } = data;
+    if (resultValueType === 'type') {
+        return defaultValue;
+    }
+    return explame || description || defaultValue;
+};
+function transformDataResult(data, options) {
     const { type, items, explame } = data;
     if (explame)
         return explame;
     const typeName = items && items.type ? items.type : type;
     if (type === 'array') {
         if (typeName === 'integer' || typeName === 'number') {
-            return [1];
+            return getResultDefaultVal(data, [1], options);
         }
         if (typeName === 'string') {
-            return ['1'];
+            return getResultDefaultVal(data, ['1'], options);
         }
     }
     if (type === 'integer' || type === 'number') {
-        return 1;
+        return getResultDefaultVal(data, 1, options);
     }
     if (type === 'string') {
-        return 'string';
+        return getResultDefaultVal(data, 'string', options);
     }
     if (type === 'boolean') {
-        return true;
+        return getResultDefaultVal(data, true, options);
     }
-    return type;
+    return getResultDefaultVal(data, type, options);
 }

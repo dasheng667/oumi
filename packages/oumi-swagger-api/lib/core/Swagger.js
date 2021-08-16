@@ -37,11 +37,6 @@ const fetch_1 = __importDefault(require("../fetch"));
  * Swagger 拉取工具
  */
 class Swagger {
-    body;
-    responseData;
-    typescriptData;
-    queryList;
-    step;
     constructor(body) {
         if (typeof body === 'object') {
             this.body = body;
@@ -197,7 +192,7 @@ class Swagger {
      * @returns
      */
     buildMockJS(options, callback) {
-        const { outputPath } = options || {};
+        const { outputPath, fileType = 'js' } = options || {};
         if (!outputPath || typeof outputPath !== 'string') {
             throw new Error(`outputPath: 格式不合法 ${outputPath}`);
         }
@@ -207,10 +202,10 @@ class Swagger {
         let mockStr = '';
         keys.forEach((key) => {
             const { response, methods } = this.queryList[key];
-            mockStr += mockjs_1.default(key, methods, response);
+            mockStr += mockjs_1.default(key, methods, response, { fileType });
         });
-        mockStr = [mockjs_1.mockExportHeaderTemp, mockStr, mockjs_1.mockExportFooterTemp].join('\n');
-        fs_1.writeFile(`${outputPath}/_mock.ts`, mockStr, { allowRepeat: false });
+        mockStr = [mockjs_1.getMockHeaderTemp(fileType), mockStr, mockjs_1.mockExportFooterTemp].join('\n');
+        fs_1.writeFile(`${outputPath}/_mock.${fileType === 'js' ? 'js' : 'ts'}`, mockStr, { allowRepeat: false });
         if (typeof callback === 'function') {
             callback();
         }

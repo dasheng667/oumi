@@ -56,3 +56,10 @@ export interface BuildApiOption {
   /** 若 outputFileType = 'merge'，这里必填 */
   outputFileName?: string;
 }
+
+export interface MockBuildAOption {
+  /** 生成路径 */
+  outputPath: string;
+
+  fileType?: 'js' | 'ts';
+}

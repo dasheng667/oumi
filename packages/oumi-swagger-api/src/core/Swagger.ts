@@ -5,7 +5,8 @@ import type {
   InterfaceTempCallback,
   ResponseCallback,
   BuildMockOption,
-  BuildApiOption
+  BuildApiOption,
+  MockBuildAOption
 } from '../../typings/swagger';
 import eachDefinitions from './eachDefinitions';
 import parameters from './parameters';
@@ -13,8 +14,8 @@ import toResponseJSON from './toResponseJSON';
 import toTypeScript from './toTypeScript';
 import toInterfaceTemp from './toInterfaceTemp';
 import { requestTemp, namespaceTempHead, namespaceTempFoot } from '../template/index';
-import mockTemp, { mockExportHeaderTemp, mockExportFooterTemp } from '../template/mockjs';
-import { validataQuery, findResponseRef, transformPath, stringCase } from '../utils';
+import mockTemp, { getMockHeaderTemp, mockExportFooterTemp } from '../template/mockjs';
+import { validataQuery, findResponseRef, transformPath } from '../utils';
 import { writeFile, writeJSON } from '../utils/fs';
 import fetch from '../fetch';
 
@@ -199,8 +200,8 @@ export default class Swagger {
    * @options outputPath 输出路径
    * @returns
    */
-  buildMockJS(options, callback?: () => void) {
-    const { outputPath } = options || {};
+  buildMockJS(options: MockBuildAOption, callback?: () => void) {
+    const { outputPath, fileType = 'js' } = options || {};
 
     if (!outputPath || typeof outputPath !== 'string') {
       throw new Error(`outputPath: 格式不合法 ${outputPath}`);
@@ -212,12 +213,12 @@ export default class Swagger {
     let mockStr = '';
     keys.forEach((key) => {
       const { response, methods } = this.queryList[key];
-      mockStr += mockTemp(key, methods, response);
+      mockStr += mockTemp(key, methods, response, { fileType });
     });
 
-    mockStr = [mockExportHeaderTemp, mockStr, mockExportFooterTemp].join('\n');
+    mockStr = [getMockHeaderTemp(fileType), mockStr, mockExportFooterTemp].join('\n');
 
-    writeFile(`${outputPath}/_mock.ts`, mockStr, { allowRepeat: false });
+    writeFile(`${outputPath}/_mock.${fileType === 'js' ? 'js' : 'ts'}`, mockStr, { allowRepeat: false });
 
     if (typeof callback === 'function') {
       callback();

@@ -98,25 +98,32 @@ export default () => {
     requestSearchSwagger({
       configId: tabsId,
       searchTag: item.name
-    }).then((res: any) => {
-      setLoadingId('');
-      if (typeof res === 'object' && Object.keys(res || {}).length > 0) {
-        const newData: any = {};
-        Object.keys(res).forEach((key) => {
-          newData[key] = {
-            description: res[key].description,
-            methods: res[key].methods
-          };
-        });
-        setExpandCache([...expandCacheId, item.id]);
-        setExpandData({
-          ...expandData,
-          [item.id]: newData
-        });
-      } else {
-        message.warning('没有数据');
-      }
-    });
+    })
+      .then((res: any) => {
+        setLoadingId('');
+        if (typeof res === 'object' && Object.keys(res || {}).length > 0) {
+          const newData: any = {};
+          Object.keys(res).forEach((key) => {
+            const val = res[key];
+            newData[key] = {
+              description: val.description,
+              methods: val.methods,
+              request: val.request,
+              response: val.response
+            };
+          });
+          setExpandCache([...expandCacheId, item.id]);
+          setExpandData({
+            ...expandData,
+            [item.id]: newData
+          });
+        } else {
+          message.warning('没有数据');
+        }
+      })
+      .catch(() => {
+        setLoadingId('');
+      });
   };
 
   // 表单搜索
@@ -185,7 +192,7 @@ export default () => {
         selectId.map((path) => (
           <p key={path}>
             {path}{' '}
-            <span onClick={() => clearSelectId(path)} title="清除">
+            <span onClick={() => clearSelectId(path)} title="移除">
               <CloseCircleOutlined />
             </span>
           </p>
@@ -195,7 +202,7 @@ export default () => {
 
   return (
     <Container>
-      <Tabs type="card" defaultActiveKey={tabsId} onTabClick={onTabClick}>
+      <Tabs className="tabs-oumi" type="card" defaultActiveKey={tabsId} onTabClick={onTabClick}>
         {data && data.map((item) => <TabPane tab={item.name} key={item.id} />)}
       </Tabs>
 

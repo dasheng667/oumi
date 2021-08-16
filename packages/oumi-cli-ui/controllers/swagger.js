@@ -130,7 +130,14 @@ const BuildSwaggerFileToLocal = async (ctx) => {
   try {
     const swaggerData = await fetch(data.href);
     const swagger = new Swagger(swaggerData);
-    const { requestLibPath, api_fileType = 'ts', filterPathPrefix = '', outputFileType, outputFileName } = config;
+    const {
+      requestLibPath,
+      api_fileType = 'ts',
+      mock_fileType = 'js',
+      filterPathPrefix = '',
+      outputFileType,
+      outputFileName
+    } = config;
 
     swagger.query({ path: searchContent }).toTypeScript();
 
@@ -146,7 +153,8 @@ const BuildSwaggerFileToLocal = async (ctx) => {
     // mockjs模拟数据
     if (config.mock_checked) {
       swagger.buildMockJS({
-        outputPath
+        outputPath,
+        fileType: mock_fileType
       });
     }
 
