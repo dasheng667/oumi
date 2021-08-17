@@ -1,20 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+// import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import App from './App';
+import { SocketContext, socket } from './hook/socket';
 
 import './index.css';
 
-const host = import.meta.env.MODE === 'development' ? 'http://localhost:9000' : window.location.origin;
+// const host = import.meta.env.MODE === 'development' ? 'http://localhost:9000' : window.location.origin;
 
-const client = new ApolloClient({
-  uri: `${host}/graphql`,
-  cache: new InMemoryCache()
-});
+// const client = new ApolloClient({
+//   uri: `${host}/graphql`,
+//   cache: new InMemoryCache()
+// });
 
 ReactDOM.render(
-  <ApolloProvider client={client}>
+  <SocketContext.Provider value={{ socket }}>
     <App />
-  </ApolloProvider>,
+  </SocketContext.Provider>,
   document.getElementById('root')
 );
+
+// ReactDOM.render(
+//   <ApolloProvider client={client}>
+//     <App />
+//   </ApolloProvider>,
+//   document.getElementById('root')
+// );

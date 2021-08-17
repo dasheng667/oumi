@@ -9,6 +9,7 @@
 		"lib"
 	],
 	"scripts": {
+		"publish": "npm publish",
 		"start": "ts-node ./example/index.ts"
 	},
 	"keywords": [

@@ -4,6 +4,9 @@ import { useState, useCallback, useEffect } from 'react';
 import { useLocation as useRouterLocation, useRouteMatch as useRouterMatch } from 'react-router-dom';
 import request from '../request';
 
+export { useSocket } from './socket';
+export * from './event';
+
 type Options = {
   methods?: 'get' | 'post';
   params?: any;

@@ -1,6 +1,6 @@
 {
 	"name": "@oumi/swagger-api",
-	"version": "1.0.0-beta",
+	"version": "1.1.0-beta",
 	"description": "远程拉取swagger内容，生成json模拟数据、typescript文件",
 	"author": "dasheng <345263463@qq.com> (http://www.yuque.com/qqhh)",
 	"license": "none",
@@ -11,6 +11,7 @@
 	],
 	"scripts": {
 		"tsc": "tsc",
+		"publish": "npm publish",
 		"start": "ts-node ./example/index.ts"
 	},
 	"keywords": [

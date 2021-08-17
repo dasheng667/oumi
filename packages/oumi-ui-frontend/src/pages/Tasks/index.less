@@ -1,0 +1,85 @@
+.task-container{
+  display: flex;
+  background: none;
+  box-shadow: none;
+  margin: 0!important;
+  padding: 0!important;
+  min-height: auto!important;
+  height: calc(100vh - 76px)!important;
+  overflow: hidden;
+
+  .task-list{
+    flex: 0 0 auto;
+    width: 300px;
+    overflow: hidden;
+    overflow-y: auto;
+    background: #f5faff;
+    cursor: pointer;
+
+    li {
+      display: flex;
+      padding: 10px 16px;
+      align-items: center;
+      .icon {
+        flex: 0 0 auto;
+        width: 40px;
+        svg{
+          font-size: 20px;
+        }
+      }
+      .task-content{
+        flex: 1;
+        .name{
+          font-size: 16px;
+          color: #333;
+          small{
+            font-size: 12px;
+            color: #6a8bad;
+          }
+          .green{
+            color: #33ba00;
+          }
+          .red{
+            color: red;
+          }
+        }
+        .desc {
+          font-size: 12px;
+          color: #6a8bad;
+        }
+      }
+
+      &:hover, &.active{
+        background: #e2e9f0;
+      }
+    }
+  }
+
+  .task-scroll{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
+    background: #fff;
+    padding: 15px;
+    .handler{
+      margin: 10px 0;
+    }
+
+    h3, h3 svg{
+      font-size: 22px;
+      color: #1890ff;
+    }
+  }
+
+  .terminal{
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .xterm-render{
+    width: 100%;
+    height: 100%;
+  }
+}

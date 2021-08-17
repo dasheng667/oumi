@@ -1,6 +1,6 @@
 {
 	"name": "@oumi/cli",
-	"version": "1.2.0-beta",
+	"version": "1.2.1-beta",
 	"description": "@oumi/cli 项目管理器脚手架",
 	"main": "index.js",
 	"bin": {
@@ -12,6 +12,7 @@
 	},
 	"scripts": {
 		"start": "oumi ui",
+		"publish": "npm publish",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [
@@ -21,8 +22,8 @@
 	"author": "dasheng",
 	"license": "MIT",
 	"dependencies": {
-		"@oumi/cli-ui": "^1.2.0-beta",
-		"@oumi/swagger-api": "^1.0.0-beta",
+		"@oumi/cli-ui": "^1.2.1-beta",
+		"@oumi/swagger-api": "^1.1.0-beta",
 		"@oumi/cli-shared-utils": "^1.0.1",
 		"@oumi/block-sdk": "^1.0.3-beta",
 		"commander": "^8.0.0"

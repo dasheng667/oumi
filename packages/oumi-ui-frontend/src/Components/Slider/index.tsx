@@ -1,40 +1,59 @@
-import React from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { Select } from 'antd';
-import { ShoppingOutlined, ApiOutlined, SettingOutlined, HomeFilled, MailOutlined } from '@ant-design/icons';
-import type { ListItem, IRouter } from '../../global';
+import { HomeFilled, MailOutlined } from '@ant-design/icons';
+import type { ListItem } from '../../global';
+import { useRequest } from '../../hook';
+import { menuList } from '../../router';
 
 import './index.less';
 
-const { Option } = Select;
+// type Props = {
+//   goProjectList: () => void;
+//   selectItem: ListItem;
+// };
 
-type Props = {
-  goProjectList: () => void;
-  // projectList: ListItem[];
-  selectItem: ListItem;
-};
+const projectListPath = '/project/select';
 
-export default (props: Props) => {
+export default (props: any) => {
   const history = useHistory();
-  const { goProjectList, selectItem } = props;
+  const [current, setCurrent] = useState('');
 
-  const menuList = [
-    {
-      name: '资产',
-      path: '/dashboard',
-      icon: <ShoppingOutlined />
-    },
-    {
-      name: 'Swagger',
-      path: '/dashboard/swagger',
-      icon: <ApiOutlined />
-    },
-    {
-      name: '配置',
-      path: '/dashboard/config',
-      icon: <SettingOutlined />
+  const {
+    data,
+    error: errorInit,
+    request
+  } = useRequest<ListItem>('/api/dashboard/init', { errorMsg: false, lazy: true });
+
+  useEffect(() => {
+    request();
+  }, []);
+
+  useEffect(() => {
+    if (errorInit) {
+      history.replace(projectListPath);
     }
-  ];
+  }, [errorInit]);
+
+  useEffect(() => {
+    const { location } = history;
+    let path = location.pathname;
+    if (path.startsWith('/tasks')) {
+      path = '/tasks';
+    }
+    setCurrent(path);
+  }, [history, history.location]);
+
+  const goProjectList = () => {
+    history.push(projectListPath);
+  };
+
+  if (errorInit) {
+    return (
+      <div style={{ padding: 50 }}>
+        <Link to={projectListPath}>选择项目</Link>
+      </div>
+    );
+  }
 
   return (
     <div className="ui-slider">
@@ -42,7 +61,7 @@ export default (props: Props) => {
         <div className="icon" title="Oumi 项目过滤器">
           <HomeFilled style={{ fontSize: 18 }} />
         </div>
-        <div className="project-name">{selectItem && selectItem.name}</div>
+        <div className="project-name">{data && data.name}</div>
       </header>
       {/* <div className="select flex-center">
         <Select style={{ width: 180 }} value={selectItem.id}>
@@ -57,10 +76,7 @@ export default (props: Props) => {
       <div className="slider-list">
         {menuList.map((item) => {
           return (
-            <div
-              className={`slider-list-item ${history.location.pathname === item.path ? 'active' : ''}`}
-              key={item.path}
-            >
+            <div className={`slider-list-item ${current === item.path ? 'active' : ''}`} key={item.path}>
               <Link to={item.path}>
                 {item.icon}
                 {item.name}

@@ -18,8 +18,6 @@ import {
 import request from '../../request';
 import { useRequest } from '../../hook';
 
-import { gql, useQuery, useMutation } from '@apollo/client';
-import * as GQL from '../../graphql';
 import type { ListItem } from '../../global';
 
 import './index.less';
@@ -47,12 +45,13 @@ const Project = ({
   goDashboard: ({ id }: { id: string }) => void;
 }) => {
   const [current, setCurrent] = useState<ListItem | null>(null);
-  const [openEditor, { data, error, loading }] = useMutation(GQL.FILE_OPEN_IN_EDITOR);
+  const loading = false;
+  // const [openEditor, { data, error, loading }] = {} as any;
 
   const onClickOpen = (item: ListItem) => {
-    if (loading) return;
+    // if (loading) return;
     setCurrent(item);
-    openEditor({ variables: { input: { file: item.path } } });
+    // openEditor({ variables: { input: { file: item.path } } });
   };
 
   return (

@@ -20,7 +20,7 @@ function asyncComponent(getComponent: any) {
       if (Component) {
         return <Component {...this.props} />;
       }
-      return null;
+      return <div style={{ padding: 20 }}>页面加载中...</div>;
     }
   };
 }

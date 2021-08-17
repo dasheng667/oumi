@@ -3,24 +3,33 @@ const fs = require('fs');
 const Koa = require('koa');
 const body = require('koa-bodyparser');
 const koaStatic = require('koa-static');
-const { ApolloServer } = require('apollo-server-koa');
+// const { ApolloServer } = require('apollo-server-koa');
 const portfinder = require('portfinder');
+const IO = require('koa-socket-2');
 
 const controller = require('./middleware/controllers');
+const socket = require('./middleware/socket');
 const cors = require('./middleware/cors');
 const model = require('./middleware/model');
 const extend = require('./middleware/extends');
-const typeDefs = require('./apollo-server/type-defs');
-const resolvers = require('./apollo-server/resolvers');
+// const typeDefs = require('./apollo-server/type-defs');
+// const resolvers = require('./apollo-server/resolvers');
 
 module.exports = async (options, cb = null) => {
   const { port } = options;
 
-  const server = new ApolloServer({ typeDefs, resolvers });
-  await server.start();
+  // const server = new ApolloServer({ typeDefs, resolvers });
+  // await server.start();
 
   const app = new Koa();
-  server.applyMiddleware({ app });
+  const io = new IO({
+    ioOptions: {
+      cors: {
+        origin: '*'
+      }
+    }
+  });
+  // server.applyMiddleware({ app });
 
   app.use(cors());
   app.use(extend());
@@ -28,6 +37,10 @@ module.exports = async (options, cb = null) => {
   app.use(koaStatic(`${__dirname}/public/assets`));
   app.use(koaStatic(`${__dirname}/public`));
   app.use(model());
+
+  io.attach(app);
+  app.use(socket(io, app));
+
   app.use(controller());
 
   app.use(async (ctx, next) => {
@@ -50,5 +63,5 @@ module.exports = async (options, cb = null) => {
     });
   });
 
-  return { server, app };
+  return { app };
 };

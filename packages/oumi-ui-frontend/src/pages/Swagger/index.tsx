@@ -5,6 +5,7 @@ import { Tabs, Spin, message, Popover } from 'antd';
 import { useRequest } from '../../hook';
 import { createId } from './utils';
 import Search from './Components/Search';
+import Container from '../Container';
 import SwaggerList from './Components/SwaggerList';
 import ProjectDirs from './Components/ProjectDirs';
 
@@ -12,22 +13,11 @@ import './index.less';
 
 const { TabPane } = Tabs;
 
-const Container = (props: any) => {
-  return (
-    <div className="ui-swagger-content">
-      <div className="top-header">
-        <h2>Swagger</h2>
-      </div>
-      <div className="ui-content-container ui-swagger-container">{props.children}</div>
-    </div>
-  );
-};
-
 const NoSwagger = () => {
   return (
-    <Container>
+    <Container title="Swagger">
       <div className="swagger-error">
-        您当前还没有配置Swagger，去 <Link to="/dashboard/config">配置</Link> 。
+        您当前还没有配置Swagger，去 <Link to="/config">配置</Link> 。
       </div>
     </Container>
   );
@@ -167,7 +157,7 @@ export default () => {
 
   if (loadingGet) {
     return (
-      <Container>
+      <Container title="Swagger">
         <Spin />
       </Container>
     );
@@ -201,7 +191,7 @@ export default () => {
   );
 
   return (
-    <Container>
+    <Container title="Swagger" className="ui-swagger-container">
       <Tabs className="tabs-oumi" type="card" defaultActiveKey={tabsId} onTabClick={onTabClick}>
         {data && data.map((item) => <TabPane tab={item.name} key={item.id} />)}
       </Tabs>

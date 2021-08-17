@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Tabs, Form, Input, Button, Table, Space, Row, Col, message } from 'antd';
-import { useHistory } from 'react-router-dom';
 import { useRequest, useLocation } from '../../hook';
 import type { ListItem } from '../../global';
 import SwaggerConfig from './Components/SwaggerConfig';
 import PrivateConfig from './Components/PrivateConfig';
+import Container from '../Container';
 
 import './index.less';
 
@@ -153,11 +153,7 @@ export default () => {
   };
 
   return (
-    <div className="ui-config-content">
-      <div className="top-header">
-        <h2>配置</h2>
-      </div>
-
+    <Container title="配置" className="ui-config-content">
       <div className="ui-config-container ui-content-container">
         <Tabs className="tabs-oumi" type="card" activeKey={currentTag} onChange={(key) => setCurrentTag(key)}>
           <TabPane tab="Swagger" key="1">
@@ -243,6 +239,6 @@ export default () => {
           </TabPane>
         </Tabs>
       </div>
-    </div>
+    </Container>
   );
 };
