@@ -1,5 +1,4 @@
 import React, { memo } from 'react';
-import Slider from '../../Components/Slider';
 
 import './index.less';
 

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import React from 'react';
-import prettier from 'prettier';
-import parserBabel from 'prettier/parser-babel';
-import parserHtml from 'prettier/parser-html';
+// import prettier from 'prettier';
+// import parserBabel from 'prettier/parser-babel';
+// import parserHtml from 'prettier/parser-html';
 import { docco, dark, github } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 
@@ -24,12 +24,12 @@ export default function (props: IProps) {
   try {
     if (typeof code === 'string') {
       if (lang === 'xml') {
-        code = prettier.format(code, { parser: 'html', plugins: [parserHtml] });
+        // code = prettier.format(code, { parser: 'html', plugins: [parserHtml] });
       } else if (lang === 'jsx') {
-        code = prettier.format(code, {
-          parser: 'babel',
-          plugins: [parserBabel]
-        });
+        // code = prettier.format(code, {
+        //   parser: 'babel',
+        //   plugins: [parserBabel]
+        // });
       }
     } else {
       console.error('code 必须是字符串');
