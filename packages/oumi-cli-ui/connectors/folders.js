@@ -1,8 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable consistent-return */
 const path = require('path');
-const fs = require('fs-extra');
-const LRU = require('lru-cache');
+const { fsExtra: fs, LRU } = require('@oumi/cli-shared-utils');
 
 const hiddenPrefix = '.';
 const isPlatformWindows = process.platform.indexOf('win') === 0;

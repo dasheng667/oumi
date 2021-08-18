@@ -45,13 +45,12 @@ const Project = ({
   goDashboard: ({ id }: { id: string }) => void;
 }) => {
   const [current, setCurrent] = useState<ListItem | null>(null);
-  const loading = false;
-  // const [openEditor, { data, error, loading }] = {} as any;
+  const { request: requestOpen, loading } = useRequest('/api/openInEditor', { lazy: true });
 
   const onClickOpen = (item: ListItem) => {
-    // if (loading) return;
+    if (loading) return;
     setCurrent(item);
-    // openEditor({ variables: { input: { file: item.path } } });
+    requestOpen({ input: { file: item.path } });
   };
 
   return (

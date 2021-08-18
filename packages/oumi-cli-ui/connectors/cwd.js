@@ -2,6 +2,7 @@
 const channels = require('./channels');
 const fs = require('fs');
 const path = require('path');
+const modelDb = require('../db/modelDb');
 
 let cwd = process.cwd();
 
@@ -15,7 +16,10 @@ function normalize(value) {
 }
 
 module.exports = {
-  get: () => cwd,
+  get: () => {
+    const current = modelDb.projectList.findCurrent();
+    return (current && current.path) || cwd;
+  },
   set: (value, context) => {
     value = normalize(value);
     if (!fs.existsSync(value)) return;

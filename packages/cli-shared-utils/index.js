@@ -20,6 +20,8 @@
 exports.chalk = require('chalk')
 exports.execa = require('execa')
 exports.semver = require('semver')
+exports.fsExtra = require('fs-extra')
+exports.LRU = require('lru-cache')
 
 Object.defineProperty(exports, 'installedBrowsers', {
   enumerable: true,

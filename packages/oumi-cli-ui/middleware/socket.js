@@ -20,7 +20,7 @@ function addSockets(socket, app, dir) {
 
 module.exports = (io, app) => {
   io.on('connection', (socket) => {
-    console.log('socket connected!');
+    // console.log('socket connected!');
     addSockets(socket, app, 'socket');
   });
 

@@ -5,27 +5,27 @@ const publishVersion = [
   {
     name: '@oumi/cli-shared-utils',
     packagePath: path.resolve('./packages/cli-shared-utils/package.json'),
-    version: '1.0.1'
+    version: '1.2.0'
   },
   {
     name: '@oumi/block-sdk',
     packagePath: path.resolve('./packages/block-sdk/package.json'),
-    version: '1.0.3-beta'
+    version: '1.1.0'
   },
   {
     name: '@oumi/cli',
     packagePath: path.resolve('./packages/oumi-cli/package.json'),
-    version: '1.2.1-beta'
+    version: '1.3.0'
   },
   {
     name: '@oumi/cli-ui',
     packagePath: path.resolve('./packages/oumi-cli-ui/package.json'),
-    version: '1.2.1-beta'
+    version: '1.3.0'
   },
   {
     name: '@oumi/swagger-api',
     packagePath: path.resolve('./packages/oumi-swagger-api/package.json'),
-    version: '1.1.0-beta'
+    version: '1.2.0'
   }
 ];
 

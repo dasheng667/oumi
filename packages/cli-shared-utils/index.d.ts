@@ -26,7 +26,13 @@ export function resumeSpinner(): void;
 
 export const chalk: Chalk;
 
+export const execa: any;
+
 export const spawn: any;
+
+export const fsExtra: any;
+
+export const LRU: any;
 
 export function writeJSON(filePath: string, data: object, callback?: any): void;
 

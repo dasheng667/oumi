@@ -36,7 +36,7 @@ const router: IRouter[] = [
         path: '/',
         label: '首页',
         exact: true,
-        component: () => <Redirect to="/dashboard" />
+        component: () => <Redirect to="/tasks" />
       },
 
       {

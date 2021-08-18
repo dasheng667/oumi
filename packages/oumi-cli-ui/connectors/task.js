@@ -6,6 +6,7 @@
 const { chalk, execa } = require('@oumi/cli-shared-utils');
 const channels = require('./channels');
 const folders = require('./folders');
+const terminate = require('../utils/terminate');
 const cwd = require('./cwd');
 const { log, parseArgs } = require('../utils');
 
@@ -114,11 +115,11 @@ async function list({ file = null, api = true } = {}, context) {
     });
 
     // Process removed tasks
-    const removedTasks = list.filter((t) => currentTasks.findIndex((c) => c.id === t.id) === -1);
+    // const removedTasks = list.filter((t) => currentTasks.findIndex((c) => c.id === t.id) === -1);
     // Remove badges
-    removedTasks.forEach((task) => {
-      updateViewBadges({ task }, context);
-    });
+    // removedTasks.forEach((task) => {
+    //   updateViewBadges({ task }, context);
+    // });
 
     // Process new tasks
     const newTasks = currentTasks
@@ -170,13 +171,113 @@ function addLog(log, context) {
 }
 
 async function run(id, context) {
+  let command = null;
+  let args = null;
   const task = findOne(id, context);
+
+  const outPipe = logPipe((queue) => {
+    // console.log('outPipe>>>', context);
+    addLog(
+      {
+        taskId: task.id,
+        type: 'stdout',
+        text: queue
+      },
+      context
+    );
+  });
+
+  const errPipe = logPipe((queue) => {
+    addLog(
+      {
+        taskId: task.id,
+        type: 'stderr',
+        text: queue
+      },
+      context
+    );
+  });
+
+  const onExit = async (code, signal) => {
+    outPipe.flush();
+    errPipe.flush();
+
+    log('Task exit', command, args, 'code:', code, 'signal:', signal);
+
+    const duration = Date.now() - task.time;
+    const seconds = Math.round(duration / 10) / 100;
+    addLog(
+      {
+        taskId: task.id,
+        type: 'stdout',
+        text: chalk.grey(`Total task duration: ${seconds}s`)
+      },
+      context
+    );
+
+    // Plugin API
+    if (task.onExit) {
+      await task.onExit({
+        args,
+        child,
+        cwd: cwd.get(),
+        code,
+        signal
+      });
+    }
+
+    if (code === null || task._terminating) {
+      updateOne(
+        {
+          id: task.id,
+          status: 'terminated'
+        },
+        context
+      );
+    } else if (code !== 0) {
+      updateOne(
+        {
+          id: task.id,
+          status: 'error'
+        },
+        context
+      );
+    } else {
+      updateOne(
+        {
+          id: task.id,
+          status: 'done'
+        },
+        context
+      );
+    }
+
+    // plugins.callHook(
+    //   {
+    //     id: 'taskExit',
+    //     args: [
+    //       {
+    //         task,
+    //         args,
+    //         child,
+    //         cwd: cwd.get(),
+    //         signal,
+    //         code
+    //       }
+    //     ],
+    //     file: cwd.get()
+    //   },
+    //   context
+    // );
+  };
 
   if (task && task.status !== 'running') {
     task._terminating = false;
 
     // eslint-disable-next-line prefer-const
-    let [command, ...args] = parseArgs(task.command);
+    let [command2, ...args2] = parseArgs(task.command);
+    command = command2;
+    args = args2;
 
     // Deduplicate arguments
     const dedupedArgs = [];
@@ -201,6 +302,14 @@ async function run(id, context) {
       args.splice(0, 0, '--');
     }
 
+    updateOne(
+      {
+        id: task.id,
+        status: 'running'
+      },
+      context
+    );
+
     addLog(
       {
         taskId: task.id,
@@ -211,8 +320,6 @@ async function run(id, context) {
     );
 
     task.time = Date.now();
-
-    console.log('>>>>>>>>>', command, args);
 
     const child = execa(command, args, {
       cwd: cwd.get(),
@@ -226,106 +333,13 @@ async function run(id, context) {
 
     task.child = child;
 
-    const outPipe = logPipe((queue) => {
-      addLog(
-        {
-          taskId: task.id,
-          type: 'stdout',
-          text: queue
-        },
-        context
-      );
-    });
     child.stdout.on('data', (buffer) => {
       outPipe.add(buffer.toString());
     });
 
-    const errPipe = logPipe((queue) => {
-      addLog(
-        {
-          taskId: task.id,
-          type: 'stderr',
-          text: queue
-        },
-        context
-      );
-    });
     child.stderr.on('data', (buffer) => {
       errPipe.add(buffer.toString());
     });
-
-    const onExit = async (code, signal) => {
-      outPipe.flush();
-      errPipe.flush();
-
-      log('Task exit', command, args, 'code:', code, 'signal:', signal);
-
-      const duration = Date.now() - task.time;
-      const seconds = Math.round(duration / 10) / 100;
-      addLog(
-        {
-          taskId: task.id,
-          type: 'stdout',
-          text: chalk.grey(`Total task duration: ${seconds}s`)
-        },
-        context
-      );
-
-      // Plugin API
-      if (task.onExit) {
-        await task.onExit({
-          args,
-          child,
-          cwd: cwd.get(),
-          code,
-          signal
-        });
-      }
-
-      if (code === null || task._terminating) {
-        updateOne(
-          {
-            id: task.id,
-            status: 'terminated'
-          },
-          context
-        );
-      } else if (code !== 0) {
-        updateOne(
-          {
-            id: task.id,
-            status: 'error'
-          },
-          context
-        );
-      } else {
-        updateOne(
-          {
-            id: task.id,
-            status: 'done'
-          },
-          context
-        );
-      }
-
-      // plugins.callHook(
-      //   {
-      //     id: 'taskExit',
-      //     args: [
-      //       {
-      //         task,
-      //         args,
-      //         child,
-      //         cwd: cwd.get(),
-      //         signal,
-      //         code
-      //       }
-      //     ],
-      //     file: cwd.get()
-      //   },
-      //   context
-      // );
-    };
 
     child.on('exit', onExit);
 
@@ -350,7 +364,7 @@ async function run(id, context) {
         },
         context
       );
-      console.error('E>>>', error);
+      console.error(error);
     });
 
     // Plugin API
@@ -362,6 +376,46 @@ async function run(id, context) {
       });
     }
   }
+  // if (task && task.status === 'running') {
+  //   const { child } = task;
+  //   const [command2, ...args2] = parseArgs(task.command);
+  //   command = command2;
+  //   args = args2;
+
+  //   child.stdout.on('data', (buffer) => {
+  //     outPipe.add(buffer.toString());
+  //   });
+
+  //   child.stderr.on('data', (buffer) => {
+  //     errPipe.add(buffer.toString());
+  //   });
+
+  //   child.on('exit', onExit);
+
+  //   child.on('error', (error) => {
+  //     const duration = Date.now() - task.time;
+  //     if (process.platform === 'win32' && error.code === 'ENOENT' && duration > WIN_ENOENT_THRESHOLD) {
+  //       return onExit(null);
+  //     }
+  //     updateOne(
+  //       {
+  //         id: task.id,
+  //         status: 'error'
+  //       },
+  //       context
+  //     );
+
+  //     addLog(
+  //       {
+  //         taskId: task.id,
+  //         type: 'stdout',
+  //         text: chalk.red(`Error while running task ${task.id} with message '${error.message}'`)
+  //       },
+  //       context
+  //     );
+  //     console.error(error);
+  //   });
+  // }
   return task;
 }
 
@@ -380,6 +434,13 @@ async function stop(id, context) {
           context
         );
       } else if (error) {
+        updateOne(
+          {
+            id: task.id,
+            status: 'error'
+          },
+          context
+        );
         throw error;
       } else {
         throw new Error('Unknown error');
@@ -388,6 +449,14 @@ async function stop(id, context) {
       console.log(chalk.red(`Can't terminate process ${task.child.pid}`));
       console.error(e);
     }
+  } else {
+    updateOne(
+      {
+        id: task.id,
+        status: 'error'
+      },
+      context
+    );
   }
   return task;
 }

@@ -6,7 +6,7 @@ const { isWindows, isLinux, isMacintosh } = require('@oumi/cli-shared-utils');
 const execFile = util.promisify(cp.execFile);
 const spawn = util.promisify(cp.spawn);
 
-exports.terminate = async function (childProcess, cwd) {
+module.exports = async function (childProcess, cwd) {
   if (isWindows) {
     try {
       const options = {

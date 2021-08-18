@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const utilsFile = require('../utils/file');
 
 const resolve = (dir) => {
   return path.resolve(__dirname, '../', dir);
@@ -213,6 +214,12 @@ const verifyDirs = async (ctx) => {
   return ctx.returnSuccess('success');
 };
 
+const openInEditor = async (ctx) => {
+  const { input, context } = ctx.request.body;
+  await utilsFile.openInEditor(input, context);
+  return ctx.returnSuccess('success');
+};
+
 module.exports = {
   'GET /api/hello/:name': fn_hello,
   'POST /api/user/folder': getUserFolder,
@@ -224,5 +231,7 @@ module.exports = {
   'POST /api/project/verifyDirs': verifyDirs,
   'POST /api/project/createDir': createProjectDir,
 
-  'POST /api/dashboard/init': getDashboardByProject
+  'POST /api/dashboard/init': getDashboardByProject,
+
+  'POST /api/openInEditor': openInEditor
 };

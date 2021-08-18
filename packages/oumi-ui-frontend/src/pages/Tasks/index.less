@@ -15,36 +15,53 @@
     overflow-y: auto;
     background: #f5faff;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+
+    .search{
+      flex: 0 0 auto;
+      height: 62px;
+      padding: 15px;
+      .ant-input-affix-wrapper{
+        border-radius: 30px;
+      }
+    }
+
+    ul{
+      flex: 1;
+      overflow: hidden;
+      overflow-y: auto;
+    }
 
     li {
       display: flex;
-      padding: 10px 16px;
+      padding: 7px 16px;
       align-items: center;
       .icon {
         flex: 0 0 auto;
         width: 40px;
         svg{
-          font-size: 20px;
+          font-size: 18px;
         }
+      }
+      .green, .color-done, .color-running{
+        color: #33ba00;
+      }
+      .red, .color-error, .color-stderr{
+        color: red;
       }
       .task-content{
         flex: 1;
         .name{
           font-size: 16px;
           color: #333;
-          small{
-            font-size: 12px;
-            color: #6a8bad;
-          }
-          .green{
-            color: #33ba00;
-          }
-          .red{
-            color: red;
-          }
+          // small{
+          //   font-size: 12px;
+          //   color: #6a8bad;
+          // }
         }
         .desc {
-          font-size: 12px;
+          font-size: 13px;
           color: #6a8bad;
         }
       }
