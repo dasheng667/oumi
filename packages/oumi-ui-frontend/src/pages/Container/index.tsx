@@ -12,7 +12,7 @@ export default memo((props: { title: string; className?: string; children: any }
         <div className="header">
           <h2>{title}</h2>
         </div>
-        <div className={`content ${className || ''}`}>{children}</div>
+        <div className={`container-main ${className || ''}`}>{children}</div>
       </div>
     </div>
   );
