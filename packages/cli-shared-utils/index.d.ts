@@ -26,6 +26,8 @@ export function resumeSpinner(): void;
 
 export const chalk: Chalk;
 
+export const rcFolder: string;
+
 export const execa: any;
 
 export const spawn: any;
@@ -34,6 +36,8 @@ export const fsExtra: any;
 
 export const LRU: any;
 
+export const PackageManager: any;
+
 export function writeJSON(filePath: string, data: object, callback?: any): void;
 
 export function createFileSync(filePath: string): void;
@@ -41,6 +45,7 @@ export function createFileSync(filePath: string): void;
 export function ensureDirSync(filePath: string): void;
 
 export function writeFile(filePath: string, content: string, options?: { isCreateFile: boolean }): void;
+
 
 export const base64: {
   /** 编码 */
@@ -52,3 +57,6 @@ export const base64: {
 
   safeUrlDecode: (input: string) => string;
 }
+
+
+export function resolveModule(request: string, context: string): string;

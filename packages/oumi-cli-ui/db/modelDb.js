@@ -4,7 +4,7 @@ const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
 const utils = require('../utils');
 
-const adapter = new FileSync(path.resolve(__dirname, '../../locals.json'));
+const adapter = new FileSync(path.resolve(utils.rcFolder, 'db.json'));
 const db = low(adapter);
 
 // DB默认数据

@@ -12,7 +12,11 @@
   'got',
   'file',
   'base64',
-  'cross-spawn'
+  'cross-spawn',
+  'module',
+  'rcFolder',
+  'PackageManager',
+  'executeCommand',
 ].forEach(m => {
   Object.assign(exports, require(`./lib/${m}`))
 })

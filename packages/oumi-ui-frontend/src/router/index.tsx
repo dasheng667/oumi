@@ -1,7 +1,7 @@
 import React from 'react';
 import asyncComponent from './asyncComponent';
 import { Redirect } from 'react-router-dom';
-import { ShoppingOutlined, ApiOutlined, SettingOutlined, SolutionOutlined } from '@ant-design/icons';
+import { ShoppingOutlined, ApiOutlined, SettingOutlined, SolutionOutlined, CodepenOutlined } from '@ant-design/icons';
 import App from './Root';
 import type { IRouter } from '../global';
 
@@ -10,6 +10,11 @@ export const menuList = [
     name: '任务',
     path: '/tasks',
     icon: <SolutionOutlined />
+  },
+  {
+    name: '依赖',
+    path: '/deps',
+    icon: <CodepenOutlined />
   },
   {
     name: '资产',
@@ -84,6 +89,13 @@ const router: IRouter[] = [
         label: 'Config',
         exact: true,
         component: asyncComponent(() => import(`../pages/Config`))
+      },
+
+      {
+        path: '/deps',
+        label: 'Deps',
+        exact: true,
+        component: asyncComponent(() => import(`../pages/Deps`))
       }
 
       // {

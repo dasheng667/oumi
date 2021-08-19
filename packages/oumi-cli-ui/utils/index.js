@@ -1,4 +1,6 @@
-const { chalk } = require('@oumi/cli-shared-utils');
+/* eslint-disable no-param-reassign */
+const path = require('path');
+const { chalk, rcFolder } = require('@oumi/cli-shared-utils');
 
 /* eslint-disable no-restricted-syntax */
 exports.createId = (max = 6, randomString = '0123456789abcdef') => {
@@ -43,3 +45,38 @@ exports.log = (...args) => {
   const first = args.shift();
   console.log(`${chalk.blue('UI')} ${chalk.dim(timestamp)}`, chalk.bold(first), ...args);
 };
+
+exports.resolveModuleRoot = (filePath, id = null) => {
+  {
+    const index = filePath.lastIndexOf(`${path.sep}index.js`);
+    if (index !== -1) {
+      filePath = filePath.substr(0, index);
+    }
+  }
+  if (id) {
+    id = id.replace(/\//g, path.sep);
+    // With node_modules folder
+    let search = `node_modules/${id}`;
+    let index = filePath.lastIndexOf(search);
+    if (index === -1) {
+      // Id only
+      search = id;
+      index = filePath.lastIndexOf(search);
+    }
+    if (index === -1) {
+      // Scoped (in dev env)
+      index = id.lastIndexOf('/');
+      if (index !== -1) {
+        search = id.substr(index + 1);
+        index = filePath.lastIndexOf(search);
+      }
+    }
+
+    if (index !== -1) {
+      filePath = filePath.substr(0, index + search.length);
+    }
+  }
+  return filePath;
+};
+
+exports.rcFolder = rcFolder;

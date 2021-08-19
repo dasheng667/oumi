@@ -1,0 +1,60 @@
+.deps-container{
+  padding-left: 30px!important;
+  .deps-header{
+    font-size: 20px;
+  }
+  .deps-list{
+    max-width: 900px;
+    li{
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #f0f0f0;
+      padding-bottom: 12px;
+      margin: 7px 0;
+      img {
+        max-width: 100%;
+      }
+      .deps-logo{
+        width: 42px;
+        flex: 0 0 auto;
+        margin-right: 20px;
+      }
+      .deps-content{
+        flex: 1;
+        .name{
+          font-size: 18px;
+          margin-bottom: 10px;
+        }
+        .description{
+          display: flex;
+          > span {
+            width: 160px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            color: #6a8bad;
+          }
+          .link{
+            margin-left: 10px;
+            &:hover{
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+      .deps-button{
+        flex: 0 0 auto;
+        width: 100px;
+        text-align: right;
+        span{
+          padding: 0 2px;
+          cursor: pointer;
+          svg{
+            font-size: 20px;
+            color: #666;
+          }
+        }
+      }
+    }
+  }
+}
