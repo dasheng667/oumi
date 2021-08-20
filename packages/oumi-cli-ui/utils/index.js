@@ -80,3 +80,15 @@ exports.resolveModuleRoot = (filePath, id = null) => {
 };
 
 exports.rcFolder = rcFolder;
+
+exports.throttle = (fun, wait = 60) => {
+  let prevTime = 0;
+  return function (...args) {
+    const now = Date.now();
+    if (now - prevTime > wait) {
+      // eslint-disable-next-line @typescript-eslint/no-invalid-this
+      fun.apply(this, args);
+      prevTime = now;
+    }
+  };
+};

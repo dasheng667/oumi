@@ -1,9 +1,17 @@
 const path = require('path');
-const { fsExtra: fs, LRU, chalk, request, resolveModule, PackageManager } = require('@oumi/cli-shared-utils');
+const {
+  fsExtra: fs,
+  LRU,
+  chalk,
+  request,
+  resolveModule,
+  PackageManager,
+  progress: installProgress
+} = require('@oumi/cli-shared-utils');
 const progress = require('./progress');
 const cwd = require('./cwd');
 const folders = require('./folders');
-const { log, resolveModuleRoot } = require('../utils/index');
+const { log, resolveModuleRoot, throttle } = require('../utils/index');
 const channels = require('./channels');
 
 const PROGRESS_ID = 'dependency-installation';
@@ -218,8 +226,8 @@ function update({ id }, context) {
       args: [id]
     });
 
-    const dep = findOne(id, context);
-    const { current, wanted } = await getVersion(dep, context);
+    // const dep = findOne(id, context);
+    // const { current, wanted } = await getVersion(dep, context);
 
     const pm = new PackageManager({ context: cwd.get() });
     await pm.upgrade(id);
@@ -230,10 +238,29 @@ function update({ id }, context) {
   });
 }
 
+function setup(context) {
+  const fun = throttle((value) => {
+    progress.set({ id: PROGRESS_ID, progress: value }, context);
+  }, 100);
+
+  installProgress.on('progress', (value) => {
+    // console.log('installProgress.value', value)
+    if (progress.get(PROGRESS_ID)) {
+      fun(value);
+    }
+  });
+  // installProgress.on('log', message => {
+  //   if (progress.get(PROGRESS_ID)) {
+  //     progress.set({ id: PROGRESS_ID, info: message }, context)
+  //   }
+  // })
+}
+
 module.exports = {
   getProjectDeps,
   getVersion,
   install,
   uninstall,
-  update
+  update,
+  setup
 };

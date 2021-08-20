@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Button, Tooltip, Input } from 'antd';
 import { useHistory } from 'react-router-dom';
 import {
@@ -14,6 +14,7 @@ import {
 import Container from '../Container';
 import { useSocket } from '../../hook';
 import Terminal, { term, fitAddon } from './Terminal';
+import { arrSortByKey, taskViewGroup } from './utils';
 
 import './index.less';
 
@@ -96,8 +97,8 @@ export default () => {
 
     // 初始化
     socket.on('get_tasks_list', (tasks) => {
-      // console.log(tasks);
       if (Array.isArray(tasks)) {
+        tasks.sort(arrSortByKey('name'));
         setData(tasks);
         setVisibleData(tasks);
         const { pathname } = history.location;
@@ -161,49 +162,59 @@ export default () => {
     setVisibleData(filter);
   };
 
+  const dataGroup = useMemo(() => taskViewGroup<ITaskItem>(visibleData), [visibleData]);
+
   return (
     <Container title="任务" className="task-container">
       <div className="task-list">
         <div className="search">
           <Input prefix={<SearchOutlined />} allowClear onChange={onSearchChange} placeholder="搜索" />
         </div>
-        <ul>
-          {visibleData &&
-            Array.isArray(visibleData) &&
-            visibleData.map((item) => {
-              const { id, name, command, status } = item;
-              return (
-                <li
-                  key={id}
-                  onClick={() => onClickTaskItem(item)}
-                  className={`${currentTask && currentTask.id === id ? 'active' : ''}`}
-                >
-                  <div className="icon">
-                    <Tooltip placement="right" title={command} color="blue">
-                      {(() => {
-                        if (status === 'running') {
-                          return <PauseCircleOutlined className="green" />;
-                        }
-                        if (status === 'error') {
-                          return <ExclamationCircleOutlined className="red" />;
-                        }
-                        if (status === 'done' || status === 'terminated') {
-                          return <CheckCircleOutlined className="green" />;
-                        }
-                        return <CodeOutlined />;
-                      })()}
-                    </Tooltip>
-                  </div>
-                  <div className="task-content">
-                    <div className="name">{name}</div>
-                    <div className="desc">
-                      <span className={`color-${status}`}>[{statusMap[status]}]</span>
-                    </div>
-                  </div>
-                </li>
-              );
-            })}
-        </ul>
+        <div className="task-ul">
+          {Object.keys(dataGroup).map((group) => {
+            const list = dataGroup[group];
+            return (
+              <div key={group}>
+                <div className="task-group">{group.toUpperCase()}</div>
+                {list &&
+                  Array.isArray(list) &&
+                  list.map((item) => {
+                    const { id, name, command, status } = item;
+                    return (
+                      <div
+                        key={id}
+                        onClick={() => onClickTaskItem(item)}
+                        className={`task-li ${currentTask && currentTask.id === id ? 'active' : ''}`}
+                      >
+                        <div className="icon">
+                          <Tooltip placement="right" title={command} color="blue">
+                            {(() => {
+                              if (status === 'running') {
+                                return <PauseCircleOutlined className="green" />;
+                              }
+                              if (status === 'error') {
+                                return <ExclamationCircleOutlined className="red" />;
+                              }
+                              if (status === 'done' || status === 'terminated') {
+                                return <CheckCircleOutlined className="green" />;
+                              }
+                              return <CodeOutlined />;
+                            })()}
+                          </Tooltip>
+                        </div>
+                        <div className="task-content">
+                          <div className="name">{name}</div>
+                          <div className="desc">
+                            <span className={`color-${status}`}>[{statusMap[status]}]</span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            );
+          })}
+        </div>
       </div>
       <div className="task-scroll">
         <h3>

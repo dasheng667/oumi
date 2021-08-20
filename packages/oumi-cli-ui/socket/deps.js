@@ -1,4 +1,4 @@
-const { getProjectDeps, install, uninstall, update } = require('../connectors/deps');
+const { getProjectDeps, install, uninstall, update, setup } = require('../connectors/deps');
 const modelDb = require('../db/modelDb');
 
 module.exports = (socket) => {
@@ -6,6 +6,7 @@ module.exports = (socket) => {
     pubsub: {
       publish: (channels, content) => {
         socket.emit(channels, content);
+        socket.broadcast.emit(channels, content);
       }
     }
   };
@@ -16,8 +17,9 @@ module.exports = (socket) => {
   });
 
   socket.on('install_dep', async ({ id, type }) => {
-    const current = await install({ id, type }, context);
-    socket.emit('get_project_deps', { data: current });
+    await install({ id, type }, context);
+    await getProjectDeps(context);
+    socket.emit('get_project_deps_done');
   });
 
   socket.on('uninstall_dep', async ({ id }) => {
@@ -29,4 +31,6 @@ module.exports = (socket) => {
     const current = await update({ id }, context);
     socket.emit('update_dep_done', current);
   });
+
+  setup(context);
 };

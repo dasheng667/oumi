@@ -57,7 +57,7 @@ const progress = exports.progress = new InstallProgress()
 exports.executeCommand = function executeCommand (command, args, cwd) {
 
   return new Promise((resolve, reject) => {
-    const apiMode = process.env.VUE_CLI_API_MODE
+    const apiMode = process.env.OUMI_CLI_API_MODE || true;
 
     progress.enabled = false
 
@@ -88,7 +88,7 @@ exports.executeCommand = function executeCommand (command, args, cwd) {
             const data = JSON.parse(str)
             if (data.type === 'step') {
               progress.enabled = false
-              // progress.log(data.data.message)
+              progress.log(data.data.message)
             } else if (data.type === 'progressStart') {
               progressTotal = data.data.total
             } else if (data.type === 'progressTick') {
@@ -96,6 +96,7 @@ exports.executeCommand = function executeCommand (command, args, cwd) {
               if (time - progressTime > 20) {
                 progressTime = time
                 progress.progress = data.data.current / progressTotal
+                // console.log('progress:', data.data.current, progressTotal)
               }
             } else {
               progress.enabled = false
