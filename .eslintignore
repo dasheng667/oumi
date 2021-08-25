@@ -13,3 +13,4 @@ _mock.js
 /packages/oumi-swagger-api/lib
 /packages/block-sdk/lib
 /packages/oumi-swagger-api/example
+/packages/oumi-cli-ui/lib

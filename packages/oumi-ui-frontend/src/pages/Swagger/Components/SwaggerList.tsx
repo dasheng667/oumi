@@ -81,17 +81,19 @@ const SwaggerList = (props: any) => {
                       Object.keys(expandData[item.id]).map((key) => {
                         const value = expandData[item.id][key];
                         return (
-                          <li
-                            className={`${value.methods || 'get'}`}
-                            key={key}
-                            onClick={() => clickShowDrawer(value, key)}
-                          >
+                          <li className={`${value.methods || 'get'}`} key={key}>
                             <span className="checkbox">
                               <Checkbox value={key} onChange={() => onChange(key)} checked={selectId.includes(key)} />
                             </span>
                             <span className="methods">{(value.methods || 'get').toLocaleUpperCase()}</span>
-                            <span className="path">{key}</span>
-                            <span className="desc" title={value.description}>
+                            <span className="path" onClick={() => clickShowDrawer(value, key)}>
+                              {key}
+                            </span>
+                            <span
+                              className="desc"
+                              title={value.description}
+                              onClick={() => clickShowDrawer(value, key)}
+                            >
                               {value.description}
                             </span>
                             <span className="bg">

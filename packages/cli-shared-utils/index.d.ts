@@ -60,3 +60,11 @@ export const base64: {
 
 
 export function resolveModule(request: string, context: string): string;
+
+export const isWindows: boolean;
+
+export const isLinux: boolean;
+
+export const isMacintosh: boolean;
+
+export const progress: any;

@@ -3,7 +3,7 @@
   "version": "0.0.1-beta",
   "scripts": {
     "dev": "vite",
-    "serve": "cd ../oumi-cli-ui && npm run dev",
+    "serve": "cd ../oumi-cli-ui && npm run serve",
     "build": "tsc && vite build",
     "serve2": "vite preview"
   },

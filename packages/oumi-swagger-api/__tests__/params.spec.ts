@@ -1,5 +1,6 @@
 import definitionsData from './mock/definitions1';
-import { requestParams1, requestParams2, requestParams3 } from './mock/params.test';
+import definitionsFile from './mock/definitions_file';
+import { requestParams1, requestParams2, requestParams3, requestFile } from './mock/params.test';
 import parametersBody from '../src/core/parameters';
 
 describe('测试 params', () => {
@@ -74,6 +75,22 @@ describe('测试 params', () => {
         name: 'groupId',
         required: true,
         type: 'integer'
+      }
+    });
+  });
+
+  it('params.file', () => {
+    const params = parametersBody(definitionsFile, {
+      parameters: requestFile
+    });
+
+    expect(params).toEqual({
+      file: {
+        name: 'file',
+        in: 'formData',
+        description: '上传文件',
+        required: true,
+        type: 'file'
       }
     });
   });

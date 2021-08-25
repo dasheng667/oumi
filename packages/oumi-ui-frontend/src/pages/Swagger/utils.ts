@@ -7,7 +7,7 @@ export const createId = (max: number = 8, randomString?: string) => {
   return s.join('');
 };
 
-const dataType = ['string', 'number', 'array', 'object', 'integer', 'boolean', 'int32', 'int64', 'ref'];
+const dataType = ['string', 'number', 'array', 'object', 'integer', 'boolean', 'int32', 'int64', 'ref', 'file'];
 
 /**
  * 校验节点是不是声明类型，声明数据必有type

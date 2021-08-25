@@ -79,3 +79,13 @@ export const requestParams3 = [
     format: 'int64'
   }
 ];
+
+export const requestFile = [
+  {
+    name: 'file',
+    in: 'formData',
+    description: '上传文件',
+    required: true,
+    type: 'file'
+  }
+];

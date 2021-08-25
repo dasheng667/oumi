@@ -6,7 +6,13 @@ const getRcPath = file => {
   return path.join(os.homedir(), file);
 }
 
-const folder = getRcPath('.oumi-cli-ui');
+let folder;
+
+if (process.env.OUMI_CLI_DEV) {
+  folder = path.resolve(__dirname, '../../.dev');
+} else {
+  folder = getRcPath('.oumi-cli-ui');
+}
 
 fs.ensureDirSync(path.resolve(__dirname, folder))
 

@@ -47,3 +47,20 @@ export const response3 = {
     }
   }
 };
+
+export const response_file = {
+  file: {
+    name: 'file',
+    in: 'formData',
+    description: '上传文件',
+    required: true,
+    type: 'file'
+  },
+  billShelfId: {
+    name: 'billShelfId',
+    in: 'query',
+    description: 'billShelfId',
+    required: false,
+    type: 'string'
+  }
+};
