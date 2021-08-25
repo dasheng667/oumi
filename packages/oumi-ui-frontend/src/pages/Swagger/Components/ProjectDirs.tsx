@@ -14,6 +14,7 @@ interface DataNode {
 type Props = {
   selectId: string[];
   configId: string;
+  setSelectId: (id: string[]) => void;
 };
 
 function updateTreeData(list: DataNode[], key: React.Key, children: DataNode[]): DataNode[] {
@@ -35,7 +36,7 @@ function updateTreeData(list: DataNode[], key: React.Key, children: DataNode[]):
 }
 
 export default (props: Props) => {
-  const { selectId, configId } = props;
+  const { selectId, setSelectId, configId } = props;
   const [treeData, setTreeData] = useState<DataNode[]>([]);
   const [selectNode, setSelectNode] = useState<any>(null);
   const { data, loading, request: requestSwaggerBuild } = useRequest('/api/swagger/build', { lazy: true });
@@ -94,6 +95,7 @@ export default (props: Props) => {
         configId
       }).then((res) => {
         message.success('生成文件成功~');
+        setSelectId([]);
       });
     }
   };

@@ -23,4 +23,5 @@ CNAME
 locals.json
 /packages/cli-shared-utils
 /packages/oumi-cli-ui/public
+/packages/oumi-cli-ui/lib
 /packages/oumi-swagger-api/lib

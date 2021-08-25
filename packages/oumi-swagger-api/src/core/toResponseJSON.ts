@@ -12,7 +12,7 @@ interface Options {
  */
 export default function toResponseJSON(resData: any, options?: Options) {
   const result = {};
-  function each(res, data) {
+  function each(res: any, data: any) {
     if (Array.isArray(data)) {
       data.forEach((value) => {
         console.log('数组的暂没有处理~');

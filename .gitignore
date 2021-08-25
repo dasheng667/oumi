@@ -9,4 +9,3 @@ locals.json
 .dev
 
 packages/oumi-swagger-api/example/build
-packages/oumi-cli-ui/lib

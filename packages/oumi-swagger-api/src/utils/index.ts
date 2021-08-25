@@ -37,7 +37,7 @@ export function verifyNodeIsDeclarationType(node: any) {
   return dataType.includes(node.type);
 }
 
-export function findResponseRef(request) {
+export function findResponseRef(request: any) {
   try {
     const {
       responses: {
@@ -90,19 +90,19 @@ export function transformPath(path: string, filterPrefix = '') {
 }
 
 export const log = {
-  red(...args) {
+  red(...args: any) {
     console.log(chalk.red(...args));
   },
-  blue(...args) {
+  blue(...args: any) {
     console.log(chalk.blue(...args));
   },
-  green(...args) {
+  green(...args: any) {
     console.log(chalk.green(...args));
   },
-  yellow(...args) {
+  yellow(...args: any) {
     console.log(chalk.yellow(...args));
   },
-  gray(...args) {
+  gray(...args: any) {
     console.log(chalk.gray(...args));
   }
 };

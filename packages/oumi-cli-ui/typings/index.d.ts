@@ -42,12 +42,14 @@ export type TaskItem = {
   name: string;
   command: string;
   index: number;
+  time: number;
   prompts: any[];
   views: any[];
   logs: any[];
   path: string | null;
   status: string;
   child: null | any;
+  [k: string]: any;
 };
 
 export type Log = {

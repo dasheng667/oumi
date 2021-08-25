@@ -19,8 +19,13 @@ export default (props: any) => {
         <Form.Item name="mock_checked" valuePropName="checked" label="生成MockJS模拟数据">
           <Switch />
         </Form.Item>
-        <Form.Item name="mock_fileType" label="mock文件类型" rules={[{ required: true, message: '请选择' }]}>
-          <Radio.Group buttonStyle="solid" defaultValue="js">
+        <Form.Item
+          name="mock_fileType"
+          label="mock文件类型"
+          initialValue="js"
+          rules={[{ required: true, message: '请选择' }]}
+        >
+          <Radio.Group buttonStyle="solid">
             <Radio.Button value="ts">TypeScript</Radio.Button>
             <Radio.Button value="js">JavaScript</Radio.Button>
           </Radio.Group>

@@ -222,7 +222,7 @@ export default () => {
             expandData={expandData}
             onClickSwaggerHead={onClickSwaggerHead}
           />
-          <ProjectDirs selectId={selectId} configId={tabsId} />
+          <ProjectDirs selectId={selectId} setSelectId={setSelectId} configId={tabsId} />
         </div>
       </div>
     </Container>

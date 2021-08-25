@@ -1,4 +1,3 @@
 .vscode
-packages/oumi-cli-ui/db/locals.json
 packages/oumi-ui-frontend
 scripts

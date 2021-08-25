@@ -21,9 +21,9 @@ export declare function transformPath(path: string, filterPrefix?: string): {
     path: string;
 };
 export declare const log: {
-    red(...args: any[]): void;
-    blue(...args: any[]): void;
-    green(...args: any[]): void;
-    yellow(...args: any[]): void;
-    gray(...args: any[]): void;
+    red(...args: any): void;
+    blue(...args: any): void;
+    green(...args: any): void;
+    yellow(...args: any): void;
+    gray(...args: any): void;
 };

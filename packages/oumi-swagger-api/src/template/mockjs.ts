@@ -111,7 +111,7 @@ const getMockContent = (funName: string, mockContent: any, fileType: 'ts' | 'js'
   if (fileType === 'ts') {
     return `(req: Request, res: Response, u: string) => {
       const data = ${mockContent}
-      return res.send({ code: 200, data：Mock.mock(data), success: true, msg: '' });
+      return res.send({ code: 200, data: Mock.mock(data), success: true, msg: '' });
     }, \n\n\n`;
   }
   return `(req, res, u) => {

@@ -16,6 +16,10 @@ export default defineConfig({
         changeOrigin: true
         // rewrite: (p) => p.replace(/^\/api/, '')
       }
+    },
+    fs: {
+      // 可以为项目根目录的上一级提供服务
+      allow: ['../oumi-swagger-api']
     }
   },
   build: {
@@ -24,7 +28,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@src': resolve('./src')
+      '@src': resolve('./src'),
+      '@oumi/swagger-api': resolve('../oumi-swagger-api')
     }
   },
   plugins: [reactRefresh()],

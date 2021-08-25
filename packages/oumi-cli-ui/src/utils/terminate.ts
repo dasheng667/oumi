@@ -21,7 +21,7 @@ export default async function (childProcess: any, cwd: any) {
     }
   } else if (isLinux || isMacintosh) {
     try {
-      const cmd = path.resolve(__dirname, './terminate.sh');
+      const cmd = path.resolve(__dirname, '../../sh/terminate.sh');
       const result: any = await spawn(cmd, [childProcess.pid.toString()], {
         cwd
       });

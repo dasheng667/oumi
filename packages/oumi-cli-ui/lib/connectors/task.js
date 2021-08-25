@@ -1,22 +1,58 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable no-param-reassign */
-/* eslint-disable consistent-return */
-import { chalk, execa } from '@oumi/cli-shared-utils';
-import channels from './channels';
-import * as folders from './folders';
-import terminate from '../utils/terminate';
-import cwd from './cwd';
-import { log, parseArgs } from '../utils';
-import type { TaskItem, Log, SocketContext } from '../../typings';
-
+'use strict';
+var __createBinding =
+  (this && this.__createBinding) ||
+  (Object.create
+    ? function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        Object.defineProperty(o, k2, {
+          enumerable: true,
+          get: function () {
+            return m[k];
+          }
+        });
+      }
+    : function (o, m, k, k2) {
+        if (k2 === undefined) k2 = k;
+        o[k2] = m[k];
+      });
+var __setModuleDefault =
+  (this && this.__setModuleDefault) ||
+  (Object.create
+    ? function (o, v) {
+        Object.defineProperty(o, 'default', { enumerable: true, value: v });
+      }
+    : function (o, v) {
+        o['default'] = v;
+      });
+var __importStar =
+  (this && this.__importStar) ||
+  function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null)
+      for (var k in mod)
+        if (k !== 'default' && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+  };
+var __importDefault =
+  (this && this.__importDefault) ||
+  function (mod) {
+    return mod && mod.__esModule ? mod : { default: mod };
+  };
+Object.defineProperty(exports, '__esModule', { value: true });
+exports.findLogs = exports.clearLogs = exports.stop = exports.run = exports.list = void 0;
+const cli_shared_utils_1 = require('@oumi/cli-shared-utils');
+const channels_1 = __importDefault(require('./channels'));
+const folders = __importStar(require('./folders'));
+const terminate_1 = __importDefault(require('../utils/terminate'));
+const cwd_1 = __importDefault(require('./cwd'));
+const utils_1 = require('../utils');
 const MAX_LOGS = 2000;
-const WIN_ENOENT_THRESHOLD = 500; // ms
+const WIN_ENOENT_THRESHOLD = 500;
 const tasks = new Map();
-
-function getTasks(file = null): TaskItem[] {
-  if (!file) file = cwd.get();
+function getTasks(file = null) {
+  if (!file) file = cwd_1.default.get();
   let list = tasks.get(file);
   if (!list) {
     list = [];
@@ -24,37 +60,27 @@ function getTasks(file = null): TaskItem[] {
   }
   return list;
 }
-
-function updateOne(data: any, context: SocketContext) {
+function updateOne(data, context) {
   const task = findOne(data.id);
   if (task) {
     if (task.status !== data.status) {
-      // updateViewBadges({
-      //   task,
-      //   data
-      // }, context)
     }
-
     Object.assign(task, data);
-    context.pubsub.publish(channels.TASK_CHANGED, {
+    context.pubsub.publish(channels_1.default.TASK_CHANGED, {
       taskChanged: task
     });
   }
   return task;
 }
-
-function logPipe(action: (queue: string) => void) {
+function logPipe(action) {
   const maxTime = 300;
-
   let queue = '';
   let size = 0;
   let time = Date.now();
-  let timeout: any;
-
-  const add = (string: string) => {
+  let timeout;
+  const add = (string) => {
     queue += string;
     size++;
-
     if (size === 50 || Date.now() > time + maxTime) {
       flush();
     } else {
@@ -62,7 +88,6 @@ function logPipe(action: (queue: string) => void) {
       timeout = setTimeout(flush, maxTime);
     }
   };
-
   const flush = () => {
     clearTimeout(timeout);
     if (!size) return;
@@ -71,27 +96,17 @@ function logPipe(action: (queue: string) => void) {
     size = 0;
     time = Date.now();
   };
-
   return {
     add,
     flush
   };
 }
-
-export async function list({ file = null, api = true } = {}, context?: SocketContext) {
-  if (!file) file = cwd.get();
+async function list({ file = null, api = true } = {}, context) {
+  if (!file) file = cwd_1.default.get();
   let list = getTasks(file);
   const pkg = folders.readPackage(file, context);
   if (pkg.scripts) {
     const existing = new Map();
-
-    // if (projects.getType(file, context) === 'vue') {
-    //   await plugins.list(file, context, { resetApi: false, lightApi: true })
-    // }
-
-    // const pluginApi = api && plugins.getApi(file)
-
-    // Get current valid tasks in project `package.json`
     const scriptKeys = Object.keys(pkg.scripts);
     const currentTasks = scriptKeys.map((name) => {
       const id = `${file}:${name}`;
@@ -107,23 +122,11 @@ export async function list({ file = null, api = true } = {}, context?: SocketCon
         path: file
       };
     });
-
-    // Process existing tasks
     const existingTasks = currentTasks.filter((task) => task.index !== -1);
-    // Update tasks data
     existingTasks.forEach((task) => {
       Object.assign(list[task.index], task);
     });
-
-    // Process removed tasks
-    // const removedTasks = list.filter((t) => currentTasks.findIndex((c) => c.id === t.id) === -1);
-    // Remove badges
-    // removedTasks.forEach((task) => {
-    //   updateViewBadges({ task }, context);
-    // });
-
-    // Process new tasks
-    const newTasks: any = currentTasks
+    const newTasks = currentTasks
       .filter((task) => task.index === -1)
       .map((task) => ({
         ...task,
@@ -131,55 +134,44 @@ export async function list({ file = null, api = true } = {}, context?: SocketCon
         child: null,
         logs: []
       }));
-
-    // Keep existing running tasks
     list = list.filter((task) => existing.get(task.id) || task.status === 'running');
-
-    // Add the new tasks
     list = list.concat(newTasks);
-
-    // Sort
-    const getSortScore = (task: TaskItem) => {
+    const getSortScore = (task) => {
       const index = scriptKeys.indexOf(task.name);
       if (index !== -1) return index;
       return Infinity;
     };
     list.sort((a, b) => getSortScore(a) - getSortScore(b));
-
     tasks.set(file, list);
   }
   return list;
 }
-
-function findOne(id: string): TaskItem | null {
+exports.list = list;
+function findOne(id) {
   for (const [, list] of tasks) {
-    const result = list.find((t: any) => t.id === id);
+    const result = list.find((t) => t.id === id);
     if (result) return result;
   }
   return null;
 }
-
-function addLog(log: Log, context: SocketContext) {
+function addLog(log, context) {
   const task = findOne(log.taskId);
   if (task) {
     if (task.logs.length === MAX_LOGS) {
       task.logs.shift();
     }
     task.logs.push(log);
-    context.pubsub.publish(channels.TASK_LOG_ADDED, {
+    context.pubsub.publish(channels_1.default.TASK_LOG_ADDED, {
       taskLogAdded: log
     });
   }
 }
-
-export async function run(id: string, context: SocketContext) {
-  let command: any = null;
-  let args: any = null;
-  const child: any = null;
+async function run(id, context) {
+  let command = null;
+  let args = null;
+  const child = null;
   const task = findOne(id);
-
   const outPipe = logPipe((queue) => {
-    // console.log('outPipe>>>', context);
     addLog(
       {
         taskId: task.id,
@@ -189,7 +181,6 @@ export async function run(id: string, context: SocketContext) {
       context
     );
   });
-
   const errPipe = logPipe((queue) => {
     addLog(
       {
@@ -200,35 +191,29 @@ export async function run(id: string, context: SocketContext) {
       context
     );
   });
-
-  const onExit = async (code: string | number | null, signal: string) => {
+  const onExit = async (code, signal) => {
     outPipe.flush();
     errPipe.flush();
-
-    log('Task exit', command, args, 'code:', code, 'signal:', signal);
-
+    utils_1.log('Task exit', command, args, 'code:', code, 'signal:', signal);
     const duration = Date.now() - task.time;
     const seconds = Math.round(duration / 10) / 100;
     addLog(
       {
         taskId: task.id,
         type: 'stdout',
-        text: chalk.grey(`Total task duration: ${seconds}s`)
+        text: cli_shared_utils_1.chalk.grey(`Total task duration: ${seconds}s`)
       },
       context
     );
-
-    // Plugin API
     if (task.onExit) {
       await task.onExit({
         args,
         child,
-        cwd: cwd.get(),
+        cwd: cwd_1.default.get(),
         code,
         signal
       });
     }
-
     if (code === null || task._terminating) {
       updateOne(
         {
@@ -254,35 +239,12 @@ export async function run(id: string, context: SocketContext) {
         context
       );
     }
-
-    // plugins.callHook(
-    //   {
-    //     id: 'taskExit',
-    //     args: [
-    //       {
-    //         task,
-    //         args,
-    //         child,
-    //         cwd: cwd.get(),
-    //         signal,
-    //         code
-    //       }
-    //     ],
-    //     file: cwd.get()
-    //   },
-    //   context
-    // );
   };
-
   if (task && task.status !== 'running') {
     task._terminating = false;
-
-    // eslint-disable-next-line prefer-const
-    let [command2, ...args2] = parseArgs(task.command);
+    let [command2, ...args2] = utils_1.parseArgs(task.command);
     command = command2;
     args = args2;
-
-    // Deduplicate arguments
     const dedupedArgs = [];
     for (let i = args.length - 1; i >= 0; i--) {
       const arg = args[i];
@@ -300,11 +262,9 @@ export async function run(id: string, context: SocketContext) {
       }
     }
     args = dedupedArgs.reverse();
-
     if (command === 'npm') {
       args.splice(0, 0, '--');
     }
-
     updateOne(
       {
         id: task.id,
@@ -312,37 +272,29 @@ export async function run(id: string, context: SocketContext) {
       },
       context
     );
-
     addLog(
       {
         taskId: task.id,
         type: 'stdout',
-        text: chalk.grey(`$ ${command} ${args.join(' ')}`)
+        text: cli_shared_utils_1.chalk.grey(`$ ${command} ${args.join(' ')}`)
       },
       context
     );
-
     task.time = Date.now();
-
-    const child: any = execa(command, args, {
-      cwd: cwd.get(),
+    const child = cli_shared_utils_1.execa(command, args, {
+      cwd: cwd_1.default.get(),
       stdio: ['inherit', 'pipe', 'pipe'],
       shell: true
     });
-
     task.child = child;
-
-    child.stdout.on('data', (buffer: any) => {
+    child.stdout.on('data', (buffer) => {
       outPipe.add(buffer.toString());
     });
-
-    child.stderr.on('data', (buffer: any) => {
+    child.stderr.on('data', (buffer) => {
       errPipe.add(buffer.toString());
     });
-
     child.on('exit', onExit);
-
-    child.on('error', (error: any) => {
+    child.on('error', (error) => {
       const duration = Date.now() - task.time;
       if (process.platform === 'win32' && error.code === 'ENOENT' && duration > WIN_ENOENT_THRESHOLD) {
         onExit(null, '');
@@ -355,76 +307,33 @@ export async function run(id: string, context: SocketContext) {
         },
         context
       );
-
       addLog(
         {
           taskId: task.id,
           type: 'stdout',
-          text: chalk.red(`Error while running task ${task.id} with message '${error.message}'`)
+          text: cli_shared_utils_1.chalk.red(`Error while running task ${task.id} with message '${error.message}'`)
         },
         context
       );
       console.error(error);
     });
-
-    // Plugin API
     if (task.onRun) {
       await task.onRun({
         args,
         child,
-        cwd: cwd.get()
+        cwd: cwd_1.default.get()
       });
     }
   }
-  // if (task && task.status === 'running') {
-  //   const { child } = task;
-  //   const [command2, ...args2] = parseArgs(task.command);
-  //   command = command2;
-  //   args = args2;
-
-  //   child.stdout.on('data', (buffer) => {
-  //     outPipe.add(buffer.toString());
-  //   });
-
-  //   child.stderr.on('data', (buffer) => {
-  //     errPipe.add(buffer.toString());
-  //   });
-
-  //   child.on('exit', onExit);
-
-  //   child.on('error', (error) => {
-  //     const duration = Date.now() - task.time;
-  //     if (process.platform === 'win32' && error.code === 'ENOENT' && duration > WIN_ENOENT_THRESHOLD) {
-  //       return onExit(null);
-  //     }
-  //     updateOne(
-  //       {
-  //         id: task.id,
-  //         status: 'error'
-  //       },
-  //       context
-  //     );
-
-  //     addLog(
-  //       {
-  //         taskId: task.id,
-  //         type: 'stdout',
-  //         text: chalk.red(`Error while running task ${task.id} with message '${error.message}'`)
-  //       },
-  //       context
-  //     );
-  //     console.error(error);
-  //   });
-  // }
   return task;
 }
-
-export async function stop(id: string, context: SocketContext) {
+exports.run = run;
+async function stop(id, context) {
   const task = findOne(id);
   if (task && task.status === 'running' && task.child) {
     task._terminating = true;
     try {
-      const { success, error } = await terminate(task.child, cwd.get());
+      const { success, error } = await terminate_1.default(task.child, cwd_1.default.get());
       if (success) {
         updateOne(
           {
@@ -446,7 +355,7 @@ export async function stop(id: string, context: SocketContext) {
         throw new Error('Unknown error');
       }
     } catch (e) {
-      console.log(chalk.red(`Can't terminate process ${task.child.pid}`));
+      console.log(cli_shared_utils_1.chalk.red(`Can't terminate process ${task.child.pid}`));
       console.error(e);
     }
   } else {
@@ -460,16 +369,17 @@ export async function stop(id: string, context: SocketContext) {
   }
   return task;
 }
-
-export function clearLogs(id: string) {
+exports.stop = stop;
+function clearLogs(id) {
   const task = findOne(id);
   if (task) {
     task.logs = [];
   }
   return task;
 }
-
-export function findLogs(id: string) {
+exports.clearLogs = clearLogs;
+function findLogs(id) {
   const task = findOne(id);
   return task ? task.logs : null;
 }
+exports.findLogs = findLogs;
