@@ -95,6 +95,12 @@ input, button {
   cursor: pointer;
 }
 
+.truncate{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 
 .tabs-oumi {
   .ant-tabs-ink-bar{
@@ -105,5 +111,20 @@ input, button {
     .ant-tabs-tab-btn{
       color: @tabs-text-color;
     }
+  }
+}
+
+.ant-tree.ant-tree-directory .ant-tree-treenode-selected .ant-tree-switcher{
+  color: #333;
+}
+.ant-tree.ant-tree-directory .ant-tree-treenode .ant-tree-node-content-wrapper.ant-tree-node-selected{
+  color: #333;
+}
+div.ant-tree-list .ant-tree-treenode.ant-tree-treenode-selected{
+  &:hover::before{
+    background: rgba(35,114,251,.1);
+  }
+  &:before {
+    background: rgba(35,114,251,.1);
   }
 }

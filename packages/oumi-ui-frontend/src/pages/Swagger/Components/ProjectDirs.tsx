@@ -17,6 +17,8 @@ type Props = {
   setSelectId: (id: string[]) => void;
 };
 
+const { DirectoryTree } = Tree;
+
 function updateTreeData(list: DataNode[], key: React.Key, children: DataNode[]): DataNode[] {
   return list.map((node) => {
     if (node.key === key) {
@@ -116,7 +118,8 @@ export default (props: Props) => {
           }}
         />
 
-        <Tree showLine showIcon loadData={onLoadData} treeData={treeData} onSelect={onSelect} />
+        {/*  showLine showIcon  */}
+        <DirectoryTree loadData={onLoadData} treeData={treeData} onSelect={onSelect} />
       </div>
       <div className="dirs-btn">
         <Button type="primary" disabled={!selectNode} onClick={onClickExport} loading={loading}>

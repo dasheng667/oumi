@@ -15,6 +15,8 @@ type Props = {
   onSelect?: (node: any) => void;
 };
 
+const { DirectoryTree } = Tree;
+
 export type SelectNode = EventDataNode & { dirPath: string };
 
 export type SelectInfo = {
@@ -104,7 +106,7 @@ export default (props: Props) => {
           }}
         />
 
-        <Tree showLine showIcon loadData={onLoadData} treeData={treeData} onSelect={onTreeSelect} />
+        <DirectoryTree loadData={onLoadData} treeData={treeData} onSelect={onTreeSelect} />
       </div>
     </div>
   );

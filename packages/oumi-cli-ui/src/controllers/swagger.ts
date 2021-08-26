@@ -81,7 +81,7 @@ const getProjectDirs = async (ctx: Context) => {
     const extname = path.extname(file);
     const isDir = stat.isDirectory();
 
-    if (filter.includes(file)) return;
+    if (filter.includes(file) || file.substr(0, 1) === '.') return;
 
     components.push({
       title: file,

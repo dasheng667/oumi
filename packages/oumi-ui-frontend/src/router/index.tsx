@@ -1,7 +1,14 @@
 import React from 'react';
 import asyncComponent from './asyncComponent';
 import { Redirect } from 'react-router-dom';
-import { ShoppingOutlined, ApiOutlined, SettingOutlined, SolutionOutlined, CodepenOutlined } from '@ant-design/icons';
+import {
+  ShoppingOutlined,
+  ApiOutlined,
+  SettingOutlined,
+  SolutionOutlined,
+  CodepenOutlined,
+  BugOutlined
+} from '@ant-design/icons';
 import App from './Root';
 import type { IRouter } from '../global';
 
@@ -25,6 +32,11 @@ export const menuList = [
     name: 'Swagger',
     path: '/swagger',
     icon: <ApiOutlined />
+  },
+  {
+    name: '接口调试',
+    path: '/debugger',
+    icon: <BugOutlined />
   },
   {
     name: '配置',
@@ -96,6 +108,12 @@ const router: IRouter[] = [
         label: 'Deps',
         exact: true,
         component: asyncComponent(() => import(`../pages/Deps`))
+      },
+      {
+        path: '/debugger',
+        label: 'Debugger',
+        exact: true,
+        component: asyncComponent(() => import(`../pages/Debugger`))
       }
 
       // {
