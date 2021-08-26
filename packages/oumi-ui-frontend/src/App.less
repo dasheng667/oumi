@@ -1,11 +1,11 @@
+@import 'antd/lib/style/themes/default.less';
+@import 'antd/dist/antd.less';
+@import './static/less/theme.less';
+
 *{margin: 0; padding: 0; box-sizing: border-box;}
 
-input, button{
+input, button {
   border: 0;
-}
-
-h1, h2, h3, h4, h5, p{
-  margin: 0;
 }
 
 #root{
@@ -79,7 +79,6 @@ h1, h2, h3, h4, h5, p{
   height: 6px;
   background: #ffffff;
   cursor: pointer;
-
 }
 
 ::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
@@ -97,9 +96,14 @@ h1, h2, h3, h4, h5, p{
 }
 
 
-.tabs-oumi .ant-tabs-tab-active{
-  background: #1890ff!important;
-}
-.tabs-oumi .ant-tabs-tab-active .ant-tabs-tab-btn{
-  color: #fff;
+.tabs-oumi {
+  .ant-tabs-ink-bar{
+    background: @primary-color - 60;
+  }
+  .ant-tabs-tab-active{
+    background: @primary-color !important;
+    .ant-tabs-tab-btn{
+      color: @tabs-text-color;
+    }
+  }
 }

@@ -1,15 +1,24 @@
+@import '../../static/less/theme.less';
+
 .wrapper-container{
+  color: @primary-text;
+
+  .ant-tabs{
+    color: @primary-text;
+  }
+
   .container-body{
     flex: auto 1 1;
     overflow-x: hidden;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    background: #e3f1ff;
+    background: @primary-bg;
   }
 
   .header{
     padding: 16px;
+    color: @primary-text;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -18,6 +27,7 @@
     h2{
       font-size: 28px;
       font-weight: 300;
+      color: @primary-text;
     }
   }
 
@@ -25,7 +35,7 @@
     min-height: 85vh;
     margin: 20px;
     margin-top: 0;
-    background: #fff;
+    background: @primary-content;
     padding: 14px;
     border-radius: 4px;
     box-shadow: 0 0 3px 3px rgb(151 151 151 / 13%);

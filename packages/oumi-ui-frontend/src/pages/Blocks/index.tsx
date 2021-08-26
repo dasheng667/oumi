@@ -39,7 +39,7 @@ export default (props: Props) => {
       <div className="dashboard-body">
         <div className="ui-dashboard-content">
           <div className="ui-content-container ui-main-container">
-            <Tabs type="line" defaultActiveKey={'1'} tabPosition="left">
+            <Tabs className="tabs-oumi" type="line" defaultActiveKey={'1'} tabPosition="left">
               {blockList &&
                 blockList.map((item) => {
                   return (

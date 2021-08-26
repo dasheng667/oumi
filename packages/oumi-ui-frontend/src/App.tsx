@@ -3,8 +3,7 @@ import { BrowserRouter as Router, HashRouter, Switch, Route, Redirect, Link } fr
 import routers from './router';
 import renderRoutes from './router/renderRoutes';
 
-import 'antd/dist/antd.css';
-import './App.css';
+import './App.less';
 
 function App() {
   return <Router>{renderRoutes(routers)}</Router>;

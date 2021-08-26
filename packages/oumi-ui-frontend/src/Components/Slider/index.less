@@ -1,3 +1,5 @@
+@import '../../static/less/theme.less';
+
 .ui-slider{
   width: 220px;
   background: #fff;
@@ -13,16 +15,15 @@
     border-bottom: 1px solid #f1f1f1;
     cursor: pointer;
     display: flex;
+    color: @primary-color;
     .icon{
       width: 60px;
       flex: 0 0 auto;
       text-align: center;
-      color: #2496ff;
     }
     .project-name{
       flex: 1;
       font-weight: 700;
-      color: #2496ff;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -43,7 +44,7 @@
       > a {
         display: block;
         padding-left: 10px;
-        color: #333;
+        color: inherit;
       }
       span.anticon{
         width: 36px;
@@ -52,13 +53,12 @@
         font-size: 18px;
       }
       &.active{
-        background: #e3f1ff;
-        a {
-          color: #2496ff;
-        }
+        background: @slider-active;
+        color: @primary-color;
       }
       &:hover{
         background: #f7f7f7;
+        color: @primary-color;
       }
     }
   }

@@ -4,12 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const eachDefinitions_1 = __importDefault(require("./eachDefinitions"));
-function checkParamsIn(value) {
-    if (value && value.in !== 'header') {
-        return true;
-    }
-    return false;
-}
 function parametersBody(definitions = {}, request = {}) {
     const { parameters } = request;
     if (!parameters || !Array.isArray(parameters))
@@ -23,17 +17,25 @@ function parametersBody(definitions = {}, request = {}) {
         Object.assign(body, value);
         return body;
     }
-    parameters.forEach((item) => {
+    const filter = parameters.filter(item => item.in !== 'header');
+    if (filter.length === 1 && filter[0].schema && filter[0].schema.$ref) {
+        // 说明是一个VO对象，只取里面的结构
+        const value = eachDefinitions_1.default({
+            definitions,
+            ref: filter[0].schema.$ref
+        });
+        Object.assign(body, value);
+        return body;
+    }
+    filter.forEach((item) => {
         if (item.schema && item.schema.$ref) {
             const value = eachDefinitions_1.default({
                 definitions,
                 ref: item.schema.$ref
             });
-            if (checkParamsIn(value)) {
-                body[item.name] = value;
-            }
+            body[item.name] = value;
         }
-        else if (checkParamsIn(item)) {
+        else {
             body[item.name] = item;
         }
     });
