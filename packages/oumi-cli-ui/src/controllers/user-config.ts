@@ -1,4 +1,4 @@
-import fetch from '../utils/fetch';
+import { request } from '@oumi/cli-shared-utils';
 import type { Context } from '../../typings';
 
 const getUserConfig = (ctx: Context) => {
@@ -18,7 +18,7 @@ const SwaggerAdd = async (ctx: Context) => {
   }
 
   try {
-    const swagger: any = await fetch(href);
+    const swagger: any = await request.getJSON(href);
     if (swagger && swagger.paths && swagger.definitions) {
       const data = ctx.model.userConfig.swagger.add({ name, href });
       return ctx.returnSuccess(data);

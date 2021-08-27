@@ -13,10 +13,14 @@
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "removeComments": false
+    "removeComments": false,
+    "paths": {
+      "@internal/*": ["internal/*"],
+    }
   },
   "exclude": ["node_modules", "**/node_modules/*"],
   "include": [
+    "internal",
     "packages",
     "typings"
   ]

@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import Swagger from '@oumi/swagger-api';
-import fetch from '../utils/fetch';
+import { request } from '@oumi/cli-shared-utils';
 // import { writeJSON } from '@oumi/swagger-api/lib/utils/fs';
 import type { Context, Next } from '../../typings';
 
@@ -19,7 +19,7 @@ const getSwaggerInfo = async (ctx: Context) => {
   }
 
   try {
-    const swagger: any = await fetch(data.href);
+    const swagger: any = await request.getJSON(data.href);
     return ctx.returnSuccess(swagger);
   } catch (e) {
     return ctx.returnError(e);

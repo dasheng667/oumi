@@ -1,4 +1,5 @@
 import path from 'path';
+import { request as fetch } from '@oumi/cli-shared-utils';
 import type {
   Query,
   QueryListItem,
@@ -17,7 +18,6 @@ import { requestTemp, namespaceTempHead, namespaceTempFoot } from '../template/i
 import mockTemp, { getMockHeaderTemp, mockExportFooterTemp } from '../template/mockjs';
 import { validataQuery, findResponseRef, transformPath } from '../utils';
 import { writeFile, writeJSON } from '../utils/fs';
-import fetch from '../fetch';
 
 /**
  * Swagger 拉取工具
@@ -42,7 +42,7 @@ export default class Swagger {
   async fetchApi(url: string) {
     if (typeof url === 'string' && url.startsWith('http')) {
       try {
-        const body = await fetch(url);
+        const body = await fetch.getJSON(url);
         this.body = body;
         return Promise.resolve(this.body);
       } catch (e) {

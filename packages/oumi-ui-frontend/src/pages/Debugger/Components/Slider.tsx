@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import React, { memo, useState } from 'react';
-import { SearchOutlined, CopyOutlined, DeleteOutlined, SmallDashOutlined } from '@ant-design/icons';
+import { SearchOutlined, CopyOutlined, DeleteOutlined, SmallDashOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Select, Input, Tree, Menu, Dropdown } from 'antd';
 
 const { Option } = Select;
@@ -125,7 +125,7 @@ const Title = memo((props: any) => {
   );
 });
 
-export default () => {
+export default ({ addPane }: { addPane: () => void }) => {
   const [treeData, setTreeData] = useState<ListNode[]>(defTreeData);
   // const [expandedKeys, setExpandedKeys] = useState([]);
   const onSelect = (keys: React.Key[], info: any) => {
@@ -228,7 +228,6 @@ export default () => {
   return (
     <div className="debugger-slider">
       <div className="select-project">
-        <span className="name">选择：</span>
         <Select style={{ width: 180 }} value={1}>
           {projectList &&
             projectList.map((item) => (
@@ -237,9 +236,13 @@ export default () => {
               </Option>
             ))}
         </Select>
+        <span className="name">选择</span>
       </div>
       <div className="search">
         <Input prefix={<SearchOutlined />} allowClear placeholder="搜索" />
+        <span className="add" onClick={() => addPane()}>
+          <PlusCircleOutlined />
+        </span>
       </div>
       <div className="api-list">
         <DirectoryTree

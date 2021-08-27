@@ -26,6 +26,7 @@ exports.execa = require('execa')
 exports.semver = require('semver')
 exports.fsExtra = require('fs-extra')
 exports.LRU = require('lru-cache')
+exports.fetch  = require('node-fetch');
 
 Object.defineProperty(exports, 'installedBrowsers', {
   enumerable: true,

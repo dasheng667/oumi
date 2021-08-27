@@ -17,7 +17,7 @@ function parametersBody(definitions = {}, request = {}) {
         Object.assign(body, value);
         return body;
     }
-    const filter = parameters.filter(item => item.in !== 'header');
+    const filter = parameters.filter((item) => item.in !== 'header');
     if (filter.length === 1 && filter[0].schema && filter[0].schema.$ref) {
         // 说明是一个VO对象，只取里面的结构
         const value = eachDefinitions_1.default({

@@ -18,7 +18,7 @@ const pkgCache = new LRU({
 //   try {
 //     return fs.stat(file).then((x: any) => x.isDirectory());
 //   } catch (e) {
-//     if (process.env.VUE_APP_CLI_UI_DEBUG) console.warn(e.message);
+//     if (process.env.OUMI_APP_CLI_UI_DEBUG) console.warn(e.message);
 //   }
 //   return false;
 // }
@@ -64,7 +64,7 @@ const pkgCache = new LRU({
 
 //     return (!isPlatformWindows && result.unix) || (isPlatformWindows && result.windows);
 //   } catch (e) {
-//     if (process.env.VUE_APP_CLI_UI_DEBUG) {
+//     if (process.env.OUMI_APP_CLI_UI_DEBUG) {
 //       console.log('file:', file);
 //       console.error(e);
 //     }
@@ -141,7 +141,7 @@ export function invalidatePackage(file: string | null) {
 //     const pkg = readPackage(file, context);
 //     return Object.keys(pkg.devDependencies || {}).includes('@vue/cli-service');
 //   } catch (e) {
-//     if (process.env.VUE_APP_CLI_UI_DEBUG) {
+//     if (process.env.OUMI_APP_CLI_UI_DEBUG) {
 //       console.log(e);
 //     }
 //   }

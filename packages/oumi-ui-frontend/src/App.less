@@ -29,6 +29,7 @@ input, button {
   display: flex;
 }
 
+
 .align-items{
   align-items: center;
 }
@@ -103,10 +104,13 @@ input, button {
 
 
 .tabs-oumi {
-  .ant-tabs-ink-bar{
+  .ant-tabs-tab-remove{
+    color: @tabs-text-color;
+  }
+  > .ant-tabs-nav > .ant-tabs-nav-wrap > .ant-tabs-nav-list > .ant-tabs-ink-bar{
     background: @primary-color - 60;
   }
-  .ant-tabs-tab-active{
+  > .ant-tabs-nav > .ant-tabs-nav-wrap > .ant-tabs-nav-list > .ant-tabs-tab-active{
     background: @primary-color !important;
     .ant-tabs-tab-btn{
       color: @tabs-text-color;

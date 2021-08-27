@@ -54,7 +54,7 @@ const parseArgs = (args) => {
 };
 exports.parseArgs = parseArgs;
 const log = (...args) => {
-  if (!process.env.VUE_APP_CLI_UI_DEBUG) return;
+  if (!process.env.OUMI_APP_CLI_UI_DEBUG) return;
   const date = new Date();
   const timestamp = `${date.getHours().toString().padStart(2, '0')}:${date
     .getMinutes()

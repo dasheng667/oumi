@@ -23,6 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
+const cli_shared_utils_1 = require("@oumi/cli-shared-utils");
 const eachDefinitions_1 = __importDefault(require("./eachDefinitions"));
 const parameters_1 = __importDefault(require("./parameters"));
 const toResponseJSON_1 = __importDefault(require("./toResponseJSON"));
@@ -32,7 +33,6 @@ const index_1 = require("../template/index");
 const mockjs_1 = __importStar(require("../template/mockjs"));
 const utils_1 = require("../utils");
 const fs_1 = require("../utils/fs");
-const fetch_1 = __importDefault(require("../fetch"));
 /**
  * Swagger 拉取工具
  */
@@ -49,7 +49,7 @@ class Swagger {
     async fetchApi(url) {
         if (typeof url === 'string' && url.startsWith('http')) {
             try {
-                const body = await fetch_1.default(url);
+                const body = await cli_shared_utils_1.request.getJSON(url);
                 this.body = body;
                 return Promise.resolve(this.body);
             }

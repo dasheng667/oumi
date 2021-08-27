@@ -1,5 +1,6 @@
 import { Chalk } from 'chalk';
 import { Ora } from 'ora';
+import { RequestInfo, RequestInit, Response } from 'node-fetch';
 
 export function got (url: string): any;
 
@@ -11,6 +12,8 @@ export const request: {
 }
 
 export const spinner: Ora;
+
+export const fetch: ( url: RequestInfo, init?: RequestInit ) => Promise<Response>;
 
 export function startSpinner(symbol: any, msg: string): void;
 
