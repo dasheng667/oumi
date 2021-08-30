@@ -7,5 +7,6 @@ TODOs.md
 *.log
 locals.json
 .dev
+.oumi
 
 packages/oumi-swagger-api/example/build

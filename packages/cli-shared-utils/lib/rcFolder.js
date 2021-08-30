@@ -9,7 +9,7 @@ const getRcPath = file => {
 let folder;
 
 if (process.env.OUMI_CLI_DEV) {
-  folder = path.resolve(__dirname, '../../.dev');
+  folder = path.resolve(__dirname, '../../../.oumi');
 } else {
   folder = getRcPath('.oumi-cli-ui');
 }

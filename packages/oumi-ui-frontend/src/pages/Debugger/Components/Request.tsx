@@ -6,27 +6,13 @@ import EditTable from './EditTable';
 
 const { TabPane } = Tabs;
 
-interface Props {}
-
-const menu = (
-  <Menu>
-    <Menu.Item>
-      <span>GET</span>
-    </Menu.Item>
-    <Menu.Item>
-      <span>POST</span>
-    </Menu.Item>
-  </Menu>
-);
+interface Props {
+  setRequestData: (data: any) => void;
+}
 
 export default (props: Props) => {
+  const { setRequestData } = props;
   const [radioValue, setRadioValue] = useState(1);
-  const [requestData, setRequestData] = useState<any>({
-    query: [],
-    bodyFormData: [],
-    header: [],
-    cookie: []
-  });
 
   const onChangeBody = (e: any) => {
     const { value } = e.target;
@@ -34,8 +20,7 @@ export default (props: Props) => {
   };
 
   const onTableChange = (key: string, data: any) => {
-    setRequestData({ ...requestData, [key]: data });
-    console.log('requestData:', requestData);
+    setRequestData({ [key]: data });
   };
 
   return (

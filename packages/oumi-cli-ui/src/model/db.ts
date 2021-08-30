@@ -1,4 +1,6 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
+import { URL } from 'url';
 import path from 'path';
 import low from 'lowdb';
 import FileSync from 'lowdb/adapters/FileSync';
@@ -26,7 +28,11 @@ const defaultData = {
       outputFileName: 'serve.ts'
     }
   },
-  userBlocks: [defaultBlock]
+  userBlocks: [defaultBlock],
+  debugger: {
+    globalEnv: [],
+    list: []
+  }
 };
 
 db.defaults(defaultData).write();
@@ -175,6 +181,50 @@ const modelDb = {
     },
     findById(id: any) {
       return db.get(this.KEY).find({ id }).value();
+    }
+  },
+
+  /** api接口调试 */
+  debugger: {
+    KEY: 'debugger',
+    getCurrProjectId() {
+      return db.get('dashboardId').value();
+    },
+    findListByKey(key: string) {
+      return db.get(`${this.KEY}.list`).find({ key }).value();
+    },
+    getList() {
+      const id = this.getCurrProjectId();
+      const res = db.get(`${this.KEY}.list`).filter({ _mid: id }).value();
+      if (Array.isArray(res)) {
+        return res.map((item, i) => {
+          const item2 = { ...item };
+          delete item2.request;
+          delete item2._mid;
+          return item2;
+        });
+      }
+      return [];
+    },
+    updateListByKey(key: string, data: any) {
+      return db
+        .get(`${this.KEY}.list`)
+        .find({ key })
+        .assign({ ...data })
+        .write();
+    },
+    removeFormList(key: string) {
+      if (key) {
+        return db.get(`${this.KEY}.list`).remove({ key }).write();
+      }
+      return null;
+    },
+    async saveOne(data: any) {
+      data._mid = this.getCurrProjectId();
+      await db.get(`${this.KEY}.list`).push(data).write();
+      return {
+        title: data.title
+      };
     }
   }
 };

@@ -1,7 +1,8 @@
 /* eslint-disable no-param-reassign */
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import { SearchOutlined, CopyOutlined, DeleteOutlined, SmallDashOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Select, Input, Tree, Menu, Dropdown } from 'antd';
+import { useRequest } from '../../../hook';
 
 const { Option } = Select;
 const { DirectoryTree } = Tree;
@@ -64,6 +65,16 @@ const defTreeData = [
   }
 ];
 
+const handlerTreeList = (list: any) => {
+  if (!Array.isArray(list)) return [];
+  return list.map((item: any) => {
+    return {
+      ...item,
+      icon: () => <span className={`method ${item.method}-color`}>{item.method.toLocaleUpperCase()}</span>
+    };
+  });
+};
+
 const TreeMenu = ({ addChildGroup }: any) => {
   const onClick = (e: any, callbcak: any) => {
     e.stopPropagation();
@@ -94,8 +105,8 @@ const TreeMenu = ({ addChildGroup }: any) => {
 };
 
 const Title = memo((props: any) => {
-  const { node, addChildGroup } = props;
-  const { group } = node;
+  const { node, addChildGroup, removeItem } = props;
+  const { group, key } = node;
 
   return (
     <div className="tree-title">
@@ -114,7 +125,7 @@ const Title = memo((props: any) => {
               <span className="icons title-copy" title="复制">
                 <CopyOutlined />
               </span>
-              <span className="icons title-delete" title="删除">
+              <span className="icons title-delete" title="删除" onClick={() => removeItem(key)}>
                 <DeleteOutlined />
               </span>
             </>
@@ -125,11 +136,19 @@ const Title = memo((props: any) => {
   );
 });
 
-export default ({ addPane }: { addPane: () => void }) => {
-  const [treeData, setTreeData] = useState<ListNode[]>(defTreeData);
-  // const [expandedKeys, setExpandedKeys] = useState([]);
+export default ({ addPane, list, removeItem }: { addPane: (pane: any) => void; list: any[]; removeItem: any }) => {
+  const [treeData, setTreeData] = useState<ListNode[]>([]);
+
   const onSelect = (keys: React.Key[], info: any) => {
-    console.log('Trigger Select', keys, info);
+    // console.log('Trigger Select', keys, info);
+    const { node } = info;
+    addPane({
+      title: node.title,
+      method: node.method,
+      url: node.url,
+      key: node.key,
+      env: node.env
+    });
   };
 
   const onDrop = (info: any) => {
@@ -225,6 +244,10 @@ export default ({ addPane }: { addPane: () => void }) => {
     console.log('xx', event, node);
   };
 
+  useEffect(() => {
+    setTreeData(handlerTreeList(list));
+  }, [list]);
+
   return (
     <div className="debugger-slider">
       <div className="select-project">
@@ -240,7 +263,14 @@ export default ({ addPane }: { addPane: () => void }) => {
       </div>
       <div className="search">
         <Input prefix={<SearchOutlined />} allowClear placeholder="搜索" />
-        <span className="add" onClick={() => addPane()}>
+        <span
+          className="add"
+          onClick={() =>
+            addPane({
+              title: '新建接口'
+            })
+          }
+        >
           <PlusCircleOutlined />
         </span>
       </div>
@@ -254,7 +284,9 @@ export default ({ addPane }: { addPane: () => void }) => {
           onDrop={onDrop}
           onDragEnter={onDragEnter}
           draggable={(node: any) => !node.isLeaf}
-          titleRender={(node) => <Title node={node} addChildGroup={() => addChildGroup(node)} />}
+          titleRender={(node) => (
+            <Title node={node} addChildGroup={() => addChildGroup(node)} removeItem={removeItem} />
+          )}
         />
       </div>
     </div>
