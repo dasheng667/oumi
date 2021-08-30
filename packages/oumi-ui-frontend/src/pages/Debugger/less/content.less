@@ -2,6 +2,50 @@
 
 .container-debugger{
 
+  .table-title{
+    padding-bottom: 5px;
+    color: #939393;
+  }
+
+  .table-textarea{
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    position: relative;
+    z-index: 10;
+    textarea.ant-input{
+      height: 100px;
+    }
+    .t-header{
+      padding: 0 10px;
+      p{
+        padding-top: 10px;
+      }
+      .gray-color{
+        padding: 5px 0;
+        color: #ccc;
+      }
+    }
+  }
+
+  .table-textarea-toggle{
+    position: absolute;
+    right: 110px;
+    top: 8px;
+    cursor: pointer;
+    color: @primary-color;
+    z-index: 9;
+  }
+
+  .table-pad{
+    padding-right: 10px;
+    position: relative;
+  }
+
+  .table-row-btn{
+    padding-top: 26px;
+  }
+
   .container-content{
     flex: 1;
     width: 100%;
@@ -54,8 +98,48 @@
 
     .request {
       padding-bottom: 20px;
-      margin-bottom: 20px;
+      margin-bottom: 40px;
       border-bottom: 1px dashed #ccc;
+      .body-none{
+        padding: 20px;
+        text-align: center;
+        border-radius: 4px;
+        border: 1px solid #ebebeb;
+        margin-top: 15px;
+        color: #ccc;
+      }
+    }
+
+    .response{
+      .response-body{
+        padding-top: 10px;
+      }
+      .list-line{
+        .list-line_item{
+          display: flex;
+          padding: 10px;
+          border-bottom: 1px solid #ebebeb;
+          .name {
+            flex: 0 0 auto;
+            width: 150px;
+          }
+          .value{
+            flex: 1;
+          }
+        }
+      }
+      .response-status{
+        position: absolute;
+        right: 10px;
+        top: 19px;
+        span{
+          padding-left: 10px;
+        }
+        u {
+          text-decoration: none;
+          color: #009b00;
+        }
+      }
     }
   }
 

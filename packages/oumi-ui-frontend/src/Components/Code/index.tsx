@@ -7,7 +7,7 @@ import { docco, dark, github } from 'react-syntax-highlighter/dist/esm/styles/hl
 import SyntaxHighlighter from 'react-syntax-highlighter';
 
 export interface IProps {
-  code: string;
+  code: string | object;
   lang?: 'json' | 'xml' | 'jsx';
   style?: 'github';
 }

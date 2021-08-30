@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tabs, Menu, Dropdown, Input, Button, Space } from 'antd';
+import { Tabs, Menu, Radio } from 'antd';
 import type { Panes } from '../type';
 import EditTable from './EditTable';
 // import { CaretDownOutlined, CaretRightOutlined, SaveOutlined } from '@ant-design/icons';
@@ -20,25 +20,48 @@ const menu = (
 );
 
 export default (props: Props) => {
-  const { pane } = props;
+  const [radioValue, setRadioValue] = useState(1);
+  const [requestData, setRequestData] = useState<any>({
+    query: [],
+    bodyFormData: [],
+    header: [],
+    cookie: []
+  });
 
-  function callback(key) {
-    console.log(key);
-  }
+  const onChangeBody = (e: any) => {
+    const { value } = e.target;
+    setRadioValue(value);
+  };
+
+  const onTableChange = (key: string, data: any) => {
+    setRequestData({ ...requestData, [key]: data });
+    console.log('requestData:', requestData);
+  };
 
   return (
-    <Tabs defaultActiveKey="1" onChange={callback}>
+    <Tabs defaultActiveKey="1">
       <TabPane tab="Params" key="1">
-        <EditTable />
+        <EditTable tableTitle="Query参数" onChange={(data) => onTableChange('query', data)} />
       </TabPane>
       <TabPane tab="Body" key="2">
-        Content of Tab Pane 2
+        <Radio.Group onChange={onChangeBody} name="bodyRadioGroup" value={radioValue}>
+          <Radio value={1}>none</Radio>
+          <Radio value={2}>form-data</Radio>
+          {/* <Radio value={3}>x-www-form-urlencoded</Radio> */}
+          {/* <Radio value={4}>json</Radio> */}
+        </Radio.Group>
+        {radioValue === 1 && <div className="body-none">该请求无 Body </div>}
+        {radioValue === 2 && (
+          <div>
+            <EditTable onChange={(data) => onTableChange('bodyFormData', data)} />
+          </div>
+        )}
       </TabPane>
       <TabPane tab="Header" key="3">
-        Content of Tab Pane 3
+        <EditTable onChange={(data) => onTableChange('header', data)} />
       </TabPane>
       <TabPane tab="Cookie" key="4">
-        Content of Tab Pane 3
+        <EditTable onChange={(data) => onTableChange('cookie', data)} />
       </TabPane>
     </Tabs>
   );

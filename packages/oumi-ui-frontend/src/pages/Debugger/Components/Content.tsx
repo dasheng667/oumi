@@ -3,6 +3,7 @@ import { Tabs, Menu, Dropdown, Input, Button, Space } from 'antd';
 import type { Panes } from '../type';
 import { CaretDownOutlined, CaretRightOutlined, SaveOutlined } from '@ant-design/icons';
 import Request from './Request';
+import Response from './Response';
 
 const { TabPane } = Tabs;
 
@@ -64,12 +65,15 @@ export default (props: Props) => {
         </div>
       </div>
 
-      <h2 className="title">请求参数</h2>
+      <h2 className="title">请求参数：</h2>
       <div className="request">
         <Request />
       </div>
 
-      <h2 className="title">响应结果</h2>
+      <h2 className="title">响应结果：</h2>
+      <div className="response">
+        <Response />
+      </div>
     </div>
   );
 };

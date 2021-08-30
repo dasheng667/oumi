@@ -1,8 +1,9 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import { Table, Input, Button, Popconfirm, Form } from 'antd';
+import { Table, Input, Button, Popconfirm, Form, Space } from 'antd';
 import type { FormInstance } from 'antd/lib/form';
 // import { DeleteOutlined } from '@ant-design/icons';
 
+const Textarea = Input.TextArea;
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
 
 interface Item {
@@ -100,7 +101,10 @@ const EditableCell: React.FC<EditableCellProps> = ({
   return <td {...restProps}>{childNode}</td>;
 };
 
-type EditableTableProps = Parameters<typeof Table>[0];
+type EditableTableProps = Parameters<typeof Table>[0] & {
+  tableTitle?: string;
+  onChange?: (data: any) => void;
+};
 
 interface DataType {
   key: React.Key;
@@ -110,6 +114,7 @@ interface DataType {
 }
 
 interface EditableTableState {
+  toggle: boolean;
   dataSource: DataType[];
   count: number;
 }
@@ -142,6 +147,7 @@ export default class EditableTable extends React.Component<EditableTableProps, E
       {
         title: '处理',
         dataIndex: 'operation',
+        width: 200,
         render: (_, record: any) =>
           this.state.dataSource.length >= 1 ? (
             <Popconfirm title="确定删除?" onConfirm={() => this.handleDelete(record.key)}>
@@ -152,6 +158,7 @@ export default class EditableTable extends React.Component<EditableTableProps, E
     ];
 
     this.state = {
+      toggle: false,
       dataSource: [
         {
           key: '0',
@@ -184,6 +191,7 @@ export default class EditableTable extends React.Component<EditableTableProps, E
   };
 
   handleSave = (row: DataType) => {
+    const { onChange } = this.props;
     const newData = [...this.state.dataSource];
     const index = newData.findIndex((item) => row.key === item.key);
     const item = newData[index];
@@ -191,12 +199,15 @@ export default class EditableTable extends React.Component<EditableTableProps, E
       ...item,
       ...row
     });
-    // console.log('newData', newData)
     this.setState({ dataSource: newData });
+    if (typeof onChange === 'function') {
+      onChange(newData);
+    }
   };
 
   render() {
-    const { dataSource } = this.state;
+    const { tableTitle } = this.props;
+    const { dataSource, toggle } = this.state;
     const components = {
       body: {
         row: EditableRow,
@@ -219,19 +230,52 @@ export default class EditableTable extends React.Component<EditableTableProps, E
       };
     });
     return (
-      <div>
-        <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
-          新增一行
-        </Button>
-        <Table
-          size="small"
-          components={components}
-          rowClassName={() => 'editable-row'}
-          bordered
-          dataSource={dataSource}
-          columns={columns as ColumnTypes}
-          pagination={false}
-        />
+      <div className="">
+        <div className="table-title mbm10">{tableTitle}</div>
+        <div className="flex rel">
+          <div className="rel table-pad flex-1">
+            {!toggle && (
+              <Table
+                size="small"
+                components={components}
+                rowClassName={() => 'editable-row'}
+                bordered
+                dataSource={dataSource}
+                columns={columns as ColumnTypes}
+                pagination={false}
+              />
+            )}
+            {toggle && (
+              <div className="table-textarea">
+                <div className="t-header flex-sp">
+                  <p>格式：参数名,必填,示例值,说明</p>
+                  <div className="t-handler">
+                    <Space>
+                      <Button size="small" type="primary">
+                        确定
+                      </Button>
+                      <Button size="small" onClick={() => this.setState({ toggle: false })}>
+                        取消
+                      </Button>
+                    </Space>
+                  </div>
+                </div>
+                <Textarea></Textarea>
+                <div className="t-header flex-sp">
+                  <span className="gray-color">字段之间以英文逗号(,)分隔，多条记录以换行分隔</span>
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="table-row-btn">
+            <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
+              新增一行
+            </Button>
+          </div>
+          <div className="table-textarea-toggle" onClick={() => this.setState({ toggle: !this.state.toggle })}>
+            批量修改
+          </div>
+        </div>
       </div>
     );
   }
