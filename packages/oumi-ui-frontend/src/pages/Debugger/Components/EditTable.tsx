@@ -1,10 +1,13 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Table, Input, Button, Popconfirm, Form, Space } from 'antd';
 import type { FormInstance } from 'antd/lib/form';
+import { createId } from '../../Swagger/utils';
 // import { DeleteOutlined } from '@ant-design/icons';
 
 const Textarea = Input.TextArea;
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
+
+const getKey = () => createId(5);
 
 interface Item {
   key: string;
@@ -119,22 +122,23 @@ interface DataType {
 interface EditableTableState {
   toggle: boolean;
   dataSource: DataType[];
-  count: number;
 }
 
 type ColumnTypes = Exclude<EditableTableProps['columns'], undefined>;
 
-export default class EditableTable extends React.Component<EditableTableProps, EditableTableState> {
+export default class EditableTable extends React.PureComponent<EditableTableProps, EditableTableState> {
   columns: (ColumnTypes[number] & { editable?: boolean; dataIndex: string })[];
 
   constructor(props: EditableTableProps) {
     super(props);
 
+    const { size } = props;
+
     this.columns = [
       {
         title: '参数名',
         dataIndex: 'name',
-        width: '30%',
+        width: size === 'small' ? '20%' : '30%',
         editable: true
       },
       {
@@ -150,7 +154,7 @@ export default class EditableTable extends React.Component<EditableTableProps, E
       {
         title: '处理',
         dataIndex: 'operation',
-        width: 200,
+        width: size === 'small' ? 150 : 200,
         render: (_, record: any) =>
           this.state.dataSource.length >= 1 ? (
             <Popconfirm title="确定删除?" onConfirm={() => this.handleDelete(record.key)}>
@@ -169,17 +173,18 @@ export default class EditableTable extends React.Component<EditableTableProps, E
           value: '',
           remark: ''
         }
-      ],
-      count: 2
+      ]
     };
   }
 
   componentWillReceiveProps(nextProps: EditableTableProps) {
     if (nextProps.tableData && nextProps.tableData !== this.state.dataSource) {
-      this.setState({
-        dataSource: nextProps.tableData || [],
-        count: nextProps.tableData.length + 1
-      });
+      // console.log('nextProps.tableData', nextProps.tableData, this.state.dataSource);
+      setTimeout(() => {
+        this.setState({
+          dataSource: nextProps.tableData || []
+        });
+      }, 0);
     }
   }
 
@@ -194,16 +199,15 @@ export default class EditableTable extends React.Component<EditableTableProps, E
   };
 
   handleAdd = () => {
-    const { count, dataSource } = this.state;
+    const { dataSource } = this.state;
     const newData: DataType = {
-      key: count,
+      key: getKey(),
       name: ``,
       value: '',
       remark: ``
     };
     this.setState({
-      dataSource: [...dataSource, newData],
-      count: count + 1
+      dataSource: [...dataSource, newData]
     });
   };
 
@@ -285,7 +289,7 @@ export default class EditableTable extends React.Component<EditableTableProps, E
             )}
           </div>
           <div className="table-row-btn">
-            <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
+            <Button onClick={this.handleAdd} size="small" style={{ marginBottom: 16 }}>
               新增一行
             </Button>
           </div>

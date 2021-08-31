@@ -276,7 +276,7 @@ export default ({
 
   return (
     <div className="debugger-slider">
-      <div className="select-project">
+      {/* <div className="select-project">
         <Select style={{ width: 180 }} value={1}>
           {projectList &&
             projectList.map((item) => (
@@ -286,7 +286,7 @@ export default ({
             ))}
         </Select>
         <span className="name">选择</span>
-      </div>
+      </div> */}
       <div className="search">
         <Input prefix={<SearchOutlined />} allowClear placeholder="搜索" />
         <span

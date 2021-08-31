@@ -6,6 +6,8 @@ import low from 'lowdb';
 import FileSync from 'lowdb/adapters/FileSync';
 import * as utils from '../utils';
 
+type EnvType = 'envList' | 'var' | 'params';
+
 const adapter = new FileSync(path.resolve(utils.rcFolder, 'db.json'));
 const db = low(adapter);
 
@@ -30,14 +32,20 @@ const defaultData = {
   },
   userBlocks: [defaultBlock],
   debugger: {
-    globalEnv: [],
-    list: []
+    currentEnv: 'dev',
+    global: [], // 全局配置
+    envList: [], // 环境配置列表
+    list: [] // 用户保存的列表
   }
 };
 
 db.defaults(defaultData).write();
 
 const modelDb = {
+  getCurrProjectId() {
+    return db.get('dashboardId').value();
+  },
+
   lastImportPath: {
     KEY: 'lastImportPath',
     get() {
@@ -188,14 +196,11 @@ const modelDb = {
   debugger: {
     KEY: 'debugger',
     LIST_KEY: 'debugger.list',
-    getCurrProjectId() {
-      return db.get('dashboardId').value();
-    },
     findListByKey(key: string) {
       return db.get(this.LIST_KEY).find({ key }).value();
     },
     getList() {
-      const id = this.getCurrProjectId();
+      const id = modelDb.getCurrProjectId();
       const res = db.get(this.LIST_KEY).filter({ _mid: id }).value();
       if (Array.isArray(res)) {
         return res.map((item, i) => {
@@ -227,12 +232,116 @@ const modelDb = {
       return null;
     },
     async saveOne(data: any) {
-      data._mid = this.getCurrProjectId();
+      data._mid = modelDb.getCurrProjectId();
       await db.get(this.LIST_KEY).push(data).write();
       const item2 = { ...data };
       delete item2.request;
       delete item2._mid;
       return item2;
+    }
+  },
+
+  // 全局调试器
+  debuggerGlobal: {
+    getKeyByType() {
+      return 'debugger.global';
+    },
+    getList() {
+      const key = this.getKeyByType();
+      const id = modelDb.getCurrProjectId();
+
+      return db.get(key).filter({ _mid: id }).value();
+    },
+    save(data: any) {
+      const mid = modelDb.getCurrProjectId();
+      const key = this.getKeyByType();
+
+      const find = db.get(key).find({ type: data.type, _mid: mid }).value();
+      if (find) {
+        return this.update(data.type, mid, data);
+      }
+
+      db.get(key)
+        .push({ _mid: mid, ...data })
+        .write();
+      return data;
+    },
+    update(type: EnvType, mid: string, data: any) {
+      const key = this.getKeyByType();
+      return db
+        .get(key)
+        .find({ type, _mid: mid })
+        .assign({ ...data })
+        .write();
+    },
+    getGlobalParams() {
+      const type = 'params';
+      const mid = modelDb.getCurrProjectId();
+      const find = db.get(this.getKeyByType()).find({ type, _mid: mid }).value();
+      if (find && find.data) {
+        const { query, header, cookie, bodyFormData } = find.data;
+        return {
+          query: utils.dataTransform(query),
+          header: utils.dataTransform(header),
+          cookie: utils.dataTransform(cookie),
+          bodyFormData: utils.dataTransform(bodyFormData)
+        };
+      }
+      return {
+        query: null,
+        header: null,
+        cookie: null,
+        bodyFormData: null
+      };
+    }
+  },
+
+  debuggerEnvList: {
+    getKeyByType() {
+      return 'debugger.envList';
+    },
+    getList() {
+      const key = this.getKeyByType();
+      const id = modelDb.getCurrProjectId();
+      return db.get(key).filter({ _mid: id }).value();
+    },
+    save(envName: string, data: any) {
+      const mid = modelDb.getCurrProjectId();
+      const key = this.getKeyByType();
+
+      const find = db.get(key).find({ _mid: mid, envName }).value();
+      if (find) {
+        return this.update(mid, envName, data);
+      }
+      data._mid = modelDb.getCurrProjectId();
+      db.get(key)
+        .push({ _mid: mid, envName, ...data })
+        .write();
+      return data;
+    },
+    update(mid: string, envName: string, data: any) {
+      const key = this.getKeyByType();
+      return db
+        .get(key)
+        .find({ _mid: mid, envName })
+        .assign({ ...data })
+        .write();
+    },
+    getCurrentEnv() {
+      return db.get('debugger.currentEnv').value();
+    },
+    setCurrentEnv(env: string) {
+      db.set('debugger.currentEnv', env).write();
+      return env;
+    },
+    getCurrentEnvConfig() {
+      const mid = modelDb.getCurrProjectId();
+      const envName = this.getCurrentEnv();
+      const find = db.get(this.getKeyByType()).find({ envName, _mid: mid }).value();
+      if (find && find.form) {
+        return find.form;
+      }
+      return null;
     }
   }
 };

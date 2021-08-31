@@ -5,12 +5,14 @@ import { useHistory } from 'react-router-dom';
 
 import Slider from './Components/Slider';
 import Content from './Components/Content';
+import GlobalEnv from './Components/GlobalEnv';
 import type { Panes, Env } from './type';
 import { useRequest } from '../../hook';
 
 import './less/index.less';
 import './less/slider.less';
 import './less/content.less';
+import './less/env.less';
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -19,8 +21,11 @@ const defpanes = [{ title: '项目概览', content: 'Content of Tab Pane 1', key
 export default () => {
   const history = useHistory();
   const [panes, setPanes] = useState<Panes[]>([...defpanes]);
-  const [env, setEnv] = useState<Env>('dev');
+  // const [env, setEnv] = useState<Env>('dev');
+  const [visible, setVisible] = useState(false);
   const [activeKey, setActiveKey] = useState(defpanes[0].key);
+  const { request: requestGetEnv, data: env, setData: setEnv } = useRequest<Env>('/api/debugger/getCurrentEnv');
+  const { request: requestToggleEnv } = useRequest('/api/debugger/toggleEnv', { lazy: true });
   const { data: dataList, request: requestList } = useRequest<any[]>('/api/debugger/getList');
   const { request: requestRemove, loading: removeLoading } = useRequest('/api/debugger/remove', { lazy: true });
 
@@ -85,17 +90,18 @@ export default () => {
 
   const handleChange = (value: Env) => {
     setEnv(value);
+    requestToggleEnv({ env: value });
   };
 
   const Operations = () => {
     return (
       <Space className="operations prp10">
-        <Select defaultValue="dev" style={{ width: 120 }} onChange={handleChange}>
+        <Select value={env} style={{ width: 120 }} onChange={handleChange}>
           <Option value="dev">开发环境</Option>
           <Option value="test">测试环境</Option>
           <Option value="prod">生产环境</Option>
         </Select>
-        <span className="icon">
+        <span className="icon" onClick={() => setVisible(true)}>
           <UnorderedListOutlined />
         </span>
       </Space>
@@ -164,6 +170,7 @@ export default () => {
         </Tabs>
         {/* <Container /> */}
       </div>
+      <GlobalEnv visible={visible} setVisible={setVisible} />
     </div>
   );
 };

@@ -104,7 +104,8 @@ const getRequestContent = (arr: any[]) => {
 
 /** 执行一个请求任务 */
 const runTask = async (ctx: Context) => {
-  const { env, method, url, request, key } = ctx.request.body;
+  const { env, url, request, key } = ctx.request.body;
+  let { method } = ctx.request.body;
 
   if (!env) {
     return ctx.returnError('env error');
@@ -121,16 +122,33 @@ const runTask = async (ctx: Context) => {
 
   let fetchUrl = url;
   const startTime = Date.now();
+  method = method.toLocaleUpperCase();
+
   try {
-    const headers = getRequestContent(request.header);
-    const query = getRequestContent(request.query);
-    const bodyFormData = getRequestContent(request.bodyFormData);
+    // 全局参数
+    const globalParams = ctx.model.debuggerGlobal.getGlobalParams();
+
+    // 若当前url不是http开头，取全局的url前缀
+    if (!fetchUrl.startsWith('http')) {
+      // 当前环境的配置
+      const envConfig = ctx.model.debuggerEnvList.getCurrentEnvConfig();
+      if (envConfig && envConfig.url) {
+        fetchUrl = envConfig.url + fetchUrl;
+      }
+    }
+
+    // 合并参数
+    const headers = { ...globalParams.header, ...getRequestContent(request.header) };
+    const query = { ...globalParams.query, ...getRequestContent(request.query) };
+    const bodyFormData = { ...globalParams.bodyFormData, ...getRequestContent(request.bodyFormData) };
+    const cookie = { ...globalParams.cookie, ...getRequestContent(request.cookie) };
+
     const options: any = {
       method,
       headers
     };
-    if (method.toLocaleUpperCase() === 'POST') {
-      Object.assign(options, { body: bodyFormData });
+    if (method === 'POST') {
+      Object.assign(options, { body: JSON.stringify(bodyFormData) });
     } else {
       const index = fetchUrl.indexOf('?');
       let urlParams = '';
@@ -144,7 +162,6 @@ const runTask = async (ctx: Context) => {
       } else {
         fetchUrl += `${fetchUrl.indexOf('?') > -1 ? '' : '?'}${querystring.stringify({ ...query })}`;
       }
-      // console.log('fetchUrl:', fetchUrl);
     }
 
     const res = await fetch(fetchUrl, options);
@@ -182,10 +199,73 @@ const runTask = async (ctx: Context) => {
   }
 };
 
+/** 获取全局变量 */
+const getGlobalVar = (ctx: Context) => {
+  const res1 = ctx.model.debuggerGlobal.getList();
+  const res2 = ctx.model.debuggerEnvList.getList();
+  return ctx.returnSuccess({
+    global: res1,
+    envList: res2
+  });
+};
+
+/** 保存全局变量 */
+const saveGlobalVar = (ctx: Context) => {
+  const { type, data, form } = ctx.request.body;
+
+  if (!type) {
+    return ctx.returnError('type error');
+  }
+  if (!data) {
+    return ctx.returnError('data error');
+  }
+
+  // 环境变量
+  if (type === 'envList') {
+    if (!form || !form.env) {
+      return ctx.returnError('form error');
+    }
+    const res = ctx.model.debuggerEnvList.save(form.env, {
+      data,
+      form
+    });
+    return ctx.returnSuccess(res);
+  }
+
+  const res = ctx.model.debuggerGlobal.save({
+    type,
+    data,
+    form
+  });
+  return ctx.returnSuccess(res);
+};
+
+/** 切换环境变量 */
+const toggleEnv = (ctx: Context) => {
+  const { env } = ctx.request.body;
+
+  if (!env) {
+    return ctx.returnError('env error');
+  }
+
+  const res = ctx.model.debuggerEnvList.setCurrentEnv(env);
+  return ctx.returnSuccess(res);
+};
+
+const getCurrentEnv = (ctx: Context) => {
+  const res = ctx.model.debuggerEnvList.getCurrentEnv();
+  return ctx.returnSuccess(res);
+};
+
 export default {
   'POST /api/debugger/taskDetail': taskDetail,
   'POST /api/debugger/getList': getList,
   'POST /api/debugger/remove': removeOneTask,
   'POST /api/debugger/save': onSaveOneTask,
-  'POST /api/debugger/runTask': runTask
+  'POST /api/debugger/runTask': runTask,
+
+  'POST /api/debugger/getGlobalVar': getGlobalVar,
+  'POST /api/debugger/saveGlobalVar': saveGlobalVar,
+  'POST /api/debugger/getCurrentEnv': getCurrentEnv,
+  'POST /api/debugger/toggleEnv': toggleEnv
 };

@@ -96,3 +96,16 @@ export const throttle = (fun: any, wait = 60) => {
     }
   };
 };
+
+export const dataTransform = (arr: any[]) => {
+  if (Array.isArray(arr)) {
+    const res = {};
+    arr.forEach((item) => {
+      if (item.name) {
+        res[item.name] = item.value;
+      }
+    });
+    return res;
+  }
+  return null;
+};
