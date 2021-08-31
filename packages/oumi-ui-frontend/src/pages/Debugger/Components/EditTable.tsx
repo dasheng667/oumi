@@ -15,12 +15,14 @@ interface Item {
 
 interface EditableRowProps {
   index: number;
+  'data-row-key': string;
 }
 
 const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
   const [form] = Form.useForm();
+  const name = `${props['data-row-key']}_form` || 'form';
   return (
-    <Form form={form} component={false}>
+    <Form form={form} name={name} component={false}>
       <EditableContext.Provider value={form}>
         <tr {...props} />
       </EditableContext.Provider>
@@ -103,6 +105,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
 type EditableTableProps = Parameters<typeof Table>[0] & {
   tableTitle?: string;
+  tableData?: any[];
   onChange?: (data: any) => void;
 };
 
@@ -159,7 +162,7 @@ export default class EditableTable extends React.Component<EditableTableProps, E
 
     this.state = {
       toggle: false,
-      dataSource: [
+      dataSource: props.tableData || [
         {
           key: '0',
           name: '',
@@ -171,9 +174,23 @@ export default class EditableTable extends React.Component<EditableTableProps, E
     };
   }
 
+  componentWillReceiveProps(nextProps: EditableTableProps) {
+    if (nextProps.tableData && nextProps.tableData !== this.state.dataSource) {
+      this.setState({
+        dataSource: nextProps.tableData || [],
+        count: nextProps.tableData.length + 1
+      });
+    }
+  }
+
   handleDelete = (key: React.Key) => {
+    const { onChange } = this.props;
     const dataSource = [...this.state.dataSource];
-    this.setState({ dataSource: dataSource.filter((item) => item.key !== key) });
+    this.setState({ dataSource: dataSource.filter((item) => item.key !== key) }, () => {
+      if (typeof onChange === 'function') {
+        onChange(this.state.dataSource);
+      }
+    });
   };
 
   handleAdd = () => {

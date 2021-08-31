@@ -1,8 +1,15 @@
 /* eslint-disable no-param-reassign */
 import React, { memo, useState, useEffect } from 'react';
-import { SearchOutlined, CopyOutlined, DeleteOutlined, SmallDashOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import {
+  SearchOutlined,
+  CopyOutlined,
+  DeleteOutlined,
+  SmallDashOutlined,
+  PlusCircleOutlined,
+  LoadingOutlined
+} from '@ant-design/icons';
 import { Select, Input, Tree, Menu, Dropdown } from 'antd';
-import { useRequest } from '../../../hook';
+// import { useRequest } from '../../../hook';
 
 const { Option } = Select;
 const { DirectoryTree } = Tree;
@@ -19,7 +26,7 @@ const projectList = [
   { id: 2, name: 'BOMS' }
 ];
 
-const defTreeData = [
+/* const defTreeData = [
   {
     title: 'parent 0',
     key: '0-0',
@@ -64,6 +71,7 @@ const defTreeData = [
     ]
   }
 ];
+ */
 
 const handlerTreeList = (list: any) => {
   if (!Array.isArray(list)) return [];
@@ -88,7 +96,7 @@ const TreeMenu = ({ addChildGroup }: any) => {
         <a
           target="_blank"
           rel="noopener noreferrer"
-          href="https://www.antgroup.com"
+          href=""
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
@@ -105,7 +113,7 @@ const TreeMenu = ({ addChildGroup }: any) => {
 };
 
 const Title = memo((props: any) => {
-  const { node, addChildGroup, removeItem } = props;
+  const { node, addChildGroup, removeItem, removeLoading } = props;
   const { group, key } = node;
 
   return (
@@ -125,8 +133,16 @@ const Title = memo((props: any) => {
               <span className="icons title-copy" title="复制">
                 <CopyOutlined />
               </span>
-              <span className="icons title-delete" title="删除" onClick={() => removeItem(key)}>
-                <DeleteOutlined />
+              <span
+                className="icons title-delete"
+                title="删除"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  removeItem(key);
+                }}
+              >
+                {removeLoading ? <LoadingOutlined /> : <DeleteOutlined />}
               </span>
             </>
           );
@@ -136,7 +152,17 @@ const Title = memo((props: any) => {
   );
 });
 
-export default ({ addPane, list, removeItem }: { addPane: (pane: any) => void; list: any[]; removeItem: any }) => {
+export default ({
+  addPane,
+  list,
+  removeItem,
+  removeLoading
+}: {
+  addPane: (pane: any) => void;
+  list: any[];
+  removeItem: any;
+  removeLoading: boolean;
+}) => {
   const [treeData, setTreeData] = useState<ListNode[]>([]);
 
   const onSelect = (keys: React.Key[], info: any) => {
@@ -285,7 +311,12 @@ export default ({ addPane, list, removeItem }: { addPane: (pane: any) => void; l
           onDragEnter={onDragEnter}
           draggable={(node: any) => !node.isLeaf}
           titleRender={(node) => (
-            <Title node={node} addChildGroup={() => addChildGroup(node)} removeItem={removeItem} />
+            <Title
+              node={node}
+              addChildGroup={() => addChildGroup(node)}
+              removeItem={removeItem}
+              removeLoading={removeLoading}
+            />
           )}
         />
       </div>

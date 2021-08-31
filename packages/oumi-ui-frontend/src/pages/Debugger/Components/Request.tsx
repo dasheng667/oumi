@@ -6,12 +6,20 @@ import EditTable from './EditTable';
 
 const { TabPane } = Tabs;
 
+type IRequestData = {
+  query: any[];
+  bodyFormData: any[];
+  header: any[];
+  cookie: any[];
+};
+
 interface Props {
+  requestData: IRequestData;
   setRequestData: (data: any) => void;
 }
 
 export default (props: Props) => {
-  const { setRequestData } = props;
+  const { setRequestData, requestData } = props;
   const [radioValue, setRadioValue] = useState(1);
 
   const onChangeBody = (e: any) => {
@@ -26,7 +34,11 @@ export default (props: Props) => {
   return (
     <Tabs defaultActiveKey="1">
       <TabPane tab="Params" key="1">
-        <EditTable tableTitle="Query参数" onChange={(data) => onTableChange('query', data)} />
+        <EditTable
+          tableData={requestData.query}
+          tableTitle="Query参数"
+          onChange={(data) => onTableChange('query', data)}
+        />
       </TabPane>
       <TabPane tab="Body" key="2">
         <Radio.Group onChange={onChangeBody} name="bodyRadioGroup" value={radioValue}>
@@ -38,15 +50,15 @@ export default (props: Props) => {
         {radioValue === 1 && <div className="body-none">该请求无 Body </div>}
         {radioValue === 2 && (
           <div>
-            <EditTable onChange={(data) => onTableChange('bodyFormData', data)} />
+            <EditTable tableData={requestData.bodyFormData} onChange={(data) => onTableChange('bodyFormData', data)} />
           </div>
         )}
       </TabPane>
       <TabPane tab="Header" key="3">
-        <EditTable onChange={(data) => onTableChange('header', data)} />
+        <EditTable tableData={requestData.header} onChange={(data) => onTableChange('header', data)} />
       </TabPane>
       <TabPane tab="Cookie" key="4">
-        <EditTable onChange={(data) => onTableChange('cookie', data)} />
+        <EditTable tableData={requestData.cookie} onChange={(data) => onTableChange('cookie', data)} />
       </TabPane>
     </Tabs>
   );

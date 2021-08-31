@@ -109,8 +109,16 @@ const router: IRouter[] = [
         exact: true,
         component: asyncComponent(() => import(`../pages/Deps`))
       },
+
       {
         path: '/debugger',
+        label: 'Debugger',
+        exact: true,
+        component: asyncComponent(() => import(`../pages/Debugger`))
+      },
+
+      {
+        path: '/debugger/:id',
         label: 'Debugger',
         exact: true,
         component: asyncComponent(() => import(`../pages/Debugger`))

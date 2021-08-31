@@ -187,15 +187,16 @@ const modelDb = {
   /** api接口调试 */
   debugger: {
     KEY: 'debugger',
+    LIST_KEY: 'debugger.list',
     getCurrProjectId() {
       return db.get('dashboardId').value();
     },
     findListByKey(key: string) {
-      return db.get(`${this.KEY}.list`).find({ key }).value();
+      return db.get(this.LIST_KEY).find({ key }).value();
     },
     getList() {
       const id = this.getCurrProjectId();
-      const res = db.get(`${this.KEY}.list`).filter({ _mid: id }).value();
+      const res = db.get(this.LIST_KEY).filter({ _mid: id }).value();
       if (Array.isArray(res)) {
         return res.map((item, i) => {
           const item2 = { ...item };
@@ -206,25 +207,32 @@ const modelDb = {
       }
       return [];
     },
+    findTaskDetail(key: string) {
+      if (key) {
+        return db.get(this.LIST_KEY).find({ key }).value();
+      }
+      return null;
+    },
     updateListByKey(key: string, data: any) {
       return db
-        .get(`${this.KEY}.list`)
+        .get(this.LIST_KEY)
         .find({ key })
         .assign({ ...data })
         .write();
     },
     removeFormList(key: string) {
       if (key) {
-        return db.get(`${this.KEY}.list`).remove({ key }).write();
+        return db.get(this.LIST_KEY).remove({ key }).write();
       }
       return null;
     },
     async saveOne(data: any) {
       data._mid = this.getCurrProjectId();
-      await db.get(`${this.KEY}.list`).push(data).write();
-      return {
-        title: data.title
-      };
+      await db.get(this.LIST_KEY).push(data).write();
+      const item2 = { ...data };
+      delete item2.request;
+      delete item2._mid;
+      return item2;
     }
   }
 };

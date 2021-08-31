@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { UnorderedListOutlined } from '@ant-design/icons';
 import { Tabs, Button, Select, Space } from 'antd';
+import { useHistory } from 'react-router-dom';
 
 import Slider from './Components/Slider';
 import Content from './Components/Content';
@@ -16,11 +17,12 @@ const { Option } = Select;
 const defpanes = [{ title: '项目概览', content: 'Content of Tab Pane 1', key: '1' }];
 
 export default () => {
+  const history = useHistory();
   const [panes, setPanes] = useState<Panes[]>([...defpanes]);
   const [env, setEnv] = useState<Env>('dev');
   const [activeKey, setActiveKey] = useState(defpanes[0].key);
   const { data: dataList, request: requestList } = useRequest<any[]>('/api/debugger/getList');
-  const { request: requestRemove } = useRequest('/api/debugger/remove', { lazy: true });
+  const { request: requestRemove, loading: removeLoading } = useRequest('/api/debugger/remove', { lazy: true });
 
   const onChange = (key: string) => {
     setActiveKey(key);
@@ -30,6 +32,12 @@ export default () => {
     // console.log('action', action);
     if (action === 'remove' && typeof e === 'string') {
       removePane(e);
+    }
+  };
+
+  const pushHash = (data: any) => {
+    if (data.title !== '新建接口') {
+      window.location.hash = `${data.key}`;
     }
   };
 
@@ -51,6 +59,8 @@ export default () => {
       setPanes([...panes, p].filter((v) => v && v.key));
       setActiveKey(p.key);
     }
+
+    pushHash(data);
   };
 
   const removePane = (targetKey: any) => {
@@ -94,17 +104,20 @@ export default () => {
 
   const onSaveSuccess = ({ pane }: any) => {
     requestList();
-    if (pane && pane.key) {
-      const i = panes.findIndex((p) => p.key === pane.key);
+    // console.log('pane', pane)
+    if (pane && pane.isDelete) {
+      const i = panes.findIndex((p) => p.key === pane.prevKey);
       if (i > -1) {
         panes.splice(i, 1, pane);
       }
       setPanes([...panes]);
+      setActiveKey(pane.key);
+      pushHash(pane);
     }
   };
 
-  const removeApiItem = async (key: string) => {
-    if (key) {
+  const removePaneItem = async (key: string) => {
+    if (key && !removeLoading) {
       await requestRemove({ key });
       requestList();
       const findIndex = panes.findIndex((item) => item.key === key);
@@ -117,9 +130,20 @@ export default () => {
     }
   };
 
+  useEffect(() => {
+    const { hash } = window.location;
+    if (hash && dataList) {
+      const key = hash.substr(1);
+      const find = dataList.find((item) => item && item.key === key);
+      if (find) {
+        addPane(find);
+      }
+    }
+  }, [dataList, history, history.location]);
+
   return (
     <div className="container-debugger">
-      <Slider addPane={addPane} list={dataList} removeItem={removeApiItem} />
+      <Slider addPane={addPane} list={dataList} removeItem={removePaneItem} removeLoading={removeLoading} />
       <div className="container-content">
         <Tabs
           className="tabs-oumi"
