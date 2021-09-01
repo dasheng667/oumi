@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import type { Context as KoaContext } from 'koa';
 import type modelDB from '../src/model/db';
 
@@ -56,4 +57,25 @@ export type Log = {
   taskId: string;
   type: string;
   text: string;
+};
+
+export type SwaggerItem = {
+  href: string;
+  name: string;
+  id?: string;
+  default?: boolean;
+};
+
+export type BlocksItem = {
+  href: string;
+  name: string;
+  id?: string;
+  default?: boolean;
+};
+
+export type GlobalRequestParams = {
+  query: object | null;
+  bodyFormData: object | null;
+  header: object | null;
+  cookie: object | null;
 };

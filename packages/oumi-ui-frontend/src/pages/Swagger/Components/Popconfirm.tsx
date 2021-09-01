@@ -63,12 +63,12 @@ export default (props: Props) => {
       title={content}
       visible={visible}
       onConfirm={onOk}
-      placement="left"
+      placement="top"
       okButtonProps={{ loading }}
       onCancel={() => showPopconfirm(false)}
       icon={false}
     >
-      <Button size="small" type="primary" disabled={!selectNode} onClick={() => showPopconfirm(true)}>
+      <Button size="middle" disabled={!selectNode} onClick={() => showPopconfirm(true)}>
         新建文件夹
       </Button>
     </Popconfirm>

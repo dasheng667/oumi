@@ -4,8 +4,8 @@ import type { Context } from '../../typings';
 const getUserConfig = (ctx: Context) => {
   const data = ctx.model.userConfig.get() || {};
   const blocks = ctx.model.userBlocks.get() || [];
-  data.blocks = blocks;
-  return ctx.returnSuccess(data);
+  const swagger = ctx.model.userConfig.swagger.get();
+  return ctx.returnSuccess({ ...data, swagger, blocks });
 };
 
 const SwaggerAdd = async (ctx: Context) => {

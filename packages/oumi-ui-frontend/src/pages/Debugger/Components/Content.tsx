@@ -4,7 +4,7 @@ import { CaretDownOutlined, CaretRightOutlined, SaveOutlined } from '@ant-design
 import { useRequest } from '../../../hook';
 import Request from './Request';
 import Response from './Response';
-import type { Panes, Env } from '../type';
+import type { Panes, Env, IRequestData, EditTableItem } from '../type';
 
 const { TabPane } = Tabs;
 
@@ -39,9 +39,10 @@ export default memo((props: Props) => {
   // console.log('pane', pane);
   const [url, setUrl] = useState('');
   const [method, setMethod] = useState<'get' | 'post'>('get');
-  const [requestData, setRequestData] = useState<any>({
+  const [requestData, setRequestData] = useState<IRequestData>({
     query: [],
     bodyFormData: [],
+    bodyJSON: [],
     header: [],
     cookie: []
   });
@@ -56,7 +57,7 @@ export default memo((props: Props) => {
 
   const onSetRequestData = (data: any) => {
     setRequestData({ ...requestData, ...data });
-    console.log('requestData:', requestData);
+    // console.log('requestData:', requestData);
   };
 
   const onRun = () => {
@@ -137,14 +138,16 @@ export default memo((props: Props) => {
         </div>
       </div>
 
-      <h2 className="title">请求参数：</h2>
-      <div className="request">
-        <Request requestData={requestData} setRequestData={onSetRequestData} />
-      </div>
+      <div className="content-scroll">
+        <h2 className="title">请求参数：</h2>
+        <div className="request">
+          <Request requestData={requestData} setRequestData={onSetRequestData} />
+        </div>
 
-      <h2 className="title">响应结果：</h2>
-      <div className="response">
-        <Response responseData={responseData} />
+        <h2 className="title">响应结果：</h2>
+        <div className="response">
+          <Response responseData={responseData} />
+        </div>
       </div>
     </div>
   );

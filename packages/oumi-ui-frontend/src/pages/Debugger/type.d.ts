@@ -8,3 +8,20 @@ export interface Panes {
 }
 
 export type Env = 'dev' | 'test' | 'prod';
+
+export type IRequestData = {
+  query: any[];
+  bodyFormData: any[];
+  bodyJSON: any[];
+  header: any[];
+  cookie: any[];
+};
+
+export type IRequestDataKey = keyof IRequestData;
+
+export type EditTableItem = {
+  key: string;
+  name: string;
+  value: string;
+  remark: string;
+};

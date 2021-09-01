@@ -89,6 +89,7 @@ export default () => {
       title: '操作',
       width: 70,
       render: (text: string, item: ListItem) => {
+        if (item.default) return null;
         return (
           <a onClick={() => removeSwagger(item)} key={item.id}>
             删除

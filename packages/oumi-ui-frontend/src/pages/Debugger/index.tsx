@@ -152,7 +152,7 @@ export default () => {
       <Slider addPane={addPane} list={dataList} removeItem={removePaneItem} removeLoading={removeLoading} />
       <div className="container-content">
         <Tabs
-          className="tabs-oumi"
+          className="custom-tabs"
           hideAdd
           onChange={onChange}
           onEdit={onEdit}
@@ -162,7 +162,7 @@ export default () => {
         >
           {panes.map((pane) => (
             <TabPane tab={pane.title} key={pane.key}>
-              <div className="content-scroll">
+              <div className="tab-content">
                 <Content pane={pane} env={env} onSaveSuccess={onSaveSuccess} />
               </div>
             </TabPane>

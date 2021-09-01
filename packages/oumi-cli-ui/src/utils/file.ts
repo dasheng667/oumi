@@ -1,4 +1,5 @@
-import { launch } from '@oumi/cli-shared-utils';
+import path from 'path';
+import { launch, fsExtra } from '@oumi/cli-shared-utils';
 
 // 打开编辑器
 export async function openInEditor(input: any = {}) {
@@ -26,4 +27,27 @@ export function load(file: string) {
     return module.default;
   }
   return module;
+}
+
+const loadCache = new Map();
+
+const configFileName = '.racconfig.js';
+
+export function readConfigFile(file: string, fileName = configFileName, force?: boolean) {
+  if (!file) return null;
+
+  if (!force) {
+    const cachedValue = loadCache.get(file);
+    if (cachedValue) {
+      return cachedValue;
+    }
+  }
+
+  const pkgFile = path.join(file, fileName);
+  if (fsExtra.existsSync(pkgFile)) {
+    const pkg = require(pkgFile);
+    loadCache.set(file, pkg);
+    return pkg;
+  }
+  return null;
 }

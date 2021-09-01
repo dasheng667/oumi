@@ -2,6 +2,7 @@ import React, { memo, useState, useCallback, useMemo, useEffect } from 'react';
 import { Modal, Tabs, Form, Input, message } from 'antd';
 import EditTable from './EditTable';
 import { useRequest } from '../../../hook';
+import type { IRequestData, EditTableItem, IRequestDataKey } from '../type';
 
 interface Props {
   visible: boolean;
@@ -39,7 +40,7 @@ const MainEnv = memo(
       prod: []
     });
 
-    const onTableChange = (data: any) => {
+    const onTableChange = (data: EditTableItem[]) => {
       const env = envVal[ckey];
       const newData = { ...tableData, [env]: data };
       setTableData(newData);
@@ -76,7 +77,7 @@ const MainEnv = memo(
           </Form.Item>
         </Form>
         <div className="title">环境变量</div>
-        <EditTable tableData={tableData[envVal[ckey]]} size="small" onChange={(data) => onTableChange(data)} />
+        <EditTable tableData={tableData[envVal[ckey]]} size="small" onEditChange={(data) => onTableChange(data)} />
         <Tips />
       </>
     );
@@ -85,12 +86,15 @@ const MainEnv = memo(
 
 const MainContent = memo(
   ({ ckey, onChange, form, globalData }: { ckey: CKEY; onChange: IOnChange; form: any; globalData: any }) => {
+    const [tabFlag, setTabFlag] = useState(false);
+    const [tabsKey, setTabsKey] = useState('1');
     const [varTableData, setVarTableData] = useState<any>([]);
-    const [request, setRequestData] = useState<any>({
+    const [request, setRequestData] = useState<IRequestData>({
       query: [],
       header: [],
       cookie: [],
-      bodyFormData: []
+      bodyFormData: [],
+      bodyJSON: []
     });
 
     const { global, envList } = globalData || {};
@@ -108,12 +112,28 @@ const MainContent = memo(
       }
     }, [globalData, global]);
 
-    const onVarTableChange = (key: EnvType, data: any) => {
+    // 跳转对应的tab
+    useEffect(() => {
+      if (request && tabFlag === false) {
+        if (request.bodyFormData && Object.keys(request.bodyFormData).length > 0) {
+          setTabsKey('2');
+        } else if (request.bodyJSON && Object.keys(request.bodyJSON).length > 0) {
+          setTabsKey('2');
+        } else if (request.query && request.query.length > 0) {
+          setTabsKey('1');
+        } else if (request.header && request.header.length > 0) {
+          setTabsKey('3');
+        }
+        setTabFlag(true);
+      }
+    }, [request, tabFlag]);
+
+    const onVarTableChange = (data: EditTableItem[], key: EnvType) => {
       setVarTableData(data);
       onChange(data, key);
     };
 
-    const onTableChange = (key: string, data: any) => {
+    const onTableChange = (key: IRequestDataKey, data: EditTableItem[]) => {
       const newData = { ...request, [key]: data };
       setRequestData(newData);
       onChange(newData, 'params');
@@ -123,7 +143,7 @@ const MainContent = memo(
       return (
         <>
           <div className="title">全局变量</div>
-          <EditTable tableData={varTableData} size="small" onChange={(data) => onVarTableChange(data, 'var')} />
+          <EditTable tableData={varTableData} size="small" onEditChange={(data) => onVarTableChange(data, 'var')} />
           <Tips />
         </>
       );
@@ -133,27 +153,35 @@ const MainContent = memo(
       return (
         <>
           <div className="title">全局参数</div>
-          <Tabs defaultActiveKey="1">
+          <Tabs activeKey={tabsKey} onChange={(key) => setTabsKey(key)}>
             <TabPane tab="Params" key="1">
               <EditTable
                 size="small"
                 tableData={request.query}
                 tableTitle="Query参数"
-                onChange={(data) => onTableChange('query', data)}
+                onEditChange={(data) => onTableChange('query', data)}
               />
             </TabPane>
             <TabPane tab="Body" key="2">
               <EditTable
                 size="small"
                 tableData={request.bodyFormData}
-                onChange={(data) => onTableChange('bodyFormData', data)}
+                onEditChange={(data) => onTableChange('bodyFormData', data)}
               />
             </TabPane>
             <TabPane tab="Header" key="3">
-              <EditTable size="small" tableData={request.header} onChange={(data) => onTableChange('header', data)} />
+              <EditTable
+                size="small"
+                tableData={request.header}
+                onEditChange={(data) => onTableChange('header', data)}
+              />
             </TabPane>
             <TabPane tab="Cookie" key="4">
-              <EditTable size="small" tableData={request.cookie} onChange={(data) => onTableChange('cookie', data)} />
+              <EditTable
+                size="small"
+                tableData={request.cookie}
+                onEditChange={(data) => onTableChange('cookie', data)}
+              />
             </TabPane>
           </Tabs>
           <Tips />

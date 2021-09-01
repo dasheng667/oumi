@@ -1,7 +1,8 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Table, Input, Button, Popconfirm, Form, Space } from 'antd';
-import type { FormInstance } from 'antd/lib/form';
 import { createId } from '../../Swagger/utils';
+import type { FormInstance } from 'antd/lib/form';
+import type { EditTableItem } from '../type';
 // import { DeleteOutlined } from '@ant-design/icons';
 
 const Textarea = Input.TextArea;
@@ -108,20 +109,13 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
 type EditableTableProps = Parameters<typeof Table>[0] & {
   tableTitle?: string;
-  tableData?: any[];
-  onChange?: (data: any) => void;
+  tableData?: EditTableItem[];
+  onEditChange?: (data: EditTableItem[]) => void;
 };
-
-interface DataType {
-  key: React.Key;
-  name: string;
-  value: string;
-  remark: string;
-}
 
 interface EditableTableState {
   toggle: boolean;
-  dataSource: DataType[];
+  dataSource: EditTableItem[];
 }
 
 type ColumnTypes = Exclude<EditableTableProps['columns'], undefined>;
@@ -189,18 +183,18 @@ export default class EditableTable extends React.PureComponent<EditableTableProp
   }
 
   handleDelete = (key: React.Key) => {
-    const { onChange } = this.props;
+    const { onEditChange } = this.props;
     const dataSource = [...this.state.dataSource];
     this.setState({ dataSource: dataSource.filter((item) => item.key !== key) }, () => {
-      if (typeof onChange === 'function') {
-        onChange(this.state.dataSource);
+      if (typeof onEditChange === 'function') {
+        onEditChange(this.state.dataSource);
       }
     });
   };
 
   handleAdd = () => {
     const { dataSource } = this.state;
-    const newData: DataType = {
+    const newData: EditTableItem = {
       key: getKey(),
       name: ``,
       value: '',
@@ -211,8 +205,8 @@ export default class EditableTable extends React.PureComponent<EditableTableProp
     });
   };
 
-  handleSave = (row: DataType) => {
-    const { onChange } = this.props;
+  handleSave = (row: EditTableItem) => {
+    const { onEditChange } = this.props;
     const newData = [...this.state.dataSource];
     const index = newData.findIndex((item) => row.key === item.key);
     const item = newData[index];
@@ -221,8 +215,8 @@ export default class EditableTable extends React.PureComponent<EditableTableProp
       ...row
     });
     this.setState({ dataSource: newData });
-    if (typeof onChange === 'function') {
-      onChange(newData);
+    if (typeof onEditChange === 'function') {
+      onEditChange(newData);
     }
   };
 
@@ -241,7 +235,7 @@ export default class EditableTable extends React.PureComponent<EditableTableProp
       }
       return {
         ...col,
-        onCell: (record: DataType) => ({
+        onCell: (record: EditTableItem) => ({
           record,
           editable: col.editable,
           dataIndex: col.dataIndex,

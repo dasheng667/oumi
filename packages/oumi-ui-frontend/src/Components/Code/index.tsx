@@ -32,7 +32,8 @@ export default function (props: IProps) {
         // });
       }
     } else {
-      console.error('code 必须是字符串');
+      console.error('code 必须是字符串', code);
+      code = '{}';
     }
   } catch (e) {
     console.error(e);

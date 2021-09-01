@@ -5,6 +5,8 @@ import path from 'path';
 import low from 'lowdb';
 import FileSync from 'lowdb/adapters/FileSync';
 import * as utils from '../utils';
+import { readConfigFile } from '../utils/file';
+import type { SwaggerItem, BlocksItem, GlobalRequestParams } from '../../typings';
 
 type EnvType = 'envList' | 'var' | 'params';
 
@@ -110,10 +112,21 @@ const modelDb = {
     // 用户的swagger列表
     swagger: {
       KEY: 'userConfig.swagger',
-      get() {
-        return db.get(this.KEY).value();
+      readConfig(): SwaggerItem[] {
+        const find = modelDb.projectList.findCurrent();
+        if (find && find.path) {
+          const file = readConfigFile(find.path);
+          if (file && Array.isArray(file.swaggerList)) {
+            return (file.swaggerList as SwaggerItem[]).map((v) => ({ ...v, default: true }));
+          }
+        }
+        return [];
       },
-      add(data: any) {
+      get(): SwaggerItem[] {
+        const res = db.get(this.KEY).value() || [];
+        return [...this.readConfig(), ...res];
+      },
+      add(data: SwaggerItem) {
         if (!this.get()) {
           db.set(this.KEY, []).write();
         }
@@ -122,7 +135,7 @@ const modelDb = {
         }
         return db.get(this.KEY).push(data).write();
       },
-      remove(id: any) {
+      remove(id: string) {
         if (id) {
           return db
             .get(this.KEY)
@@ -133,8 +146,10 @@ const modelDb = {
         }
         return null;
       },
-      findById(id: any) {
-        return db.get(this.KEY).find({ id }).value();
+      findById(id: string): SwaggerItem | null {
+        const dbFind = db.get(this.KEY).find({ id }).value();
+        if (dbFind) return dbFind;
+        return this.readConfig().find((v) => v.id === id);
       }
     },
 
@@ -167,7 +182,7 @@ const modelDb = {
     get() {
       return db.get(this.KEY).value();
     },
-    add(data: any) {
+    add(data: BlocksItem) {
       if (!this.get()) {
         db.set(this.KEY, []).write();
       }
@@ -176,18 +191,18 @@ const modelDb = {
       }
       return db.get(this.KEY).push(data).write();
     },
-    remove(id: any) {
+    remove(id: string) {
       if (id) {
         return db
           .get(this.KEY)
-          .remove((item: any) => {
+          .remove((item: BlocksItem) => {
             return item.id === id;
           })
           .write();
       }
       return null;
     },
-    findById(id: any) {
+    findById(id: string): BlocksItem | null {
       return db.get(this.KEY).find({ id }).value();
     }
   },
@@ -274,7 +289,7 @@ const modelDb = {
         .assign({ ...data })
         .write();
     },
-    getGlobalParams() {
+    getGlobalParams(): GlobalRequestParams {
       const type = 'params';
       const mid = modelDb.getCurrProjectId();
       const find = db.get(this.getKeyByType()).find({ type, _mid: mid }).value();

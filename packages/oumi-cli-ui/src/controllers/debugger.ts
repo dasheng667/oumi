@@ -5,7 +5,36 @@ import { createId } from '../utils';
 import { fetch } from '@oumi/cli-shared-utils';
 import type { Context } from '../../typings';
 
-const runFetch = () => {};
+// eslint-disable-next-line @typescript-eslint/ban-types
+const urlStringify = (url: string, query: object) => {
+  let fetchUrl = url;
+  const index = fetchUrl.indexOf('?');
+  let urlParams = '';
+  if (index > -1) {
+    urlParams = fetchUrl.substr(index + 1);
+    fetchUrl = fetchUrl.substr(0, index);
+  }
+  const paramsData = querystring.parse(urlParams) || null;
+  if (urlParams && paramsData) {
+    fetchUrl += `?${querystring.stringify({ ...paramsData, ...query })}`;
+  } else {
+    fetchUrl += `${fetchUrl.indexOf('?') > -1 ? '' : '?'}${querystring.stringify({ ...query })}`;
+  }
+  return fetchUrl;
+};
+
+const getRequestContent = (arr: any[]) => {
+  if (Array.isArray(arr)) {
+    const res = {};
+    arr.forEach((item) => {
+      if (item.name) {
+        res[item.name] = item.value;
+      }
+    });
+    return res;
+  }
+  return null;
+};
 
 const onSaveOneTask = async (ctx: Context) => {
   const data = await ctx.model.projectList.findCurrent();
@@ -89,19 +118,6 @@ const taskDetail = async (ctx: Context) => {
   return ctx.returnSuccess(res || {});
 };
 
-const getRequestContent = (arr: any[]) => {
-  if (Array.isArray(arr)) {
-    const res = {};
-    arr.forEach((item) => {
-      if (item.name) {
-        res[item.name] = item.value;
-      }
-    });
-    return res;
-  }
-  return null;
-};
-
 /** 执行一个请求任务 */
 const runTask = async (ctx: Context) => {
   const { env, url, request, key } = ctx.request.body;
@@ -138,30 +154,29 @@ const runTask = async (ctx: Context) => {
     }
 
     // 合并参数
-    const headers = { ...globalParams.header, ...getRequestContent(request.header) };
-    const query = { ...globalParams.query, ...getRequestContent(request.query) };
-    const bodyFormData = { ...globalParams.bodyFormData, ...getRequestContent(request.bodyFormData) };
     const cookie = { ...globalParams.cookie, ...getRequestContent(request.cookie) };
+    const headers = { ...globalParams.header, ...getRequestContent(request.header) };
+
+    if (Object.keys(cookie).length > 0) {
+      Object.assign(headers, { cookie: querystring.stringify(cookie) });
+    }
 
     const options: any = {
       method,
       headers
     };
     if (method === 'POST') {
-      Object.assign(options, { body: JSON.stringify(bodyFormData) });
-    } else {
-      const index = fetchUrl.indexOf('?');
-      let urlParams = '';
-      if (index > -1) {
-        urlParams = fetchUrl.substr(index + 1);
-        fetchUrl = fetchUrl.substr(0, index);
-      }
-      const paramsData = querystring.parse(urlParams) || null;
-      if (urlParams && paramsData) {
-        fetchUrl += `?${querystring.stringify({ ...paramsData, ...query })}`;
-      } else {
-        fetchUrl += `${fetchUrl.indexOf('?') > -1 ? '' : '?'}${querystring.stringify({ ...query })}`;
-      }
+      // 合并全局参数
+      const bodyFormData = { ...globalParams.bodyFormData, ...getRequestContent(request.bodyFormData) };
+      const bodyJSON = { ...getRequestContent(request.bodyJSON) };
+      // 优先 form data
+      const reqBody = Object.keys(bodyFormData).length > 0 ? JSON.stringify(bodyFormData) : bodyJSON;
+
+      Object.assign(options, { body: reqBody });
+    } else if (method === 'GET') {
+      // 处理 get 的url
+      const query = { ...globalParams.query, ...getRequestContent(request.query) };
+      fetchUrl = urlStringify(fetchUrl, query);
     }
 
     const res = await fetch(fetchUrl, options);

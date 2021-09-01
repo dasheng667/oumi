@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Tree, Button, message, Form, Input } from 'antd';
+import { Tree, Button, message, Space } from 'antd';
 import request from '../../../request';
 import { useRequest } from '../../../hook';
 import Popconfirm from './Popconfirm';
@@ -107,7 +107,7 @@ export default (props: Props) => {
       <div className="dirs-box">
         <div className="dirs-head">当前项目目录：</div>
 
-        <Popconfirm
+        {/* <Popconfirm
           selectNode={selectNode}
           onSuccess={() => {
             if (selectNode && selectNode.key) {
@@ -116,15 +116,28 @@ export default (props: Props) => {
               requestAndSetTree();
             }
           }}
-        />
+        /> */}
 
         {/*  showLine showIcon  */}
         <DirectoryTree loadData={onLoadData} treeData={treeData} onSelect={onSelect} />
       </div>
       <div className="dirs-btn">
-        <Button type="primary" disabled={!selectNode} onClick={onClickExport} loading={loading}>
-          生成接口到目录
-        </Button>
+        <Space>
+          <Button type="primary" size="middle" disabled={!selectNode} onClick={onClickExport} loading={loading}>
+            生成接口到目录
+          </Button>
+
+          <Popconfirm
+            selectNode={selectNode}
+            onSuccess={() => {
+              if (selectNode && selectNode.key) {
+                onLoadData({ key: selectNode.key, dirPath: selectNode.key });
+              } else {
+                requestAndSetTree();
+              }
+            }}
+          />
+        </Space>
       </div>
     </div>
   );
