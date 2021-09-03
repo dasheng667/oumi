@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, message } from 'antd';
 // import { InfoCircleOutlined } from '@ant-design/icons';
-import { useRequest } from '../../../hook';
+import { useRequest } from '@src/hook';
 
 export default ({ data }: { data: any }) => {
   const [form] = Form.useForm();

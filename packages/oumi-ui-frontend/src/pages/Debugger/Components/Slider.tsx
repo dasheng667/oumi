@@ -6,81 +6,40 @@ import {
   DeleteOutlined,
   SmallDashOutlined,
   PlusCircleOutlined,
-  LoadingOutlined
+  LoadingOutlined,
+  BugOutlined
 } from '@ant-design/icons';
 import { Select, Input, Tree, Menu, Dropdown } from 'antd';
-// import { useRequest } from '../../../hook';
+import { loop } from '@src/utils';
+import type { TreeNode } from '../type';
 
 const { Option } = Select;
 const { DirectoryTree } = Tree;
-
-interface ListNode {
-  title: string;
-  key: string;
-  isLeaf?: boolean;
-  children?: ListNode[];
-}
 
 const projectList = [
   { id: 1, name: 'OMS' },
   { id: 2, name: 'BOMS' }
 ];
 
-/* const defTreeData = [
-  {
-    title: 'parent 0',
-    key: '0-0',
-    group: 1,
-    children: [
-      { title: 'leaf 0-0', key: '0-0-0', isLeaf: true },
-      { title: 'leaf 0-1', key: '0-0-1', isLeaf: true }
-    ]
-  },
-  {
-    title: 'parent 1',
-    key: '0-1',
-    group: 1,
-    children: [
-      {
-        title: 'leaf 1-0 -adfasdfasfasfasd11111222f',
-        key: '0-1-0',
-        icon: () => <span className="method get-color">GET</span>,
-        children: [
-          { title: 'leaf 0-0', key: '11', isLeaf: true },
-          { title: 'leaf 0-1', key: '22', isLeaf: true }
-        ]
-      },
-      {
-        title: 'leaf 1-1',
-        key: '0-1-1',
-        icon: () => <span className="method post-color">POST</span>,
-        children: [
-          { title: 'leaf 0-0', key: '33', isLeaf: true },
-          { title: 'leaf 0-1', key: '44', isLeaf: true }
-        ]
-      },
-      {
-        title: 'leaf 1-3',
-        key: '0-1-3',
-        icon: () => <span className="method put-color">PUT</span>,
-        children: [
-          { title: 'leaf 0-0', key: '55', isLeaf: true },
-          { title: 'leaf 0-1', key: '66', isLeaf: true }
-        ]
-      }
-    ]
-  }
-];
- */
-
 const handlerTreeList = (list: any) => {
   if (!Array.isArray(list)) return [];
-  return list.map((item: any) => {
-    return {
-      ...item,
-      icon: () => <span className={`method ${item.method}-color`}>{item.method.toLocaleUpperCase()}</span>
-    };
-  });
+  const res = [...list];
+  function deep(arr: any) {
+    if (Array.isArray(arr)) {
+      arr.forEach((item) => {
+        if (item.isTest) {
+          item.icon = () => <BugOutlined />;
+        } else if (item.method) {
+          item.icon = () => <span className={`method ${item.method}-color`}>{item.method.toLocaleUpperCase()}</span>;
+        }
+        if (item.children) {
+          deep(item.children);
+        }
+      });
+    }
+  }
+  deep(res);
+  return res;
 };
 
 const TreeMenu = ({ addChildGroup }: any) => {
@@ -156,24 +115,30 @@ export default ({
   addPane,
   list,
   removeItem,
-  removeLoading
+  removeLoading,
+  expandedKeys,
+  onExpand
 }: {
   addPane: (pane: any) => void;
   list: any[];
   removeItem: any;
   removeLoading: boolean;
+  expandedKeys: string[];
+  onExpand: any;
 }) => {
-  const [treeData, setTreeData] = useState<ListNode[]>([]);
+  const [treeData, setTreeData] = useState<TreeNode[]>([]);
 
   const onSelect = (keys: React.Key[], info: any) => {
     // console.log('Trigger Select', keys, info);
-    const { node } = info;
+    const { node } = info as { node: TreeNode };
     addPane({
       title: node.title,
       method: node.method,
       url: node.url,
       key: node.key,
-      env: node.env
+      env: node.env,
+      pkey: node.pkey,
+      isTest: node.isTest
     });
   };
 
@@ -187,18 +152,6 @@ export default ({
     if (!info.dropToGap && !info.node.group) {
       return;
     }
-
-    const loop = (data: any, key: string, callback: any) => {
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].key === key) {
-          callback(data[i], i, data);
-          return;
-        }
-        if (data[i].children) {
-          loop(data[i].children, key, callback);
-        }
-      }
-    };
 
     const data = [...treeData];
 
@@ -293,7 +246,8 @@ export default ({
           className="add"
           onClick={() =>
             addPane({
-              title: '新建接口'
+              title: '新建接口',
+              isNew: true
             })
           }
         >
@@ -306,7 +260,9 @@ export default ({
           onSelect={onSelect}
           treeData={treeData}
           allowDrop={allowDrop}
+          // expandedKeys={expandedKeys}
           // onRightClick={onRightClick}
+          onExpand={onExpand}
           onDrop={onDrop}
           onDragEnter={onDragEnter}
           draggable={(node: any) => !node.isLeaf}
@@ -324,7 +280,7 @@ export default ({
   );
 };
 
-function updateTreeData(list: ListNode[], key: React.Key, children: ListNode[]): ListNode[] {
+function updateTreeData(list: TreeNode[], key: React.Key, children: TreeNode[]): TreeNode[] {
   return list.map((node) => {
     if (node.key === key) {
       return {

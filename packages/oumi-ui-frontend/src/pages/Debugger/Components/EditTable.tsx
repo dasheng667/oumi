@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Table, Input, Button, Popconfirm, Form, Space } from 'antd';
-import { createId } from '../../Swagger/utils';
+import { createId } from '@src/utils';
 import type { FormInstance } from 'antd/lib/form';
 import type { EditTableItem } from '../type';
 // import { DeleteOutlined } from '@ant-design/icons';

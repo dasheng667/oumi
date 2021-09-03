@@ -43,6 +43,19 @@ const defaultData = {
 
 db.defaults(defaultData).write();
 
+const loop = (data: any, key: string, callback: any) => {
+  if (!Array.isArray(data)) return;
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].key === key) {
+      callback(data[i], i, data);
+      return;
+    }
+    if (data[i].children) {
+      loop(data[i].children, key, callback);
+    }
+  }
+};
+
 const modelDb = {
   getCurrProjectId() {
     return db.get('dashboardId').value();
@@ -211,48 +224,64 @@ const modelDb = {
   debugger: {
     KEY: 'debugger',
     LIST_KEY: 'debugger.list',
-    findListByKey(key: string) {
-      return db.get(this.LIST_KEY).find({ key }).value();
+    // write() {
+    //   db.get(this.LIST_KEY).write();
+    // },
+    createId() {
+      return utils.createId(10);
+    },
+
+    // 追加一个节点
+    pushNode(data: any) {
+      const data2 = { ...data };
+      if (!data2.key) {
+        data2.key = this.createId();
+      }
+      data2._mid = modelDb.getCurrProjectId();
+      db.get(this.LIST_KEY).push(data2).write();
+      return data2;
+    },
+
+    // findListByKey(key: string) {
+    //   return db.get(this.LIST_KEY).find({ key }).value();
+    // },
+    getListAll() {
+      const id = modelDb.getCurrProjectId();
+      return db.get(this.LIST_KEY).filter({ _mid: id }).value();
     },
     getList() {
-      const id = modelDb.getCurrProjectId();
-      const res = db.get(this.LIST_KEY).filter({ _mid: id }).value();
+      const res = this.getListAll();
       if (Array.isArray(res)) {
         return res.map((item, i) => {
           const item2 = { ...item };
           delete item2.request;
+          delete item2.requestPost;
           delete item2._mid;
           return item2;
         });
       }
       return [];
     },
-    findTaskDetail(key: string) {
+    findByKey(key: string) {
       if (key) {
         return db.get(this.LIST_KEY).find({ key }).value();
       }
       return null;
     },
-    updateListByKey(key: string, data: any) {
+    updateByKey(key: string, data: any) {
       return db
         .get(this.LIST_KEY)
         .find({ key })
         .assign({ ...data })
         .write();
     },
-    removeFormList(key: string) {
-      if (key) {
-        return db.get(this.LIST_KEY).remove({ key }).write();
-      }
-      return null;
-    },
-    async saveOne(data: any) {
-      data._mid = modelDb.getCurrProjectId();
-      await db.get(this.LIST_KEY).push(data).write();
-      const item2 = { ...data };
-      delete item2.request;
-      delete item2._mid;
-      return item2;
+    removeByKey(key: string) {
+      return db
+        .get(this.LIST_KEY)
+        .remove((item) => {
+          return item.key === key;
+        })
+        .write();
     }
   },
 

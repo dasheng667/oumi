@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Tabs, Form, Input, Button, Table, Space, Row, Col, message } from 'antd';
-import { useRequest, useLocation } from '../../hook';
-import type { ListItem } from '../../global';
+import { useRequest, useLocation } from '@src/hook';
+import type { ListItem } from '@src/global';
 import SwaggerConfig from './Components/SwaggerConfig';
 import PrivateConfig from './Components/PrivateConfig';
 import Container from '../Container';

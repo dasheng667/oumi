@@ -1,7 +1,7 @@
 import React, { memo, useState, useCallback, useMemo, useEffect } from 'react';
 import { Modal, Tabs, Form, Input, message } from 'antd';
 import EditTable from './EditTable';
-import { useRequest } from '../../../hook';
+import { useRequest } from '@src/hook';
 import type { IRequestData, EditTableItem, IRequestDataKey } from '../type';
 
 interface Props {

@@ -18,7 +18,7 @@
     "noEmit": true,
     "jsx": "react",
     "paths": {
-      "@src": ["src/*"]
+      "@src/*": ["src/*"]
     }
   },
   "include": ["src", "typings"]

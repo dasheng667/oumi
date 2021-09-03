@@ -1,17 +1,27 @@
 import React, { memo, useState, useEffect } from 'react';
-import { Tabs, Menu, Dropdown, Input, Button, Space } from 'antd';
-import { CaretDownOutlined, CaretRightOutlined, SaveOutlined } from '@ant-design/icons';
-import { useRequest } from '../../../hook';
+import { Tabs, Menu, Dropdown, Input, Button, Space, Tooltip, Spin } from 'antd';
+import {
+  CaretDownOutlined,
+  CaretRightOutlined,
+  SaveOutlined,
+  BugOutlined,
+  QuestionCircleOutlined
+} from '@ant-design/icons';
+import { useRequest } from '@src/hook';
 import Request from './Request';
 import Response from './Response';
-import type { Panes, Env, IRequestData, EditTableItem } from '../type';
+import TestCaseButton from './TestCaseButton';
+import { DegContext } from '../context';
 
-const { TabPane } = Tabs;
+import type { Panes, Env, IRequestData, TreeNode, IRequestPostItem } from '../type';
+
+// const { TabPane } = Tabs;
 
 interface Props {
   pane: Panes;
   env: Env;
   onSaveSuccess?: (data: any) => void;
+  addChildTree: (key: string, children: TreeNode[]) => void;
 }
 
 const RenderMenu = ({ onClick }: any) => (
@@ -35,10 +45,12 @@ const DefaultContent = () => {
 };
 
 export default memo((props: Props) => {
-  const { pane, env, onSaveSuccess } = props;
+  const { pane, env, onSaveSuccess, addChildTree } = props;
   // console.log('pane', pane);
+  const { isTest: isTestExample, isNew } = pane;
   const [url, setUrl] = useState('');
   const [method, setMethod] = useState<'get' | 'post'>('get');
+  const [requestPostData, setRequestPostData] = useState<IRequestPostItem[]>([]);
   const [requestData, setRequestData] = useState<IRequestData>({
     query: [],
     bodyFormData: [],
@@ -47,17 +59,22 @@ export default memo((props: Props) => {
     cookie: []
   });
 
-  const { request: requestDetail } = useRequest('/api/debugger/taskDetail', { lazy: true });
+  const { request: requestDetail, loading: loadingInit } = useRequest('/api/debugger/taskDetail', { lazy: true });
+  const { request: requestCreateTest } = useRequest('/api/debugger/creatTestExp', { lazy: true });
   const {
     request: requestRun,
     loading: loadingRun,
     data: responseData
   } = useRequest('/api/debugger/runTask', { lazy: true });
-  const { request: requestSave, loading: loadingSave } = useRequest('/api/debugger/save', { lazy: true });
+  const { request: requestSave, loading: loadingSave } = useRequest('/api/debugger/saveTask', { lazy: true });
 
-  const onSetRequestData = (data: any) => {
-    setRequestData({ ...requestData, ...data });
-    // console.log('requestData:', requestData);
+  // context
+  const providerValue = {
+    requestData,
+    responseData,
+    setRequestData,
+    requestPostData,
+    setRequestPostData
   };
 
   const onRun = () => {
@@ -65,7 +82,8 @@ export default memo((props: Props) => {
       method,
       url,
       env,
-      request: requestData
+      request: requestData,
+      requestPost: requestPostData
     });
   };
 
@@ -75,11 +93,13 @@ export default memo((props: Props) => {
       method,
       url,
       env,
-      request: requestData
+      request: requestData,
+      requestPost: requestPostData,
+      isTest: isTestExample
     });
     if (typeof onSaveSuccess === 'function') {
       onSaveSuccess({
-        pane: { ...pane, isDelete: pane.title === '新建接口', prevKey: pane.key, ...res }
+        pane: { ...pane, prevKey: pane.key, ...res }
       });
     }
   };
@@ -89,9 +109,20 @@ export default memo((props: Props) => {
     setUrl(value);
   };
 
+  const onAddCase = (val: { name: string }) => {
+    requestCreateTest({
+      title: val.name,
+      pkey: pane.key
+    }).then((res: any) => {
+      const node = { ...res };
+      node.icon = () => <BugOutlined />;
+      addChildTree(pane.key, [node]);
+    });
+  };
+
   useEffect(() => {
     if (pane && pane.key && pane.key !== '1') {
-      requestDetail({ key: pane.key }).then((res: any) => {
+      requestDetail({ key: pane.key, pkey: pane.pkey }).then((res: any) => {
         if (!res) return;
         if (res.url) {
           setUrl(res.url);
@@ -102,6 +133,9 @@ export default memo((props: Props) => {
         if (res.request) {
           setRequestData(res.request);
         }
+        if (res.requestPost) {
+          setRequestPostData(res.requestPost);
+        }
       });
     }
   }, [pane]);
@@ -110,45 +144,82 @@ export default memo((props: Props) => {
     return <DefaultContent />;
   }
 
+  if (loadingInit) {
+    return (
+      <div className="rel" style={{ height: 300 }}>
+        <div className="fetch-loading">
+          <Spin />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="content-body">
-      <div className="d-header flex-center">
-        <div className="radius flex-center">
-          <div className="method">
-            <Dropdown overlay={<RenderMenu onClick={setMethod} />} trigger={['click']}>
-              <div>
-                {method.toLocaleUpperCase()} <CaretDownOutlined />
+    <DegContext.Provider value={providerValue}>
+      <div className="content-body">
+        <div className="d-header flex-center">
+          <div className="radius flex-center">
+            {!isTestExample && (
+              <div className={`method ${method}-color`}>
+                <Dropdown overlay={<RenderMenu onClick={setMethod} />} trigger={['click']}>
+                  <div>
+                    {method.toLocaleUpperCase()} <CaretDownOutlined />
+                  </div>
+                </Dropdown>
               </div>
-            </Dropdown>
+            )}
+            {isTestExample && (
+              <div className={`method ${method}-color`}>
+                <span style={{ marginRight: 10 }}>{method.toLocaleUpperCase()}</span>
+                <Tooltip placement="bottom" title="测试用例的URL需要父级保存才能生效哦~">
+                  <QuestionCircleOutlined />
+                </Tooltip>
+              </div>
+            )}
+            <div className="input">
+              {!isTestExample && (
+                <Input placeholder='接口路径 "/"或"http"起始 ' onChange={onInputChange} defaultValue={pane.url} />
+              )}
+              {isTestExample && (
+                <Input placeholder='接口路径 "/"或"http"起始 ' onChange={onInputChange} value={url} disabled />
+              )}
+            </div>
           </div>
-          <div className="input">
-            <Input placeholder='接口路径 "/"或"http"起始 ' onChange={onInputChange} defaultValue={pane.url} />
+
+          <div className="handler rel">
+            {!isNew && (
+              <Space>
+                <Button type="primary" icon={<CaretRightOutlined />} onClick={onRun} loading={loadingRun}>
+                  运行
+                </Button>
+                {!isTestExample && <TestCaseButton onAddCase={onAddCase} />}
+                <Button type="default" icon={<SaveOutlined />} onClick={onSave} loading={loadingSave}>
+                  保存
+                </Button>
+              </Space>
+            )}
+            {isNew && (
+              <Space>
+                <Button type="primary" icon={<SaveOutlined />} onClick={onSave} loading={loadingSave}>
+                  保存
+                </Button>
+              </Space>
+            )}
           </div>
         </div>
 
-        <div className="handler">
-          <Space>
-            <Button type="primary" icon={<CaretRightOutlined />} onClick={onRun} loading={loadingRun}>
-              运行
-            </Button>
-            <Button type="default" icon={<SaveOutlined />} onClick={onSave} loading={loadingSave}>
-              保存
-            </Button>
-          </Space>
+        <div className="content-scroll">
+          <h2 className="title">请求参数：</h2>
+          <div className="request">
+            <Request isTestExample={isTestExample} />
+          </div>
+
+          <h2 className="title">响应结果：</h2>
+          <div className="response">
+            <Response />
+          </div>
         </div>
       </div>
-
-      <div className="content-scroll">
-        <h2 className="title">请求参数：</h2>
-        <div className="request">
-          <Request requestData={requestData} setRequestData={onSetRequestData} />
-        </div>
-
-        <h2 className="title">响应结果：</h2>
-        <div className="response">
-          <Response responseData={responseData} />
-        </div>
-      </div>
-    </div>
+    </DegContext.Provider>
   );
 });

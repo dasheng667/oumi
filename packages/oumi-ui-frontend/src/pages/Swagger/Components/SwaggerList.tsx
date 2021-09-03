@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Checkbox, Drawer, Tabs } from 'antd';
-import { toResponseJSON } from '../utils';
+import { toResponseJSON } from '@src/utils';
 import { CaretDownOutlined, CaretRightOutlined, LoadingOutlined } from '@ant-design/icons';
 import Code from '../../../Components/Code';
 

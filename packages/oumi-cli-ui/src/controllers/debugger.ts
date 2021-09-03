@@ -1,7 +1,6 @@
+/* eslint-disable no-underscore-dangle */
 import querystring from 'querystring';
 import pkg from '../../package.json';
-import { URL } from 'url';
-import { createId } from '../utils';
 import { fetch } from '@oumi/cli-shared-utils';
 import type { Context } from '../../typings';
 
@@ -36,86 +35,44 @@ const getRequestContent = (arr: any[]) => {
   return null;
 };
 
-const onSaveOneTask = async (ctx: Context) => {
-  const data = await ctx.model.projectList.findCurrent();
-  if (!data) {
-    return ctx.returnError(`项目数据异常`);
-  }
-  const { env, method, url, request, group, key } = ctx.request.body;
-
-  if (!env) {
-    return ctx.returnError('env error');
-  }
-  if (!method) {
-    return ctx.returnError('method error');
-  }
-  if (!url) {
-    return ctx.returnError('url error');
-  }
-  if (!request) {
-    return ctx.returnError('request error');
-  }
-  /* 
-    >>> ant design tree 格式
-    
-    title: 'parent 0',
-    key: '0-0',
-    group: true,
-    children: [
-      { title: 'leaf 0-0', key: '0-0-0', isLeaf: true },
-    ]
-  */
-
-  const isHttp = url.startsWith('http');
-  let title = isHttp ? new URL(url).pathname : url;
-  if (isHttp && (title === '/' || !title)) {
-    // 没有pathname
-    title = new URL(url).hostname;
-  }
-  const writeData: any = {
-    url,
-    title,
-    env,
-    method,
-    group,
-    request
-  };
-
-  if (key) {
-    const find = await ctx.model.debugger.findListByKey(key);
-    if (find) {
-      const ues = await ctx.model.debugger.updateListByKey(key, writeData);
-      return ctx.returnSuccess(ues);
-    }
-  }
-
-  const res = await ctx.model.debugger.saveOne({ key: createId(10), ...writeData });
-  return ctx.returnSuccess(res);
-};
-
 const getList = async (ctx: Context) => {
   const res = ctx.model.debugger.getList();
   return ctx.returnSuccess(res);
 };
 
-const removeOneTask = async (ctx: Context) => {
+const removeNode = async (ctx: Context) => {
   const { key } = ctx.request.body;
   if (!key) {
     return ctx.returnError(`参数异常`);
   }
-  const res = ctx.model.debugger.removeFormList(key);
+  const res = ctx.model.debugger.removeByKey(key);
   return ctx.returnSuccess(res);
 };
 
 /** 一个任务的详情数据 */
 const taskDetail = async (ctx: Context) => {
-  const { key } = ctx.request.body;
+  const { key, pkey } = ctx.request.body;
   if (!key) {
     return ctx.returnError(`参数异常`);
   }
   if (key === '1') return ctx.returnSuccess({});
-  const res = ctx.model.debugger.findTaskDetail(key);
-  return ctx.returnSuccess(res || {});
+
+  const find = ctx.model.debugger.findByKey(key);
+  let res = { ...find };
+
+  if (pkey) {
+    const parent = ctx.model.debugger.findByKey(pkey);
+    // 测试用例的url需要替换成父级的
+    if (parent && !parent.isTest) {
+      res = {
+        ...res,
+        url: parent.url,
+        method: parent.method
+      };
+    }
+  }
+
+  return ctx.returnSuccess(res);
 };
 
 /** 执行一个请求任务 */
@@ -206,12 +163,101 @@ const runTask = async (ctx: Context) => {
       status: res.status,
       header: res.headers.raw(),
       requestHeader,
-      body,
-      isJSON
+      fetchUrl,
+      method,
+      isJSON,
+      body
     });
   } catch (e) {
     return ctx.returnError(e);
   }
+};
+
+/** 创建一个测试用例 */
+const createTestExample = (ctx: Context) => {
+  const { title, pkey } = ctx.request.body;
+  if (!title) {
+    return ctx.returnError('title error');
+  }
+  if (!pkey) {
+    return ctx.returnError('pkey error');
+  }
+
+  const findParent: any = ctx.model.debugger.findByKey(pkey);
+
+  if (findParent) {
+    try {
+      const deep = JSON.stringify(findParent);
+      const parse = JSON.parse(deep);
+      // 新的子节点
+      const node = {
+        pkey,
+        title,
+        url: null,
+        request: parse.request,
+        requestPost: parse.requestPost,
+        isLeaf: true,
+        isTest: true,
+        _mid: findParent._mid
+      };
+      const res = ctx.model.debugger.pushNode(node);
+      return ctx.returnSuccess(res);
+    } catch (e) {
+      return ctx.returnError(e);
+    }
+  }
+
+  return ctx.returnError(`not find key ${pkey}`);
+};
+
+/** 保存一个任务 */
+const onSaveTask = async (ctx: Context) => {
+  const data = await ctx.model.projectList.findCurrent();
+  if (!data) {
+    return ctx.returnError(`项目数据异常`);
+  }
+  const { env, method, url, request, group, key, requestPost, isTest } = ctx.request.body;
+
+  if (!env) {
+    return ctx.returnError('env error');
+  }
+  if (!method) {
+    return ctx.returnError('method error');
+  }
+  if (!url) {
+    return ctx.returnError('url error');
+  }
+  if (!request) {
+    return ctx.returnError('request error');
+  }
+
+  /* 
+    >>> ant design tree 格式
+    title: 'parent 0',
+    key: '0-0',
+    group: true,
+    children: [
+      { title: 'leaf 0-0', key: '0-0-0', isLeaf: true },
+    ]
+  */
+
+  // 测试用例不能覆盖 url, method等参数
+  const writeData = {
+    url: isTest ? null : url,
+    env: isTest ? null : env,
+    method: isTest ? null : method,
+    group,
+    request,
+    requestPost
+  };
+
+  if (key) {
+    const ues = await ctx.model.debugger.updateByKey(key, writeData);
+    return ctx.returnSuccess(ues);
+  }
+
+  const res = await ctx.model.debugger.pushNode(writeData);
+  return ctx.returnSuccess(res);
 };
 
 /** 获取全局变量 */
@@ -273,11 +319,12 @@ const getCurrentEnv = (ctx: Context) => {
 };
 
 export default {
-  'POST /api/debugger/taskDetail': taskDetail,
   'POST /api/debugger/getList': getList,
-  'POST /api/debugger/remove': removeOneTask,
-  'POST /api/debugger/save': onSaveOneTask,
+  'POST /api/debugger/remove': removeNode,
+  'POST /api/debugger/saveTask': onSaveTask,
   'POST /api/debugger/runTask': runTask,
+  'POST /api/debugger/taskDetail': taskDetail,
+  'POST /api/debugger/creatTestExp': createTestExample,
 
   'POST /api/debugger/getGlobalVar': getGlobalVar,
   'POST /api/debugger/saveGlobalVar': saveGlobalVar,

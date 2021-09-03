@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Tree, Button, message, Space } from 'antd';
-import request from '../../../request';
-import { useRequest } from '../../../hook';
+import request from '@src/request';
+import { useRequest } from '@src/hook';
 import Popconfirm from './Popconfirm';
 
 interface DataNode {

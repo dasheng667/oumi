@@ -1,9 +1,9 @@
 import React, { memo, useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { HomeFilled, MailOutlined } from '@ant-design/icons';
-import type { ListItem } from '../../global';
-import { useRequest } from '../../hook';
-import { menuList } from '../../router';
+import type { ListItem } from '@src/global';
+import { useRequest } from '@src/hook';
+import { menuList } from '@src/router';
 
 import './index.less';
 

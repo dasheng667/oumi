@@ -14,7 +14,7 @@ import {
 import Container from '../Container';
 import { useSocket } from '../../hook';
 import Terminal, { term, fitAddon } from './Terminal';
-import { arrSortByKey, taskViewGroup } from './utils';
+import { arrSortByKey, taskViewGroup } from '@src/utils';
 
 import './index.less';
 

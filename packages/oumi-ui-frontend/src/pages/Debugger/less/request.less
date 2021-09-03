@@ -1,0 +1,41 @@
+@import '../../../static/less/theme.less';
+
+.container-debugger{
+  .request-content-front{
+    padding: 0 20px 20px 10px;
+  }
+  .ant-list-items{
+    border: 1px solid #f0f0f0;
+    border-radius: 4px;
+    background: #fbfbfb;
+    .icon{
+      margin-right: 10px;
+      svg {
+        color: #FF6666;
+      }
+    }
+    .ant-list-item{
+      padding: 10px 20px;
+    }
+    .handler{
+      
+    }
+  }
+}
+
+.assert-flex{
+  > .ant-form-item:first-child{
+    width: 220px;
+    .ant-form-item-label{
+      max-width: inherit;
+      width: 98.33px;
+      flex: 0 0 auto;
+    }
+    .ant-form-item-control{
+      flex: 1;
+    }
+  }
+  .ant-form-item:last-child{
+    flex: 1;
+  }
+}

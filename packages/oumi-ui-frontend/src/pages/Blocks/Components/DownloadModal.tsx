@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Modal, Alert, message } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import type { Blocks } from '../../../global';
-import type { SelectInfo, SelectNode } from '../../../Components/FolderTree';
-import FolderTree from '../../../Components/FolderTree';
-import { useRequest } from '../../../hook';
+import { useRequest } from '@src/hook';
+import type { Blocks } from '@src/global';
+import type { SelectInfo, SelectNode } from '@src/Components/FolderTree';
+import FolderTree from '@src/Components/FolderTree';
 
 type Props = {
   modalData: Blocks | null;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, message, Form, Input, Popconfirm } from 'antd';
-import { useRequest } from '../../../hook';
+import { useRequest } from '@src/hook';
 
 type Props = {
   /** null 表示当前项目 */

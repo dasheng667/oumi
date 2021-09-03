@@ -15,10 +15,9 @@ import {
   LoadingOutlined,
   RightCircleOutlined
 } from '@ant-design/icons';
-import request from '../../request';
-import { useRequest } from '../../hook';
-
-import type { ListItem } from '../../global';
+import request from '@src/request';
+import { useRequest } from '@src/hook';
+import type { ListItem } from '@src/global';
 
 import './index.less';
 

@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 import { Tabs, Radio } from 'antd';
 import Code from '../../../Components/Code';
 import EditTable from './EditTable';
+import { useDegContext } from '../context';
 // import { CaretDownOutlined, CaretRightOutlined, SaveOutlined } from '@ant-design/icons';
 
 const { TabPane } = Tabs;
 
-interface Props {
-  responseData: any;
-}
+interface Props {}
 
 export default (props: Props) => {
-  const { responseData } = props;
-  const { header = {}, body = '', isJSON, status, statusText, timer, requestHeader } = responseData || {};
+  const { responseData } = useDegContext();
+  if (!responseData) return null;
+  const { header = {}, body = '', isJSON, status, statusText, timer, requestHeader, fetchUrl } = responseData || {};
   const [radioValue, setRadioValue] = useState('pretty');
 
   const onChangeBody = (e: any) => {
@@ -78,17 +78,29 @@ export default (props: Props) => {
               })}
           </div>
         </TabPane>
+        <TabPane tab="Other" key="5">
+          <div className="list-line">
+            <div className="list-line_item">
+              <span className="name">URL</span>
+              <span className="value">{fetchUrl}</span>
+            </div>
+          </div>
+        </TabPane>
       </Tabs>
-      <div className="response-status">
-        <span>
-          状态码:{' '}
-          <u>
-            {status} {statusText}
-          </u>
-        </span>{' '}
-        <span>
-          耗时: <u>{timer} ms</u>
-        </span>{' '}
+      <div className={`response-status status-${status}`}>
+        {status && (
+          <span>
+            状态码:{' '}
+            <u>
+              {status} {statusText}
+            </u>
+          </span>
+        )}
+        {status && (
+          <span>
+            耗时: <u>{timer} ms</u>
+          </span>
+        )}
         {/* <span>
           大小: <u>36.84 K</u>
         </span> */}

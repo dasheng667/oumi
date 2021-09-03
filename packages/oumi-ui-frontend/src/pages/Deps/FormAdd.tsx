@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { LinkOutlined } from '@ant-design/icons';
 import { Input, AutoComplete } from 'antd';
 import type { SelectProps } from 'antd/es/select';
-import { useRequest } from '../../hook';
+import { useRequest } from '@src/hook';
 
 interface OptionItem {
   name: string;
