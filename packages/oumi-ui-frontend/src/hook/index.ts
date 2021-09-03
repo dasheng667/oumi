@@ -1,5 +1,5 @@
 import axios from 'axios';
-import querystring from 'querystring';
+import querystring from 'qs';
 import { useState, useCallback, useEffect } from 'react';
 import { useLocation as useRouterLocation, useRouteMatch as useRouterMatch } from 'react-router-dom';
 import request from '../request';

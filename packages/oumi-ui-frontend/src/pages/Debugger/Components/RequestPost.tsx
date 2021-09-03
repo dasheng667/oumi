@@ -13,7 +13,7 @@ const { Option } = Select;
 const AssertModal = memo((props: any) => {
   const { visible, setVisible, callback, editData, title } = props;
   const [form] = Form.useForm();
-  const [selectValue, setSelectValue] = useState('eq');
+  // const [selectValue, setSelectValue] = useState('eq');
   // const [flag, setFlag] = useState(true);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const AssertModal = memo((props: any) => {
   const runOk = () => {
     form.submit();
     form.validateFields().then((val) => {
-      console.log('val', val);
+      // console.log('val', val);
       if (typeof callback === 'function') {
         callback({ ...val });
       }
@@ -40,25 +40,26 @@ const AssertModal = memo((props: any) => {
     });
   };
 
-  const selectAssert = (val: string) => {
-    setSelectValue(val);
-    form.setFieldsValue({ assert: val });
+  const initialValues = {
+    type: 'assert',
+    assertObject: '1',
+    assertEnumKey: 'eq'
   };
 
   return (
     <Modal title={'添加断言'} visible={visible} onCancel={runCancel} onOk={runOk} okText="确定" cancelText="取消">
-      <Form name="form_config" form={form} labelCol={{ span: 5 }}>
+      <Form name="form_config" form={form} labelCol={{ span: 5 }} initialValues={initialValues}>
         <Form.Item name="key" hidden>
           <Input />
         </Form.Item>
-        <Form.Item name="type" initialValue="assert" hidden>
+        <Form.Item name="type" hidden>
           <Input />
         </Form.Item>
         <Form.Item name="name" label="断言名称">
           <Input />
         </Form.Item>
-        <Form.Item name="assertObject" label="断言对象" initialValue="1">
-          <Select defaultValue="1" disabled>
+        <Form.Item name="assertObject" label="断言对象">
+          <Select disabled>
             {assertObject.map((v) => (
               <Option key={v.value} value={v.value}>
                 {v.name}
@@ -67,10 +68,10 @@ const AssertModal = memo((props: any) => {
           </Select>
         </Form.Item>
         <Form.Item name="expression" label="提取表达式" rules={[{ required: true, message: '表达式必填' }]}>
-          <Input />
+          <Input placeholder="JSON path表达式，如$.data.list[0].name" />
         </Form.Item>
         <div className="flex assert-flex">
-          <Form.Item name="assertEnumKey" label="断言" initialValue="eq">
+          <Form.Item name="assertEnumKey" label="断言">
             <Select>
               {assertSelect.map((v) => (
                 <Option key={v.value} value={v.value}>
@@ -100,7 +101,7 @@ const AssertModal = memo((props: any) => {
 
 interface Props {}
 
-export default (props: Props) => {
+export default memo((props: Props) => {
   const { requestPostData, setRequestPostData } = useDegContext();
   const [assertVisible, setAssertVisible] = useState(false);
   const [editData, setEditData] = useState<IRequestPostItem | null>(null);
@@ -231,4 +232,4 @@ export default (props: Props) => {
       />
     </div>
   );
-};
+});

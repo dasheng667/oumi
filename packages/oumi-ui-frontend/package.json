@@ -8,8 +8,10 @@
     "build": "tsc && vite build",
     "serve2": "vite preview"
   },
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
+    "qs": "^6.10.1",
     "@apollo/client": "^3.3.21",
     "@types/react": "^17.0.14",
     "@types/react-dom": "^17.0.9",
@@ -22,7 +24,6 @@
     "graphql": "^15.5.1",
     "less": "^4.1.1",
     "mockjs": "^1.1.0",
-    "querystring": "^0.2.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router": "^5.2.0",

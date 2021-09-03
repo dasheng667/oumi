@@ -1,5 +1,5 @@
 import React, { memo, useState, useEffect } from 'react';
-import { Tabs, Menu, Dropdown, Input, Button, Space, Tooltip, Spin } from 'antd';
+import { Tabs, Menu, Dropdown, Input, Button, Space, Tooltip, Spin, message } from 'antd';
 import {
   CaretDownOutlined,
   CaretRightOutlined,
@@ -102,6 +102,7 @@ export default memo((props: Props) => {
         pane: { ...pane, prevKey: pane.key, ...res }
       });
     }
+    message.success('保存成功');
   };
 
   const onInputChange = (e: any) => {
@@ -117,6 +118,7 @@ export default memo((props: Props) => {
       const node = { ...res };
       node.icon = () => <BugOutlined />;
       addChildTree(pane.key, [node]);
+      message.success('添加用例成功');
     });
   };
 

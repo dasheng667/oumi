@@ -1,39 +1,9 @@
 /* eslint-disable no-underscore-dangle */
-import querystring from 'querystring';
+import querystring from 'qs';
 import pkg from '../../package.json';
 import { fetch } from '@oumi/cli-shared-utils';
+import { urlStringify, getRequestContent, getAssertResult } from '../connectors/debugger';
 import type { Context } from '../../typings';
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-const urlStringify = (url: string, query: object) => {
-  let fetchUrl = url;
-  const index = fetchUrl.indexOf('?');
-  let urlParams = '';
-  if (index > -1) {
-    urlParams = fetchUrl.substr(index + 1);
-    fetchUrl = fetchUrl.substr(0, index);
-  }
-  const paramsData = querystring.parse(urlParams) || null;
-  if (urlParams && paramsData) {
-    fetchUrl += `?${querystring.stringify({ ...paramsData, ...query })}`;
-  } else {
-    fetchUrl += `${fetchUrl.indexOf('?') > -1 ? '' : '?'}${querystring.stringify({ ...query })}`;
-  }
-  return fetchUrl;
-};
-
-const getRequestContent = (arr: any[]) => {
-  if (Array.isArray(arr)) {
-    const res = {};
-    arr.forEach((item) => {
-      if (item.name) {
-        res[item.name] = item.value;
-      }
-    });
-    return res;
-  }
-  return null;
-};
 
 const getList = async (ctx: Context) => {
   const res = ctx.model.debugger.getList();
@@ -77,7 +47,7 @@ const taskDetail = async (ctx: Context) => {
 
 /** 执行一个请求任务 */
 const runTask = async (ctx: Context) => {
-  const { env, url, request, key } = ctx.request.body;
+  const { env, url, request, key, requestPost } = ctx.request.body;
   let { method } = ctx.request.body;
 
   if (!env) {
@@ -157,17 +127,19 @@ const runTask = async (ctx: Context) => {
       ...headers
     };
 
-    return ctx.returnSuccess({
+    const result = {
+      body,
+      method,
+      isJSON,
+      fetchUrl,
+      requestHeader,
       timer: endTime - startTime,
       statusText: res.statusText,
       status: res.status,
       header: res.headers.raw(),
-      requestHeader,
-      fetchUrl,
-      method,
-      isJSON,
-      body
-    });
+      assertResult: getAssertResult(body, requestPost)
+    };
+    return ctx.returnSuccess(result);
   } catch (e) {
     return ctx.returnError(e);
   }
@@ -230,16 +202,6 @@ const onSaveTask = async (ctx: Context) => {
   if (!request) {
     return ctx.returnError('request error');
   }
-
-  /* 
-    >>> ant design tree 格式
-    title: 'parent 0',
-    key: '0-0',
-    group: true,
-    children: [
-      { title: 'leaf 0-0', key: '0-0-0', isLeaf: true },
-    ]
-  */
 
   // 测试用例不能覆盖 url, method等参数
   const writeData = {

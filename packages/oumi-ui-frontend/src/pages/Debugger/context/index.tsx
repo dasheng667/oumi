@@ -1,8 +1,8 @@
 import React, { createContext, useContext } from 'react';
-import type { IRequestData, IRequestPostItem } from '../type.d';
+import type { IRequestData, IRequestPostItem, IResponseData } from '../type.d';
 
 interface Context {
-  responseData: any;
+  responseData: IResponseData | null;
   requestData: IRequestData;
   setRequestData: (val: IRequestData) => void;
   requestPostData: IRequestPostItem[];

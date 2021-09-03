@@ -21,7 +21,7 @@ const SearchNpmPackage = async (ctx: Context) => {
     return ctx.returnSuccess(res);
   } catch (e) {
     console.error(e);
-    return ctx.returnError({ msg: e.msg });
+    return ctx.returnError(e);
   }
 };
 

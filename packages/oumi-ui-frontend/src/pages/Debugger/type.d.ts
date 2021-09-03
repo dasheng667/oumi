@@ -14,6 +14,19 @@ export interface Panes {
 
 export type Env = 'dev' | 'test' | 'prod';
 
+export type IResponseData = {
+  assertResult: (IRequestPostItem & { success?: boolean })[];
+  requestHeader: any;
+  header: any;
+  body: any;
+  fetchUrl: string;
+  isJSON: boolean;
+  method: 'get' | 'post';
+  status: number;
+  statusText: string;
+  timer: number;
+};
+
 export type IRequestData = {
   query: any[];
   bodyFormData: any[];

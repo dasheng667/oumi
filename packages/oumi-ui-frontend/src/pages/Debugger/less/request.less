@@ -21,6 +21,33 @@
       
     }
   }
+
+  .assert-result{
+    background: #f7f7f7;
+    border-radius: 4px;
+    padding: 10px;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    > p{
+      margin-bottom: 5px;
+    }
+    .assert-result__item{
+      display: flex;
+      margin-bottom: 5px;
+      .icon{
+        margin-right: 10px;
+        svg {
+          font-size: 20px;
+        }
+        &.green{
+          color: #1dbd88;
+        }
+        &.red{
+          color: #ff5858;
+        }
+      }
+    }
+  }
 }
 
 .assert-flex{

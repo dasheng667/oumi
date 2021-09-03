@@ -72,10 +72,11 @@ export const listToTreeList = (list: TreeNode[]): TreeNode[] => {
 export const assertObject = [{ name: 'Response JSON', value: '1' }];
 
 export const assertSelect = [
+  { name: '必需存在', value: 'required' },
   { name: '等于', value: 'eq' },
   { name: '不等于', value: 'neq' },
-  { name: '存在', value: 'exist' },
-  { name: '不存在', value: 'nexist' },
+  // { name: '存在', value: 'exist' },
+  // { name: '不存在', value: 'nexist' },
   { name: '小于', value: 'lt' },
   { name: '小于或等于', value: 'lte' },
   { name: '大于', value: 'gt' },

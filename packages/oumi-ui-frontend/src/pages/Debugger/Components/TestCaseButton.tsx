@@ -11,7 +11,7 @@ export default (props: Props) => {
   const { onAddCase } = props;
   const [form] = Form.useForm();
   // const [visible, setVisible] = React.useState(false);
-  const { data, request, loading } = useRequest('/api/project/xxx', { lazy: true });
+  // const { data, request, loading } = useRequest('/api/project/xxx', { lazy: true });
 
   const showPopconfirm = (flag: boolean, e?: React.MouseEvent) => {
     if (e) {

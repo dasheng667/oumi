@@ -26,19 +26,21 @@
 		"@oumi/block-sdk": "^1.1.0",
 		"apollo-server-koa": "^3.0.0",
 		"git-url-parse": "^11.5.0",
-		"graphql": "^15.5.1",
+		"jsonpath": "^1.1.1",
 		"koa": "^2.13.1",
 		"koa-bodyparser": "^4.3.0",
 		"koa-router": "^10.0.0",
 		"koa-socket-2": "^2.0.0",
 		"koa-static": "^5.0.0",
 		"lowdb": "^1.0.0",
-		"portfinder": "^1.0.28"
+		"portfinder": "^1.0.28",
+		"qs": "^6.10.1"
 	},
 	"publishConfig": {
 		"access": "public"
 	},
 	"devDependencies": {
+		"@types/jsonpath": "^0.2.0",
 		"cross-env": "^7.0.3"
 	}
 }

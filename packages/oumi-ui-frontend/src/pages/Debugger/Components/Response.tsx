@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Tabs, Radio } from 'antd';
+import { CheckCircleOutlined, CheckCircleFilled, InfoCircleFilled } from '@ant-design/icons';
 import Code from '../../../Components/Code';
-import EditTable from './EditTable';
 import { useDegContext } from '../context';
 // import { CaretDownOutlined, CaretRightOutlined, SaveOutlined } from '@ant-design/icons';
 
@@ -11,8 +11,17 @@ interface Props {}
 
 export default (props: Props) => {
   const { responseData } = useDegContext();
-  if (!responseData) return null;
-  const { header = {}, body = '', isJSON, status, statusText, timer, requestHeader, fetchUrl } = responseData || {};
+  const {
+    header = {},
+    body = '',
+    isJSON,
+    status,
+    statusText,
+    timer,
+    requestHeader,
+    fetchUrl,
+    assertResult
+  } = responseData || {};
   const [radioValue, setRadioValue] = useState('pretty');
 
   const onChangeBody = (e: any) => {
@@ -24,6 +33,22 @@ export default (props: Props) => {
     <div className="rel">
       <Tabs defaultActiveKey="1">
         <TabPane tab="Body" key="1">
+          {Array.isArray(assertResult) && (
+            <div className="assert-result">
+              <p>断言结果：</p>
+              {assertResult.map((item, i) => {
+                return (
+                  <div className="assert-result__item" key={i}>
+                    <div className={`icon ${item.success ? 'green' : 'red'}`}>
+                      {item.success && <CheckCircleFilled />}
+                      {!item.success && <InfoCircleFilled />}
+                    </div>
+                    <div className="name">{item.name}</div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
           <Radio.Group onChange={onChangeBody} value={radioValue}>
             <Radio.Button value="pretty">Pretty</Radio.Button>
             <Radio.Button value="preview">Preview</Radio.Button>

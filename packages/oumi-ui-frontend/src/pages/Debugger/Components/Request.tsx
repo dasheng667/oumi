@@ -17,8 +17,6 @@ interface Props {
 
 export default (props: Props) => {
   const { setRequestData, requestData } = useDegContext();
-  if (!requestData) return null;
-
   const { isTestExample } = props;
   const [tabFlag, setTabFlag] = useState(false);
   const [tabsKey, setTabsKey] = useState('6');
@@ -26,7 +24,7 @@ export default (props: Props) => {
 
   useEffect(() => {
     // 跳转对应的tab
-    if (requestData && tabFlag === false && 0) {
+    if (requestData && tabFlag === false) {
       if (requestData.bodyFormData && Object.keys(requestData.bodyFormData).length > 0) {
         setTabsKey('2');
         setRadioValue(2);
