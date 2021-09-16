@@ -22,7 +22,6 @@ function addSockets(socket: any, app: any, dir: string) {
 
 export default (io: IOServer, app: Koa) => {
   io.on('connection', (socket: any) => {
-    // console.log('socket connected!');
     addSockets(socket, app, 'socket');
   });
 

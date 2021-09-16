@@ -1,19 +1,13 @@
 import React, { memo, useState, useEffect } from 'react';
 import { Tabs, Menu, Dropdown, Input, Button, Space, Tooltip, Spin, message } from 'antd';
-import {
-  CaretDownOutlined,
-  CaretRightOutlined,
-  SaveOutlined,
-  BugOutlined,
-  QuestionCircleOutlined
-} from '@ant-design/icons';
+import { CaretDownOutlined, CaretRightOutlined, SaveOutlined, BugOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { useRequest } from '@src/hook';
 import Request from './Request';
 import Response from './Response';
 import TestCaseButton from './TestCaseButton';
 import { DegContext } from '../context';
 
-import type { Panes, Env, IRequestData, TreeNode, IRequestPostItem } from '../type';
+import type { Panes, Env, IRequestData, TreeNode, IRequestPostItem, IResponseData } from '../type';
 
 // const { TabPane } = Tabs;
 
@@ -65,7 +59,7 @@ export default memo((props: Props) => {
     request: requestRun,
     loading: loadingRun,
     data: responseData
-  } = useRequest('/api/debugger/runTask', { lazy: true });
+  } = useRequest<IResponseData>('/api/debugger/runTask', { lazy: true });
   const { request: requestSave, loading: loadingSave } = useRequest('/api/debugger/saveTask', { lazy: true });
 
   // context
@@ -179,12 +173,8 @@ export default memo((props: Props) => {
               </div>
             )}
             <div className="input">
-              {!isTestExample && (
-                <Input placeholder='接口路径 "/"或"http"起始 ' onChange={onInputChange} defaultValue={pane.url} />
-              )}
-              {isTestExample && (
-                <Input placeholder='接口路径 "/"或"http"起始 ' onChange={onInputChange} value={url} disabled />
-              )}
+              {!isTestExample && <Input placeholder='接口路径 "/"或"http"起始 ' onChange={onInputChange} defaultValue={pane.url} />}
+              {isTestExample && <Input placeholder='接口路径 "/"或"http"起始 ' onChange={onInputChange} value={url} disabled />}
             </div>
           </div>
 

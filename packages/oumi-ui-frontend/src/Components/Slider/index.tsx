@@ -1,9 +1,10 @@
 import React, { memo, useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { HomeFilled, MailOutlined } from '@ant-design/icons';
-import type { ListItem } from '@src/global';
+import { HomeFilled, MailOutlined, CaretDownOutlined, StarOutlined, CodeOutlined } from '@ant-design/icons';
+import { Dropdown, Menu, Spin } from 'antd';
 import { useRequest } from '@src/hook';
 import { menuList } from '@src/router';
+import type { ListItem } from '@src/global';
 
 import './index.less';
 
@@ -17,15 +18,22 @@ const projectListPath = '/project/select';
 export default (props: any) => {
   const history = useHistory();
   const [current, setCurrent] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const {
-    data,
-    error: errorInit,
-    request
-  } = useRequest<ListItem>('/api/dashboard/init', { errorMsg: false, lazy: true });
+  const { request: getProjectList, data: projectList = [] } = useRequest<ListItem[]>('/api/project/list');
+  const { request: requestDefDashboard } = useRequest('/api/project/dashboard', { lazy: true });
+  const { request: requestOpen } = useRequest('/api/openInEditor', { lazy: true });
+  const { data, error: errorInit, request } = useRequest<ListItem>('/api/dashboard/init', { errorMsg: false, lazy: true });
 
   useEffect(() => {
-    request();
+    setLoading(true);
+    request()
+      .then(() => {
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   }, []);
 
   useEffect(() => {
@@ -47,6 +55,52 @@ export default (props: any) => {
     history.push(projectListPath);
   };
 
+  const goDashboard = (item: ListItem) => {
+    requestDefDashboard({ id: item.id }).then(() => {
+      window.location.reload();
+    });
+  };
+
+  const onClickOpen = async () => {
+    if (!data) return;
+    setLoading(true);
+    try {
+      await requestOpen({ input: { file: data.path } });
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+    }
+  };
+
+  const menu = () => {
+    return (
+      <Menu>
+        <Menu.Item key="3" onClick={goProjectList}>
+          <HomeFilled /> Oumi 管理器
+        </Menu.Item>
+        <Menu.Item key="1" onClick={onClickOpen}>
+          <CodeOutlined /> 在编辑器中打开
+        </Menu.Item>
+        <Menu.Divider />
+        <Menu.ItemGroup title="收藏的项目">
+          {projectList &&
+            projectList
+              .filter((v) => !!v.collection && data && v.id !== data.id)
+              .map((item) => (
+                <Menu.Item key={item.id} onClick={() => goDashboard(item)}>
+                  {' '}
+                  <StarOutlined /> {item.name}{' '}
+                </Menu.Item>
+              ))}
+        </Menu.ItemGroup>
+      </Menu>
+    );
+  };
+
+  if (!data) {
+    return null;
+  }
+
   if (errorInit) {
     return (
       <div style={{ padding: 50 }}>
@@ -57,22 +111,14 @@ export default (props: any) => {
 
   return (
     <div className="ui-slider">
-      <header onClick={goProjectList}>
-        <div className="icon" title="Oumi 项目过滤器">
-          <HomeFilled style={{ fontSize: 18 }} />
-        </div>
-        <div className="project-name">{data && data.name}</div>
+      <header>
+        <Dropdown arrow placement="bottomCenter" overlay={menu} trigger={['click']}>
+          <div className="search">
+            {data.name}
+            {loading ? <Spin size="small" /> : <CaretDownOutlined />}
+          </div>
+        </Dropdown>
       </header>
-      {/* <div className="select flex-center">
-        <Select style={{ width: 180 }} value={selectItem.id}>
-          {projectList &&
-            projectList.map((item) => (
-              <Option key={item.id} value={item.id}>
-                {item.name}
-              </Option>
-            ))}
-        </Select>
-      </div> */}
       <div className="slider-list">
         {menuList.map((item) => {
           return (

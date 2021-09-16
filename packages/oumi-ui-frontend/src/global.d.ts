@@ -4,6 +4,7 @@ export type ListItem = {
   id: string;
   href?: string;
   default?: boolean;
+  collection?: boolean;
 };
 
 export type Blocks = {

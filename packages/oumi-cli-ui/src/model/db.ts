@@ -100,6 +100,9 @@ const modelDb = {
     find(findParams: any) {
       return db.get(this.KEY).find(findParams).value();
     },
+    collection(id: string, collect) {
+      return db.get(this.KEY).find({ id }).assign({ collection: !!collect }).write();
+    },
     findCurrent() {
       return db
         .get(this.KEY)

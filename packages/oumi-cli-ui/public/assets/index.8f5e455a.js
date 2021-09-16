@@ -1,1 +1,0 @@
-import{c as e,R as a}from"./vendor.e4b9c5d6.js";var r=e.exports.memo((e=>{const{title:r,children:t,className:c}=e;return a.createElement("div",{className:"wrapper-container"},a.createElement("div",{className:"container-body"},a.createElement("div",{className:"header"},a.createElement("h2",null,r)),a.createElement("div",{className:`container-main ${c||""}`},t)))}));export{r as C};

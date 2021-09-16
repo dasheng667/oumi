@@ -43,9 +43,9 @@ export const wrap = async (id: string, context: SocketContext, operation: ISetPr
     result = await operation((data) => {
       set({ id, ...data }, context);
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
-    set({ id, error: error.message }, context);
+    set({ id, error: (error && error.message) || 'catch error' }, context);
   }
 
   remove(id, context);

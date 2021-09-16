@@ -83,6 +83,21 @@ const getProjectList = async (ctx: Context) => {
   }
   ctx.returnSuccess(list || []);
 };
+
+/**
+ * 收藏项目
+ */
+const collectionProjectById = async (ctx: Context) => {
+  const { id, collect } = ctx.request.body;
+
+  if (typeof id === 'string') {
+    const list = ctx.model.projectList.collection(id, collect);
+    ctx.returnSuccess(list || []);
+  } else {
+    ctx.returnError('id error');
+  }
+};
+
 /**
  * 移除某个项目
  */
@@ -225,6 +240,7 @@ export default {
   'GET /api/hello/:name': fn_hello,
   'POST /api/user/folder': getUserFolder,
   'POST /api/project/list': getProjectList,
+  'POST /api/project/collect': collectionProjectById,
   'POST /api/project/remove': removeProject,
   'POST /api/project/dashboard': setProjectDashboard,
   'POST /api/project/import': importToProject,

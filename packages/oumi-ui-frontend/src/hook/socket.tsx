@@ -9,6 +9,10 @@ socket.on('connect', () => {
   window.console.log('socket.connected');
 });
 
+socket.on('error', (err) => {
+  window.console.log('socket.error', err);
+});
+
 export const SocketContext = createContext({ socket });
 
 export const useSocket = () => {

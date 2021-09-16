@@ -40,7 +40,7 @@ const SearchSwaggerData = async (ctx: Context, next: Next) => {
   const data = await ctx.model.userConfig.swagger.findById(configId);
 
   try {
-    const swaggerData: any = await fetch(data.href);
+    const swaggerData: any = await request.getJSON(data.href);
 
     const swagger = new Swagger(swaggerData);
     const query = searchTag ? { tag: searchTag } : { path: searchPath };
@@ -131,14 +131,7 @@ const BuildSwaggerFileToLocal = async (ctx: Context) => {
   try {
     const swaggerData: any = await fetch(data.href);
     const swagger = new Swagger(swaggerData);
-    const {
-      requestLibPath,
-      api_fileType = 'ts',
-      mock_fileType = 'js',
-      filterPathPrefix = '',
-      outputFileType,
-      outputFileName
-    } = config;
+    const { requestLibPath, api_fileType = 'ts', mock_fileType = 'js', filterPathPrefix = '', outputFileType, outputFileName } = config;
 
     swagger.query({ path: searchContent }).toTypeScript();
 

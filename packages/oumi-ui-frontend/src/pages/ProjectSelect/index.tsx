@@ -13,7 +13,9 @@ import {
   FileOutlined,
   EditOutlined,
   LoadingOutlined,
-  RightCircleOutlined
+  RightCircleOutlined,
+  StarOutlined,
+  StarFilled
 } from '@ant-design/icons';
 import request from '@src/request';
 import { useRequest } from '@src/hook';
@@ -36,15 +38,20 @@ type ProjectData = {
  */
 const Project = ({
   projectList = [],
+  getProjectList,
   removeProject,
   goDashboard
 }: {
   projectList: ListItem[];
+  getProjectList: any;
   removeProject: (item: ListItem) => void;
   goDashboard: ({ id }: { id: string }) => void;
 }) => {
   const [current, setCurrent] = useState<ListItem | null>(null);
   const { request: requestOpen, loading } = useRequest('/api/openInEditor', { lazy: true });
+  const { request: requestCollect } = useRequest('/api/project/collect', { lazy: true });
+
+  if (!Array.isArray(projectList)) return null;
 
   const onClickOpen = (item: ListItem) => {
     if (loading) return;
@@ -52,32 +59,50 @@ const Project = ({
     requestOpen({ input: { file: item.path } });
   };
 
+  const collectProject = async (e: React.MouseEvent, item: ListItem, isCollect?: boolean) => {
+    e.stopPropagation();
+    e.preventDefault();
+    await requestCollect({ id: item.id, collect: !isCollect });
+    getProjectList();
+  };
+
+  const list1 = projectList.filter((v) => v.collection);
+  const list2 = projectList.filter((v) => !v.collection);
+
+  function renderList(list: ListItem[], isCollect?: boolean) {
+    if (!Array.isArray(list)) return null;
+    return list.map((item) => {
+      return (
+        <div className="project-select-list-item" key={item.id}>
+          <div className="content">
+            <div className="content-icon cur" onClick={(e) => collectProject(e, item, isCollect)}>
+              {!isCollect && <StarOutlined style={{ fontSize: 22 }} />}
+              {isCollect && <StarFilled style={{ fontSize: 22, color: '#1890ff' }} />}
+            </div>
+            <div className="content-left" onClick={() => goDashboard({ id: item.id })}>
+              <div className="name">{item.name}</div>
+              <div className="path">{item.path}</div>
+            </div>
+            <div className="content-right">
+              <span className="open" onClick={() => onClickOpen(item)}>
+                <CodeOutlined /> 在编辑器中打开 {loading && item === current && <LoadingOutlined />}
+              </span>
+              <span className="delete" onClick={() => removeProject(item)}>
+                <CloseOutlined />
+              </span>
+            </div>
+          </div>
+        </div>
+      );
+    });
+  }
+
   return (
     <section className="project-select-list container-center tabs-content-auto">
-      {projectList &&
-        projectList.map((item) => {
-          return (
-            <div className="project-select-list-item" key={item.id}>
-              <div className="content">
-                <div className="content-icon">
-                  <ProjectOutlined style={{ fontSize: 22 }} />
-                </div>
-                <div className="content-left" onClick={() => goDashboard({ id: item.id })}>
-                  <div className="name">{item.name}</div>
-                  <div className="path">{item.path}</div>
-                </div>
-                <div className="content-right">
-                  <span className="open" onClick={() => onClickOpen(item)}>
-                    <CodeOutlined /> 在编辑器中打开 {loading && item === current && <LoadingOutlined />}
-                  </span>
-                  <span className="delete" onClick={() => removeProject(item)}>
-                    <CloseOutlined />
-                  </span>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+      {list1.length > 0 && <div className="project-select-list__title">收藏项目</div>}
+      {renderList(list1, true)}
+      <div className="project-select-list__title">更多项目</div>
+      {renderList(list2)}
       {projectList && projectList.length === 0 && <div className="empty flex-center">没有项目哦，去导入吧~</div>}
     </section>
   );
@@ -101,7 +126,7 @@ const ImportProject = ({
   const [isEdit, setISEdit] = useState(false);
   const { currentPath = [], isPackage = false, files = [] } = projectData || {};
 
-  const { request: requestVerifyDirs, loading } = useRequest('/api/project/verifyDirs', { lazy: true });
+  const { request: requestVerifyDirs } = useRequest('/api/project/verifyDirs', { lazy: true });
 
   const onClickPath = (path: string, index: number) => {
     if (index === currentPath.length - 1 || !path) return;
@@ -219,11 +244,7 @@ export default () => {
     loading: loading1
   } = useRequest<ProjectData>('/api/user/folder', { errorMsg: false });
 
-  const {
-    request: getProjectList,
-    data: projectList = [],
-    loading: loading2
-  } = useRequest<ListItem[]>('/api/project/list');
+  const { request: getProjectList, data: projectList = [], loading: loading2 } = useRequest<ListItem[]>('/api/project/list');
 
   const { request: goDashboard, loading: loadingD } = useRequest('/api/project/dashboard', {
     lazy: true,
@@ -268,7 +289,7 @@ export default () => {
               </span>
             }
           >
-            <Project projectList={projectList} removeProject={removeProject} goDashboard={goDashboard} />
+            <Project projectList={projectList} getProjectList={getProjectList} removeProject={removeProject} goDashboard={goDashboard} />
           </TabPane>
 
           <TabPane
@@ -280,11 +301,7 @@ export default () => {
               </span>
             }
           >
-            <ImportProject
-              requestImportToProject={requestImportToProject}
-              projectData={projectData}
-              requestFiles={requestFiles}
-            />
+            <ImportProject requestImportToProject={requestImportToProject} projectData={projectData} requestFiles={requestFiles} />
           </TabPane>
         </Tabs>
 
