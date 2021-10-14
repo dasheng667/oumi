@@ -129,8 +129,7 @@ export default () => {
       // setSelectId([]);
 
       const reg = /[\u4e00-\u9fa5]+/g;
-      const query =
-        name.toLocaleUpperCase().startsWith('V') || reg.test(name) ? { searchTag: name } : { searchPath: name };
+      const query = name.toLocaleUpperCase().startsWith('V') || reg.test(name) ? { searchTag: name } : { searchPath: name };
 
       requestSearchSwagger({
         configId: tabsId,
@@ -140,9 +139,12 @@ export default () => {
         if (typeof res === 'object' && Object.keys(res || {}).length > 0) {
           const newData: any = {};
           Object.keys(res).forEach((key) => {
+            const item = res[key];
             newData[key] = {
-              description: res[key].description,
-              methods: res[key].methods
+              description: item.description,
+              methods: item.methods,
+              request: item.request,
+              response: item.response
             };
           });
           setExpandData({
