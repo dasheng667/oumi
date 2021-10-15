@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildMockStr = exports.mockExportFooterTemp = exports.getMockHeaderTemp = void 0;
 const utils_1 = require("../utils");
-exports.getMockHeaderTemp = (fileType) => {
+const getMockHeaderTemp = (fileType) => {
     if (fileType === 'js') {
         return `const Mock = require('mockjs'); \n\n\n
 module.exports =  { \n`;
@@ -11,6 +11,7 @@ module.exports =  { \n`;
 import Mock from 'mockjs'; \n\n\n
 export default { \n`;
 };
+exports.getMockHeaderTemp = getMockHeaderTemp;
 exports.mockExportFooterTemp = `}`;
 // type MockData = MockItem & { isArray: boolean };
 const randomMockValue = (name = '', format = '') => {
@@ -66,7 +67,7 @@ const getMockValue = (item, key) => {
     }
     return '1';
 };
-exports.buildMockStr = function (data) {
+const buildMockStr = function (data) {
     if (utils_1.dataType.includes(data.type)) {
         return data.type === 'boolean' ? true : '1';
     }
@@ -103,6 +104,7 @@ exports.buildMockStr = function (data) {
     }
     return `{ \n ${deep(data, 0)} } \n `;
 };
+exports.buildMockStr = buildMockStr;
 const getMockContent = (funName, mockContent, fileType) => {
     if (fileType === 'ts') {
         return `(req: Request, res: Response, u: string) => {

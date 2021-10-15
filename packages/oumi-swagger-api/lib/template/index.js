@@ -44,7 +44,7 @@ function getInterfaceName(name) {
  * @param data
  * @returns
  */
-exports.interfaceTemp = (name, data) => {
+const interfaceTemp = (name, data) => {
     const interArr = Object.keys(data);
     if (interArr.length === 0) {
         return `export type ${utils_1.stringCase(name)} = null; \n`;
@@ -63,6 +63,7 @@ exports.interfaceTemp = (name, data) => {
     str += '} \n\n';
     return str;
 };
+exports.interfaceTemp = interfaceTemp;
 const getNameSpace = (namespace) => {
     if (namespace) {
         return `${utils_1.stringCase(namespace)}.`;
@@ -75,7 +76,7 @@ const getFunExportNameSpace = (namespace) => {
     }
     return 'export default ';
 };
-exports.requestTemp = (options) => {
+const requestTemp = (options) => {
     const { method = 'GET', url, params, fileType, namespace = '' } = options;
     if (fileType === 'ts') {
         return `${getFunExportNameSpace(namespace)}(params: ${getNameSpace(namespace)}Props, options?: {[key: string]: any}) => {
@@ -96,9 +97,12 @@ exports.requestTemp = (options) => {
   })
 } \n`;
 };
-exports.namespaceTempHead = (name) => {
+exports.requestTemp = requestTemp;
+const namespaceTempHead = (name) => {
     return `\n
 export declare namespace ${utils_1.stringCase(name)} { \n`;
 };
+exports.namespaceTempHead = namespaceTempHead;
 exports.namespaceTempFoot = `} \n`;
-exports.mockJSTemp = () => { };
+const mockJSTemp = () => { };
+exports.mockJSTemp = mockJSTemp;

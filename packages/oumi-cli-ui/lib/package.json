@@ -1,0 +1,47 @@
+{
+    "name": "@oumi/cli-ui",
+    "version": "1.5.2",
+    "description": "@oumi/cli-ui 可视化项目管理器UI",
+    "main": "lib/index.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/dasheng91/oumi.git"
+    },
+    "scripts": {
+        "serve": "cross-env OUMI_CLI_DEV=true nodemon --watch src/**/*.ts --exec \"ts-node\" ./dev.ts",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "files": [
+        "lib",
+        "sh",
+        "public",
+        "typings"
+    ],
+    "keywords": [
+        "oumi",
+        "cli-ui"
+    ],
+    "author": "dasheng",
+    "license": "MIT",
+    "dependencies": {
+        "@oumi/block-sdk": "^1.1.0",
+        "apollo-server-koa": "^3.0.0",
+        "git-url-parse": "^11.5.0",
+        "jsonpath": "^1.1.1",
+        "koa": "^2.13.1",
+        "koa-bodyparser": "^4.3.0",
+        "koa-router": "^10.0.0",
+        "koa-socket-2": "^2.0.0",
+        "koa-static": "^5.0.0",
+        "lowdb": "^1.0.0",
+        "portfinder": "^1.0.28",
+        "qs": "^6.10.1"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "devDependencies": {
+        "@types/jsonpath": "^0.2.0",
+        "cross-env": "^7.0.3"
+    }
+}
