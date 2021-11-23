@@ -25,6 +25,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const utilsFile = __importStar(require("../utils/file"));
+const deps_1 = require("../connectors/deps");
 const resolve = (dir) => {
     return path_1.default.resolve(__dirname, '../', dir);
 };
@@ -192,6 +193,11 @@ const openInEditor = async (ctx) => {
     await utilsFile.openInEditor(input);
     return ctx.returnSuccess('success');
 };
+const checkAppVersion = async (ctx) => {
+    const { version } = ctx.request.body;
+    const { current, latest } = await deps_1.getVersion('@oumi/cli', version);
+    return ctx.returnSuccess({ current, latest });
+};
 exports.default = {
     'GET /api/hello/:name': fn_hello,
     'POST /api/user/folder': getUserFolder,
@@ -203,5 +209,6 @@ exports.default = {
     'POST /api/project/verifyDirs': verifyDirs,
     'POST /api/project/createDir': createProjectDir,
     'POST /api/dashboard/init': getDashboardByProject,
-    'POST /api/openInEditor': openInEditor
+    'POST /api/openInEditor': openInEditor,
+    'POST /api/checkVersion': checkAppVersion
 };
