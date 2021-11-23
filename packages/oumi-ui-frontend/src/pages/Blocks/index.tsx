@@ -3,16 +3,12 @@ import { useHistory, Link } from 'react-router-dom';
 import { ShoppingOutlined } from '@ant-design/icons';
 import { Tabs } from 'antd';
 import { useRequest } from '@src/hook';
-import Slider from '../../Components/Slider';
-import type { ListItem, IRouter, Blocks as IBlocks } from '../../global';
-import renderRoutes from '../../router/renderRoutes';
+import type { ListItem, IRouter, Blocks as IBlocks } from '@src/typings/app';
 import Blocks from './Components/Blocks';
 import DownloadModal from './Components/DownloadModal';
 import Container from '../Container';
 
 import './index.less';
-
-const projectListPath = '/project/select';
 
 const { TabPane } = Tabs;
 
@@ -35,7 +31,7 @@ export default (props: Props) => {
   };
 
   return (
-    <Container title="资产" className="dashboard-main">
+    <Container isMain title="资产" className="dashboard-main">
       <div className="dashboard-body">
         <div className="ui-dashboard-content">
           <div className="ui-content-container ui-main-container">

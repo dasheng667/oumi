@@ -4,7 +4,7 @@ import { HomeFilled, MailOutlined, CaretDownOutlined, StarOutlined, CodeOutlined
 import { Dropdown, Menu, Spin } from 'antd';
 import { useRequest } from '@src/hook';
 import { menuList } from '@src/router';
-import type { ListItem } from '@src/global';
+import type { ListItem } from '@src/typings/app';
 
 import './index.less';
 
@@ -131,11 +131,7 @@ export default (props: any) => {
           );
         })}
       </div>
-      <div className="contact-me">
-        <a href="mailto:345263463@qq.com">
-          <MailOutlined /> 向我反馈
-        </a>
-      </div>
+      <div className="contact-me"></div>
     </div>
   );
 };

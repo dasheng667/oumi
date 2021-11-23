@@ -81,7 +81,7 @@ export default () => {
   const list2 = useMemo(() => list.filter((item) => item.type === 'devDependencies'), [list]);
 
   return (
-    <Container title="项目依赖" className="deps-container">
+    <Container isMain title="项目依赖" className="deps-container">
       {progress.progress !== -1 && (
         <div className="progress">
           <div>
@@ -108,20 +108,10 @@ export default () => {
       <div className="rel">
         <Tabs className="tabs-oumi" activeKey={activeKey} type="card" onChange={(key: any) => setActiveKey(key)}>
           <TabPane tab="运行依赖" key="1" forceRender={false}>
-            <DepsList
-              list={list1}
-              updatePackage={updatePackage}
-              removePackage={removePackage}
-              onProgress={onProgress}
-            />
+            <DepsList list={list1} updatePackage={updatePackage} removePackage={removePackage} onProgress={onProgress} />
           </TabPane>
           <TabPane tab="开发依赖" key="2" forceRender={false}>
-            <DepsList
-              list={list2}
-              updatePackage={updatePackage}
-              removePackage={removePackage}
-              onProgress={onProgress}
-            />
+            <DepsList list={list2} updatePackage={updatePackage} removePackage={removePackage} onProgress={onProgress} />
           </TabPane>
         </Tabs>
       </div>

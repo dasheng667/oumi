@@ -3,7 +3,7 @@ import { Modal, Alert, message } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { useRequest } from '@src/hook';
-import type { Blocks } from '@src/global';
+import type { Blocks } from '@src/typings/app';
 import type { SelectInfo, SelectNode } from '@src/Components/FolderTree';
 import FolderTree from '@src/Components/FolderTree';
 

@@ -19,7 +19,7 @@ import {
 } from '@ant-design/icons';
 import request from '@src/request';
 import { useRequest } from '@src/hook';
-import type { ListItem } from '@src/global';
+import type { ListItem } from '@src/typings/app';
 
 import './index.less';
 

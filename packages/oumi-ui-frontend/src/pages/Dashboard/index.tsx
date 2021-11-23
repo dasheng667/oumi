@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import type { IRouter } from '../../global';
+import type { IRouter } from '@src/typings/app';
 import Container from '../Container';
 
 import './index.less';

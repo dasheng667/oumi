@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Spin, Tabs } from 'antd';
-import type { ListItem, Blocks } from '@src/global';
+import type { ListItem, Blocks } from '@src/typings/app';
 import { useRequest } from '@src/hook';
 
 const { TabPane } = Tabs;

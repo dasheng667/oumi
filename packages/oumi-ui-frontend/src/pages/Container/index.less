@@ -21,6 +21,7 @@
     color: @primary-text;
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     align-items: center;
     position: relative;
     z-index: 1;
@@ -28,6 +29,30 @@
       font-size: 28px;
       font-weight: 300;
       color: @primary-text;
+    }
+    .right-menu{
+      padding-right: 30px;
+      a{
+        color: inherit;
+      }
+      .icon-radius{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #dee9f3;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        margin-right: 5px;
+        transition: all .35s;
+        svg {
+          font-size: 20px;
+        }
+        &:hover{
+          background: #bdccda;
+        }
+      }
     }
   }
 

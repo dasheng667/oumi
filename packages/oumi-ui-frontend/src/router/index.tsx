@@ -1,16 +1,9 @@
 import React from 'react';
 import asyncComponent from './asyncComponent';
 import { Redirect } from 'react-router-dom';
-import {
-  ShoppingOutlined,
-  ApiOutlined,
-  SettingOutlined,
-  SolutionOutlined,
-  CodepenOutlined,
-  BugOutlined
-} from '@ant-design/icons';
+import { ShoppingOutlined, ApiOutlined, SettingOutlined, SolutionOutlined, CodepenOutlined, BugOutlined } from '@ant-design/icons';
+import type { IRouter } from '@src/typings/app';
 import App from './Root';
-import type { IRouter } from '../global';
 
 export const menuList = [
   {

@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import * as utilsFile from '../utils/file';
+import { getVersion } from '../connectors/deps';
 import type { Context } from '../../typings';
 
 const resolve = (dir: string) => {
@@ -236,6 +237,12 @@ const openInEditor = async (ctx: Context) => {
   return ctx.returnSuccess('success');
 };
 
+const checkAppVersion = async (ctx: Context) => {
+  const { version } = ctx.request.body;
+  const { current, latest } = await getVersion('@oumi/cli', version);
+  return ctx.returnSuccess({ current, latest });
+};
+
 export default {
   'GET /api/hello/:name': fn_hello,
   'POST /api/user/folder': getUserFolder,
@@ -250,5 +257,6 @@ export default {
 
   'POST /api/dashboard/init': getDashboardByProject,
 
-  'POST /api/openInEditor': openInEditor
+  'POST /api/openInEditor': openInEditor,
+  'POST /api/checkVersion': checkAppVersion
 };

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Tabs, Form, Input, Button, Table, Space, Row, Col, message } from 'antd';
 import { useRequest, useLocation } from '@src/hook';
-import type { ListItem } from '@src/global';
+import type { ListItem } from '@src/typings/app';
 import SwaggerConfig from './Components/SwaggerConfig';
 import PrivateConfig from './Components/PrivateConfig';
 import Container from '../Container';
@@ -171,11 +171,7 @@ export default () => {
                     <Input />
                   </Form.Item>
 
-                  <Form.Item
-                    name="href"
-                    label="链接"
-                    rules={[{ required: true, validator: checkHref, message: '请输入一个正确的链接' }]}
-                  >
+                  <Form.Item name="href" label="链接" rules={[{ required: true, validator: checkHref, message: '请输入一个正确的链接' }]}>
                     <Input />
                   </Form.Item>
 

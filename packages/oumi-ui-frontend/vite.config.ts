@@ -1,6 +1,7 @@
 import path from 'path';
 import { defineConfig } from 'vite';
 import reactRefresh from '@vitejs/plugin-react-refresh';
+import pkg from '../oumi-cli-ui/package.json';
 
 const resolve = (dir: string) => {
   return path.resolve(__dirname, './', dir);
@@ -21,6 +22,9 @@ export default defineConfig({
       // 可以为项目根目录的上一级提供服务
       allow: ['../oumi-swagger-api']
     }
+  },
+  define: {
+    AppVersion: JSON.stringify(pkg.version)
   },
   build: {
     outDir: '../oumi-cli-ui/public',

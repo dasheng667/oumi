@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CloseCircleOutlined } from '@ant-design/icons';
 import { Tabs, Spin, message, Popover } from 'antd';
@@ -8,6 +8,7 @@ import Search from './Components/Search';
 import Container from '../Container';
 import SwaggerList from './Components/SwaggerList';
 import ProjectDirs from './Components/ProjectDirs';
+import getTags from './getTags';
 
 import './index.less';
 
@@ -23,7 +24,7 @@ const NoSwagger = () => {
   );
 };
 
-export default () => {
+export default memo(() => {
   const [tabsId, setTabsId] = useState('');
   const { data, error, loading: loadingGet } = useRequest<any[]>('/api/config/swagger/get');
 
@@ -56,7 +57,8 @@ export default () => {
 
   useEffect(() => {
     if (swaggerData && Array.isArray(swaggerData.tags)) {
-      setSwaggerList(swaggerData.tags.map((item: any) => ({ ...item, id: createId(8) })));
+      setSwaggerList(getTags(swaggerData));
+      // setSwaggerList(swaggerData.tags.map((item: any) => ({ ...item, id: createId(8) })));
     }
   }, [swaggerData]);
 
@@ -193,7 +195,7 @@ export default () => {
   );
 
   return (
-    <Container title="Swagger" className="ui-swagger-container">
+    <Container isMain title="Swagger" className="ui-swagger-container">
       <Tabs className="tabs-oumi" type="card" defaultActiveKey={tabsId} onTabClick={onTabClick}>
         {data && data.map((item) => <TabPane tab={item.name} key={item.id} />)}
       </Tabs>
@@ -229,4 +231,4 @@ export default () => {
       </div>
     </Container>
   );
-};
+});

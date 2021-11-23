@@ -165,7 +165,7 @@ export default () => {
   const dataGroup = useMemo(() => taskViewGroup<ITaskItem>(visibleData), [visibleData]);
 
   return (
-    <Container title="任务" className="task-container">
+    <Container isMain title="任务" className="task-container">
       <div className="task-list">
         <div className="search">
           <Input prefix={<SearchOutlined />} allowClear onChange={onSearchChange} placeholder="搜索" />
