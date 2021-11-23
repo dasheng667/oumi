@@ -94,3 +94,33 @@ export const useLocation = () => {
   location.query = querystring.parse(location.search.substr(1));
   return location;
 };
+
+interface DownloadFileOptions {
+  params?: object;
+  customFileName?: string;
+}
+
+export const useDownloadFile = () => {
+  const downloadFile = useCallback((url: string, options?: DownloadFileOptions) => {
+    const { customFileName, params } = options || {};
+    const urlParams = new URLSearchParams();
+    const paramsData: any = { ...params };
+    Object.keys(paramsData).forEach((k) => {
+      urlParams.append(k, paramsData[k]);
+    });
+    const exportUrl = `${url}?${urlParams.toString()}`;
+
+    if (customFileName) {
+      const aEl = document.createElement('a');
+      aEl.href = exportUrl;
+      aEl.download = customFileName;
+      aEl.click();
+    } else {
+      window.location.href = exportUrl;
+    }
+  }, []);
+
+  return {
+    downloadFile
+  };
+};

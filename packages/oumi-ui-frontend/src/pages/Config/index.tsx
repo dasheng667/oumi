@@ -154,13 +154,13 @@ export default () => {
   };
 
   return (
-    <Container title="配置" className="ui-config-content">
-      <div className="ui-config-container ui-content-container">
+    <Container isMain title="配置" className="ui-config-content">
+      <div className="scroll-body ui-config-container ui-content-container">
         <Tabs className="tabs-oumi" type="card" activeKey={currentTag} onChange={(key) => setCurrentTag(key)}>
           <TabPane tab="Swagger" key="1">
             <Row>
               <Col span={11}>
-                <h3>Swagger配置</h3>
+                <h3>API导出配置</h3>
                 <SwaggerConfig formConfig={formConfig} onFinish={onFinishConfig} configLoading={configLoading} />
               </Col>
 

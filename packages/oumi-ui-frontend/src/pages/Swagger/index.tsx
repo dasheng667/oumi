@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CloseCircleOutlined } from '@ant-design/icons';
-import { Tabs, Spin, message, Popover } from 'antd';
+import { Tabs, Spin, message, Popover, Form } from 'antd';
 import { useRequest } from '@src/hook';
 import { createId } from '@src/utils';
 import Search from './Components/Search';
@@ -27,13 +27,9 @@ const NoSwagger = () => {
 export default memo(() => {
   const [tabsId, setTabsId] = useState('');
   const { data, error, loading: loadingGet } = useRequest<any[]>('/api/config/swagger/get');
+  const [form] = Form.useForm();
 
-  const {
-    data: swaggerData,
-    loading: loadingSwagger,
-    request: requestSwagger,
-    source
-  } = useRequest<any>('/api/swagger/info', { lazy: true });
+  const { data: swaggerData, loading: loadingSwagger, request: requestSwagger } = useRequest<any>('/api/swagger/info', { lazy: true });
 
   const { request: requestSearchSwagger } = useRequest<any>('/api/swagger/search', { lazy: true });
 
@@ -42,12 +38,6 @@ export default memo(() => {
   const [loadingId, setLoadingId] = useState(''); // 子列表loading
   const [expandCacheId, setExpandCache] = useState<string[]>([]); // 缓存已展开的列表id
   const [selectId, setSelectId] = useState<string[]>([]); // 已选中的api
-
-  useEffect(() => {
-    return () => {
-      source.cancel();
-    };
-  }, []);
 
   useEffect(() => {
     if (data && data.length > 0) {
@@ -64,8 +54,13 @@ export default memo(() => {
 
   useEffect(() => {
     if (tabsId) {
+      const searchName = form.getFieldValue('name');
       setSelectId([]);
-      requestSwagger({ id: tabsId });
+      if (!searchName) {
+        requestSwagger({ id: tabsId });
+      } else {
+        onFinish({ name: searchName });
+      }
     }
   }, [tabsId]);
 
@@ -121,7 +116,7 @@ export default memo(() => {
   // 表单搜索
   const onFinish = (val: { name: string }) => {
     const { name } = val;
-    if (!name) {
+    if (name === undefined || name === '') {
       requestSwagger({ id: tabsId });
     } else {
       const id = createId(8);
@@ -208,7 +203,7 @@ export default memo(() => {
         )}
 
         <div className="selected flex align-items">
-          <Search onFinish={onFinish} />
+          <Search form={form} onFinish={onFinish} />
           <Popover content={content} title="已选中" placement="bottom">
             <div className="plp2">
               已选中<span className="span">{selectId.length}</span>个
@@ -218,6 +213,7 @@ export default memo(() => {
 
         <div className="body-flex">
           <SwaggerList
+            tabsId={tabsId}
             selectId={selectId}
             setSelectId={setSelectId}
             swaggerList={swaggerList}

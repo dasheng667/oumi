@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import * as utilsFile from '../utils/file';
+import { request } from '@oumi/cli-shared-utils';
 import { getVersion } from '../connectors/deps';
 import type { Context } from '../../typings';
 
@@ -237,6 +238,11 @@ const openInEditor = async (ctx: Context) => {
   return ctx.returnSuccess('success');
 };
 
+const getSystemNotices = async (ctx: Context) => {
+  const result = await request.getJSON('https://quniter.coding.net/p/notification/d/notification/git/raw/master/message.json');
+  return ctx.returnSuccess(result);
+};
+
 const checkAppVersion = async (ctx: Context) => {
   const { version } = ctx.request.body;
   const { current, latest } = await getVersion('@oumi/cli', version);
@@ -258,5 +264,6 @@ export default {
   'POST /api/dashboard/init': getDashboardByProject,
 
   'POST /api/openInEditor': openInEditor,
+  'POST /api/notices': getSystemNotices,
   'POST /api/checkVersion': checkAppVersion
 };

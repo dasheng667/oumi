@@ -2,11 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Form, Input, Button } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 
-export default (props: any) => {
-  const { onFinish } = props;
+type Props = {
+  onFinish: (data: any) => void;
+  form: any;
+};
+
+export default (props: Props) => {
+  const { onFinish, form } = props;
 
   return (
-    <Form name="customized_form_controls" layout="inline" onFinish={onFinish}>
+    <Form form={form} name="customized_form_controls" layout="inline" onFinish={onFinish}>
       <Form.Item
         name="name"
         label="搜索"

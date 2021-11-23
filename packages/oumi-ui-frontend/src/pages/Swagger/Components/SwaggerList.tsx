@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
-import { Checkbox, Drawer, Tabs } from 'antd';
+import { Checkbox, Drawer, Tabs, Tag, Button, Space, Tooltip } from 'antd';
 import { toResponseJSON } from '@src/utils';
-import { CaretDownOutlined, CaretRightOutlined, LoadingOutlined } from '@ant-design/icons';
+import { useDownloadFile } from '@src/hook';
+import { CaretDownOutlined, CaretRightOutlined, LoadingOutlined, FileTextOutlined, ControlOutlined } from '@ant-design/icons';
 import Code from '../../../Components/Code';
 
 const { TabPane } = Tabs;
 
 const SwaggerList = (props: any) => {
-  const { swaggerList, expandData = {}, expandCacheId, loadingId, onClickSwaggerHead, setSelectId, selectId } = props;
+  const { swaggerList, expandData = {}, expandCacheId, loadingId, onClickSwaggerHead, setSelectId, selectId, tabsId } = props;
   const [visible, setVisible] = useState(false);
   const [drawerData, setDrawerData] = useState<any>(null);
   const [defaultActiveKey, setDefaultActiveKey] = useState('1');
+  const { downloadFile } = useDownloadFile();
 
   const onAllChange = (e: React.MouseEvent, item: any) => {
     const all = Object.keys(expandData[item.id] || {});
@@ -44,6 +46,16 @@ const SwaggerList = (props: any) => {
     setTimeout(() => {
       setDrawerData({ ...value, key });
     }, 200);
+  };
+
+  const downLoadMock = (path: string) => {
+    if (!path) return;
+    downloadFile('/api/export/mock', { params: { id: tabsId, searchPath: path } });
+  };
+
+  const downLoadTS = (path: string) => {
+    if (!path) return;
+    downloadFile('/api/export/typescript', { params: { id: tabsId, searchPath: path } });
   };
 
   return (
@@ -89,11 +101,7 @@ const SwaggerList = (props: any) => {
                             <span className="path" onClick={() => clickShowDrawer(value, key)}>
                               {key}
                             </span>
-                            <span
-                              className="desc"
-                              title={value.description}
-                              onClick={() => clickShowDrawer(value, key)}
-                            >
+                            <span className="desc" title={value.description} onClick={() => clickShowDrawer(value, key)}>
                               {value.description}
                             </span>
                             <span className="bg">
@@ -118,7 +126,37 @@ const SwaggerList = (props: any) => {
         visible={visible}
         width={800}
       >
-        <p style={{ position: 'relative', top: -10 }}>路径: {drawerData && drawerData.key}</p>
+        <div style={{ position: 'relative', top: -10 }}>
+          <Space>
+            <Tooltip title="导出包含 Response 结果的文件" placement="top">
+              <Button
+                size="small"
+                type="default"
+                danger
+                icon={<FileTextOutlined />}
+                onClick={() => downLoadMock(drawerData && drawerData.key)}
+              >
+                导出
+              </Button>
+            </Tooltip>
+            <Tooltip title="导出 Typescript 类型数据声明的接口文件" placement="top">
+              <Button
+                size="small"
+                type="default"
+                danger
+                icon={<ControlOutlined />}
+                onClick={() => downLoadTS(drawerData && drawerData.key)}
+              >
+                导出TS
+              </Button>
+            </Tooltip>
+            {drawerData && drawerData.methods === 'post' && <Tag color="green">POST</Tag>}
+            {drawerData && drawerData.methods === 'get' && <Tag color="blue">GET</Tag>}
+            {drawerData && drawerData.methods === 'delete' && <Tag color="red">DELETE</Tag>}
+            {drawerData && drawerData.methods === 'put' && <Tag color="volcano">PUT</Tag>}
+            {drawerData && drawerData.key}
+          </Space>
+        </div>
         <Tabs
           className="tabs-oumi"
           activeKey={defaultActiveKey}

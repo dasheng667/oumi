@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Tree, Button, message, Space } from 'antd';
+import { Tree, Button, message, Space, Tooltip } from 'antd';
 import request from '@src/request';
 import { useRequest } from '@src/hook';
+import { InfoCircleOutlined } from '@ant-design/icons';
 import Popconfirm from './Popconfirm';
 
 interface DataNode {
@@ -105,7 +106,13 @@ export default (props: Props) => {
   return (
     <div className="dirs">
       <div className="dirs-box">
-        <div className="dirs-head">当前项目目录：</div>
+        <div className="dirs-head">
+          生成接口到目录{' '}
+          <Tooltip title="生成接口的规则在配置中心修改">
+            <InfoCircleOutlined />
+          </Tooltip>
+          ：
+        </div>
 
         {/* <Popconfirm
           selectNode={selectNode}
