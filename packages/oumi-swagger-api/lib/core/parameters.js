@@ -10,9 +10,18 @@ function parametersBody(definitions = {}, request = {}) {
         return null;
     const body = {};
     if (parameters.length === 1 && parameters[0].in === 'body') {
+        const { schema, name } = parameters[0];
+        if (schema.type === 'array') {
+            const value = eachDefinitions_1.default({
+                definitions,
+                isArray: true,
+                ref: schema.items.$ref
+            });
+            return { [name]: value };
+        }
         const value = eachDefinitions_1.default({
             definitions,
-            ref: parameters[0].schema.$ref
+            ref: schema.$ref
         });
         Object.assign(body, value);
         return body;

@@ -8,6 +8,8 @@ function eachDefinitions(params) {
     if (firstFlag === true) {
         refTotal = [];
     }
+    if (typeof ref !== 'string')
+        return null;
     ref = ref.replace('#/definitions/', '');
     const findRefIndex = refTotal.findIndex((item) => {
         return item.ref === ref;

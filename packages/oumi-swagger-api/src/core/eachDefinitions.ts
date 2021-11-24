@@ -18,6 +18,8 @@ export default function eachDefinitions(params: Props) {
     refTotal = [];
   }
 
+  if (typeof ref !== 'string') return null;
+
   ref = ref.replace('#/definitions/', '');
 
   const findRefIndex = refTotal.findIndex((item) => {

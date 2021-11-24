@@ -6,9 +6,18 @@ export default function parametersBody(definitions: any = {}, request: { paramet
   const body = {};
 
   if (parameters.length === 1 && parameters[0].in === 'body') {
+    const { schema, name } = parameters[0];
+    if (schema.type === 'array') {
+      const value: any = eachDefinitions({
+        definitions,
+        isArray: true,
+        ref: schema.items.$ref
+      });
+      return { [name]: value };
+    }
     const value: any = eachDefinitions({
       definitions,
-      ref: parameters[0].schema.$ref
+      ref: schema.$ref
     });
     Object.assign(body, value);
     return body;

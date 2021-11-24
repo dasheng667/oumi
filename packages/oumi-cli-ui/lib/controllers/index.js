@@ -25,6 +25,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const utilsFile = __importStar(require("../utils/file"));
+const cli_shared_utils_1 = require("@oumi/cli-shared-utils");
 const deps_1 = require("../connectors/deps");
 const resolve = (dir) => {
     return path_1.default.resolve(__dirname, '../', dir);
@@ -193,6 +194,10 @@ const openInEditor = async (ctx) => {
     await utilsFile.openInEditor(input);
     return ctx.returnSuccess('success');
 };
+const getSystemNotices = async (ctx) => {
+    const result = await cli_shared_utils_1.request.getJSON('https://quniter.coding.net/p/notification/d/notification/git/raw/master/message.json');
+    return ctx.returnSuccess(result);
+};
 const checkAppVersion = async (ctx) => {
     const { version } = ctx.request.body;
     const { current, latest } = await deps_1.getVersion('@oumi/cli', version);
@@ -210,5 +215,6 @@ exports.default = {
     'POST /api/project/createDir': createProjectDir,
     'POST /api/dashboard/init': getDashboardByProject,
     'POST /api/openInEditor': openInEditor,
+    'POST /api/notices': getSystemNotices,
     'POST /api/checkVersion': checkAppVersion
 };
