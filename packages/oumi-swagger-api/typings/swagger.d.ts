@@ -62,4 +62,6 @@ export interface MockBuildAOption {
   outputPath: string;
 
   fileType?: 'js' | 'ts';
+
+  writeLocalFile?: boolean;
 }

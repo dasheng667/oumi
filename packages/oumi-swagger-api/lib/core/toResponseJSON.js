@@ -23,7 +23,7 @@ function toResponseJSON(resData, options) {
                     each(arrChild, value);
                     res[key] = [arrChild];
                 }
-                else if (utils_1.verifyNodeIsDeclarationType(value)) {
+                else if ((0, utils_1.verifyNodeIsDeclarationType)(value)) {
                     // 是一个正常的数据声明格式
                     res[key] = transformDataResult(value, options);
                 }

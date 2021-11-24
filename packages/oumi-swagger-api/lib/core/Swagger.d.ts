@@ -37,7 +37,7 @@ export default class Swagger {
      * @options outputPath 输出路径
      * @returns
      */
-    buildMockJS(options: MockBuildAOption, callback?: () => void): this;
+    buildMockJS(options: MockBuildAOption, callback?: (mockStr: string) => void): this;
     /**
      *
      * @returns 生成api文件

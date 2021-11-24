@@ -6,7 +6,7 @@ import { requestTemp, namespaceTempHead, namespaceTempFoot } from '@oumi/swagger
 import { request } from '@oumi/cli-shared-utils';
 import type { Context } from '../../typings';
 
-const exportMock = async (ctx: Context) => {
+const exportMockJSON = async (ctx: Context) => {
   const { id, searchPath }: any = ctx.request.query;
 
   const data = await ctx.model.userConfig.swagger.findById(id);
@@ -26,6 +26,20 @@ const exportMock = async (ctx: Context) => {
     ctx.set('Content-Type', 'application/json-my-attachment');
     ctx.set('content-disposition', `attachment; filename="${trans.key}.json"`);
     ctx.body = JSON.stringify(json, null, '\t');
+  });
+};
+
+const exportMockFile = async (ctx: Context) => {
+  const { id, searchPath }: any = ctx.request.query;
+
+  const data = await ctx.model.userConfig.swagger.findById(id);
+  const swaggerData: any = await request.getJSON(data.href);
+  const swagger = new Swagger(swaggerData);
+
+  swagger.query({ path: searchPath }).buildMockJS({ fileType: 'js', writeLocalFile: false, outputPath: 'none' }, (mockString: string) => {
+    ctx.set('Content-Type', 'application/json-my-attachment');
+    ctx.set('content-disposition', `attachment; filename="_mock.js"`);
+    ctx.body = mockString;
   });
 };
 
@@ -75,6 +89,7 @@ const exportTSFile = async (ctx: Context) => {
 };
 
 export default {
-  'GET /api/export/mock': exportMock,
-  'GET /api/export/typescript': exportTSFile
+  'GET /api/export/json': exportMockJSON,
+  'GET /api/export/typescript': exportTSFile,
+  'GET /api/export/mock': exportMockFile
 };

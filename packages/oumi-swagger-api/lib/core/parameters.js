@@ -12,14 +12,14 @@ function parametersBody(definitions = {}, request = {}) {
     if (parameters.length === 1 && parameters[0].in === 'body') {
         const { schema, name } = parameters[0];
         if (schema.type === 'array') {
-            const value = eachDefinitions_1.default({
+            const value = (0, eachDefinitions_1.default)({
                 definitions,
                 isArray: true,
                 ref: schema.items.$ref
             });
             return { [name]: value };
         }
-        const value = eachDefinitions_1.default({
+        const value = (0, eachDefinitions_1.default)({
             definitions,
             ref: schema.$ref
         });
@@ -29,7 +29,7 @@ function parametersBody(definitions = {}, request = {}) {
     const filter = parameters.filter((item) => item.in !== 'header');
     if (filter.length === 1 && filter[0].schema && filter[0].schema.$ref) {
         // 说明是一个VO对象，只取里面的结构
-        const value = eachDefinitions_1.default({
+        const value = (0, eachDefinitions_1.default)({
             definitions,
             ref: filter[0].schema.$ref
         });
@@ -38,7 +38,7 @@ function parametersBody(definitions = {}, request = {}) {
     }
     filter.forEach((item) => {
         if (item.schema && item.schema.$ref) {
-            const value = eachDefinitions_1.default({
+            const value = (0, eachDefinitions_1.default)({
                 definitions,
                 ref: item.schema.$ref
             });

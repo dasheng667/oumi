@@ -119,8 +119,8 @@ const getMockContent = (funName, mockContent, fileType) => {
 };
 function mockTemp(apiPath, methods, response, options) {
     const { fileType } = options || {};
-    const funName = utils_1.transformPath(apiPath).key;
-    const mockContent = exports.buildMockStr(response && response.code && response.data ? response.data : response);
+    const funName = (0, utils_1.transformPath)(apiPath).key;
+    const mockContent = (0, exports.buildMockStr)(response && response.code && response.data ? response.data : response);
     const code = `"${methods.toLocaleUpperCase()} ${apiPath}": ${getMockContent(funName, mockContent, fileType)}`;
     return code;
 }

@@ -200,8 +200,8 @@ export default class Swagger {
    * @options outputPath 输出路径
    * @returns
    */
-  buildMockJS(options: MockBuildAOption, callback?: () => void) {
-    const { outputPath, fileType = 'js' } = options || {};
+  buildMockJS(options: MockBuildAOption, callback?: (mockStr: string) => void) {
+    const { outputPath, fileType = 'js', writeLocalFile = true } = options || {};
 
     if (!outputPath || typeof outputPath !== 'string') {
       throw new Error(`outputPath: 格式不合法 ${outputPath}`);
@@ -218,10 +218,12 @@ export default class Swagger {
 
     mockStr = [getMockHeaderTemp(fileType), mockStr, mockExportFooterTemp].join('\n');
 
-    writeFile(`${outputPath}/_mock.${fileType === 'js' ? 'js' : 'ts'}`, mockStr, { allowRepeat: false });
+    if (writeLocalFile) {
+      writeFile(`${outputPath}/_mock.${fileType === 'js' ? 'js' : 'ts'}`, mockStr, { allowRepeat: false });
+    }
 
     if (typeof callback === 'function') {
-      callback();
+      callback(mockStr);
     }
 
     return this;
@@ -232,14 +234,7 @@ export default class Swagger {
    * @returns 生成api文件
    */
   buildApi(options: BuildApiOption) {
-    const {
-      outputPath,
-      requestLibPath,
-      fileType,
-      filterPathPrefix,
-      outputFileName = 'serve.ts',
-      outputFileType
-    } = options || {};
+    const { outputPath, requestLibPath, fileType, filterPathPrefix, outputFileName = 'serve.ts', outputFileType } = options || {};
 
     if (!outputPath || typeof outputPath !== 'string') {
       throw new Error(`outputPath: 格式不合法 ${outputPath}`);
@@ -265,13 +260,7 @@ export default class Swagger {
         if (fileType === 'js') {
           mergeTemp += [requestContent].join('\n');
         } else {
-          mergeTemp += [
-            namespaceTempHead(pathData.key),
-            propsString,
-            resultString,
-            namespaceTempFoot,
-            requestContent
-          ].join('\n');
+          mergeTemp += [namespaceTempHead(pathData.key), propsString, resultString, namespaceTempFoot, requestContent].join('\n');
         }
       });
     };
@@ -291,10 +280,7 @@ export default class Swagger {
         if (fileType === 'js') {
           writeFile(`${outputPath}/${pathData.path}.js`, [requestLibContent, requestContent].join('\n'));
         } else {
-          writeFile(
-            `${outputPath}/${pathData.path}.ts`,
-            [requestLibContent, propsString, resultString, requestContent].join('\n')
-          );
+          writeFile(`${outputPath}/${pathData.path}.ts`, [requestLibContent, propsString, resultString, requestContent].join('\n'));
         }
       });
     };

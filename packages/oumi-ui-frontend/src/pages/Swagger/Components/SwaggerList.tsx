@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Checkbox, Drawer, Tabs, Tag, Button, Space, Tooltip } from 'antd';
 import { toResponseJSON } from '@src/utils';
 import { useDownloadFile } from '@src/hook';
-import { CaretDownOutlined, CaretRightOutlined, LoadingOutlined, FileTextOutlined, ControlOutlined } from '@ant-design/icons';
+import { CaretDownOutlined, CaretRightOutlined, LoadingOutlined, FileTextOutlined, ControlOutlined, ApiOutlined } from '@ant-design/icons';
 import Code from '../../../Components/Code';
 
 const { TabPane } = Tabs;
@@ -50,12 +50,28 @@ const SwaggerList = (props: any) => {
 
   const downLoadMock = (path: string) => {
     if (!path) return;
-    downloadFile('/api/export/mock', { params: { id: tabsId, searchPath: path } });
+    downloadFile('/api/export/json', { params: { id: tabsId, searchPath: path } });
   };
 
   const downLoadTS = (path: string) => {
     if (!path) return;
     downloadFile('/api/export/typescript', { params: { id: tabsId, searchPath: path } });
+  };
+
+  const downLoadMockJS = (path: string) => {
+    if (!path) return;
+    downloadFile('/api/export/mock', { params: { id: tabsId, searchPath: path } });
+  };
+
+  const RenderMethods = () => {
+    return (
+      <>
+        {drawerData && drawerData.methods === 'post' && <Tag color="green">POST</Tag>}
+        {drawerData && drawerData.methods === 'get' && <Tag color="blue">GET</Tag>}
+        {drawerData && drawerData.methods === 'delete' && <Tag color="red">DELETE</Tag>}
+        {drawerData && drawerData.methods === 'put' && <Tag color="volcano">PUT</Tag>}
+      </>
+    );
   };
 
   return (
@@ -119,16 +135,19 @@ const SwaggerList = (props: any) => {
         })}
 
       <Drawer
-        title={(drawerData && (drawerData.description || drawerData.key)) || ''}
+        title={
+          <span>
+            <RenderMethods /> {(drawerData && (drawerData.description || drawerData.key)) || ''}
+          </span>
+        }
         placement="right"
         closable={false}
         onClose={() => setDrawerVisible(false)}
         visible={visible}
-        width={800}
-      >
-        <div style={{ position: 'relative', top: -10 }}>
+        width={880}
+        extra={
           <Space>
-            <Tooltip title="导出包含 Response 结果的文件" placement="top">
+            <Tooltip title="导出包含 Response 结果的文件" placement="bottom">
               <Button
                 size="small"
                 type="default"
@@ -139,10 +158,21 @@ const SwaggerList = (props: any) => {
                 导出
               </Button>
             </Tooltip>
-            <Tooltip title="导出 Typescript 类型数据声明的接口文件" placement="top">
+            <Tooltip title="导出 Mockjs 格式的模拟数据文件" placement="bottom">
               <Button
                 size="small"
                 type="default"
+                danger
+                icon={<ApiOutlined />}
+                onClick={() => downLoadMockJS(drawerData && drawerData.key)}
+              >
+                导出Mock
+              </Button>
+            </Tooltip>
+            <Tooltip title="导出 Typescript 格式的接口类型定义文件" placement="bottom">
+              <Button
+                size="small"
+                type="primary"
                 danger
                 icon={<ControlOutlined />}
                 onClick={() => downLoadTS(drawerData && drawerData.key)}
@@ -150,12 +180,11 @@ const SwaggerList = (props: any) => {
                 导出TS
               </Button>
             </Tooltip>
-            {drawerData && drawerData.methods === 'post' && <Tag color="green">POST</Tag>}
-            {drawerData && drawerData.methods === 'get' && <Tag color="blue">GET</Tag>}
-            {drawerData && drawerData.methods === 'delete' && <Tag color="red">DELETE</Tag>}
-            {drawerData && drawerData.methods === 'put' && <Tag color="volcano">PUT</Tag>}
-            {drawerData && drawerData.key}
           </Space>
+        }
+      >
+        <div style={{ position: 'relative', top: -10, overflow: 'hidden' }}>
+          <Space>路径:{drawerData && drawerData.key}</Space>
         </div>
         <Tabs
           className="tabs-oumi"
