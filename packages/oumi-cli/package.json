@@ -1,6 +1,6 @@
 {
 	"name": "@oumi/cli",
-	"version": "1.5.7",
+	"version": "1.5.8",
 	"description": "@oumi/cli 项目管理器脚手架",
 	"main": "index.js",
 	"bin": {

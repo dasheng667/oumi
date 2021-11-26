@@ -15,7 +15,7 @@ const publishVersion = [
   {
     name: '@oumi/cli',
     packagePath: path.resolve('./packages/oumi-cli/package.json'),
-    version: '1.5.7'
+    version: '1.5.8'
   },
   {
     name: '@oumi/cli-ui',
