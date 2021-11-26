@@ -7,7 +7,7 @@ const swagger_api_1 = __importDefault(require("@oumi/swagger-api"));
 const utils_1 = require("@oumi/swagger-api/lib/utils");
 const template_1 = require("@oumi/swagger-api/lib/template");
 const cli_shared_utils_1 = require("@oumi/cli-shared-utils");
-const exportMock = async (ctx) => {
+const exportMockJSON = async (ctx) => {
     const { id, searchPath } = ctx.request.query;
     const data = await ctx.model.userConfig.swagger.findById(id);
     const swaggerData = await cli_shared_utils_1.request.getJSON(data.href);
@@ -23,6 +23,17 @@ const exportMock = async (ctx) => {
         ctx.set('Content-Type', 'application/json-my-attachment');
         ctx.set('content-disposition', `attachment; filename="${trans.key}.json"`);
         ctx.body = JSON.stringify(json, null, '\t');
+    });
+};
+const exportMockFile = async (ctx) => {
+    const { id, searchPath } = ctx.request.query;
+    const data = await ctx.model.userConfig.swagger.findById(id);
+    const swaggerData = await cli_shared_utils_1.request.getJSON(data.href);
+    const swagger = new swagger_api_1.default(swaggerData);
+    swagger.query({ path: searchPath }).buildMockJS({ fileType: 'js', writeLocalFile: false, outputPath: 'none' }, (mockString) => {
+        ctx.set('Content-Type', 'application/json-my-attachment');
+        ctx.set('content-disposition', `attachment; filename="_mock.js"`);
+        ctx.body = mockString;
     });
 };
 const exportTSFile = async (ctx) => {
@@ -62,6 +73,7 @@ const exportTSFile = async (ctx) => {
     });
 };
 exports.default = {
-    'GET /api/export/mock': exportMock,
-    'GET /api/export/typescript': exportTSFile
+    'GET /api/export/json': exportMockJSON,
+    'GET /api/export/typescript': exportTSFile,
+    'GET /api/export/mock': exportMockFile
 };
