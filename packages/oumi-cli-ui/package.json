@@ -1,11 +1,11 @@
 {
 	"name": "@oumi/cli-ui",
-	"version": "1.5.5",
+	"version": "1.5.6",
 	"description": "@oumi/cli-ui 可视化项目管理器UI",
 	"main": "lib/index.js",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/dasheng91/oumi.git"
+		"url": "git+https://github.com/dasheng667/oumi.git"
 	},
 	"scripts": {
 		"serve": "cross-env OUMI_CLI_DEV=true nodemon --watch src/**/*.ts --exec \"ts-node\" ./dev.ts",
@@ -25,7 +25,6 @@
 	"license": "MIT",
 	"dependencies": {
 		"@oumi/block-sdk": "^1.1.0",
-		"apollo-server-koa": "^3.0.0",
 		"git-url-parse": "^11.5.0",
 		"jsonpath": "^1.1.1",
 		"koa": "^2.13.1",

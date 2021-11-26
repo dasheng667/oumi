@@ -122,7 +122,7 @@ export default memo((props: { title: string; className?: string; isMain?: boolea
               </Badge>
               <span className="icon icon-radius">
                 <Tooltip title="我要加入开源">
-                  <a href="https://github.com/dasheng91/oumi" target="_blank">
+                  <a href="https://github.com/dasheng667/oumi" target="_blank">
                     <GithubOutlined />
                   </a>
                 </Tooltip>

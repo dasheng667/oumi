@@ -246,13 +246,7 @@ class Swagger {
                     mergeTemp += [requestContent].join('\n');
                 }
                 else {
-                    mergeTemp += [
-                        (0, index_1.namespaceTempHead)(pathData.key),
-                        propsString,
-                        resultString,
-                        index_1.namespaceTempFoot,
-                        requestContent
-                    ].join('\n');
+                    mergeTemp += [(0, index_1.namespaceTempHead)(pathData.key), propsString, resultString, index_1.namespaceTempFoot, requestContent].join('\n');
                 }
             });
         };

@@ -18,7 +18,7 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/dasheng91/oumi.git",
+		"url": "git+https://github.com/dasheng667/oumi.git",
 		"directory": "packages/block-sdk"
 	},
 	"licenses": "(MIT OR Apache-2.0)",
