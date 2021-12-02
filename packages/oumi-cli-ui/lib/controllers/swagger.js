@@ -96,7 +96,7 @@ const BuildSwaggerFileToLocal = async (ctx) => {
     const data = await ctx.model.userConfig.swagger.findById(configId);
     const config = await ctx.model.userConfig.swaggerConfig.get();
     try {
-        const swaggerData = await fetch(data.href);
+        const swaggerData = await cli_shared_utils_1.request.getJSON(data.href);
         const swagger = new swagger_api_1.default(swaggerData);
         const { requestLibPath, api_fileType = 'ts', mock_fileType = 'js', filterPathPrefix = '', outputFileType, outputFileName } = config;
         swagger.query({ path: searchContent }).toTypeScript();
