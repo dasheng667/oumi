@@ -1,4 +1,5 @@
 # @oumi/cli
+前端项目脚手架。
 
 ## 安装
 ```
@@ -7,9 +8,26 @@ npm install -g @oumi/cli
 yarn global add @oumi/cli
 ```
 
-## 使用
+## UI 可视化管理器
 ```js
-oumi ui
+oumi ui  // 启动ui可视化项目管理器
+```
+
+## 项目初始化
+```js
+oumi init myApp
+```
+
+## 编译命令
+```js
+oumi dev  // 默认vite 开发模式
+oumi dev:webpack // webpack5 的开发模式
+oumi build // 打包使用webpack5
+```
+
+## 文档相关
+```js
+oumi doc:build // 打包组件文档
 ```
 
 
@@ -20,23 +38,5 @@ npm update -g @oumi/cli
 yarn global upgrade --latest @oumi/cli
 ```
 
-
-## 预览 oumi ui
-### 创建项目
-![创建项目](./static/images/oumi-preview1.png)
-
-### 任务管理
-![任务管理](./static/images/oumi-preview-tasks.png)
-
-### 依赖管理
-![依赖管理](./static/images/oumi-preview-deps.png)
-
-### 资产
-目前默认pro-blocks，且允许自定义[配置](https://www.yuque.com/qqhh/cuq2ci/vpg4rw)。
-![资产](./static/images/oumi-preview2.png)
-
-### Swagger
-![Swagger](./static/images/oumi-preview3.png)
-
-### 配置
-![配置](./static/images/oumi-preview4.png)
+## 其他链接
+. [Oumi UI](../oumi-cli-ui/README.md)

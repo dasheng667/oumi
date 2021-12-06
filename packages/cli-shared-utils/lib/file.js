@@ -25,3 +25,5 @@ exports.writeFile = function writeFile(filePath, content, options) {
   }
   fs.writeFile(filePath, content, null, () => {});
 }
+
+exports.getModuleExport = exports => exports.__esModule ? exports.default : exports

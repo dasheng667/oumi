@@ -1,17 +1,22 @@
 {
-	"name": "@oumi/cli",
+	"name": "@oumi/cli_test",
 	"version": "1.5.9",
 	"description": "@oumi/cli 项目管理器脚手架",
-	"main": "index.js",
+	"main": "lib/index.js",
 	"bin": {
-		"oumi": "bin/oumi.js"
+		"oumi_test": "bin/oumi.js"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/dasheng667/oumi.git"
 	},
+	"files": [
+		"bin",
+		"lib"
+	],
 	"scripts": {
 		"start": "oumi ui",
+		"dev": "tsc -w",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [
@@ -24,8 +29,7 @@
 		"@oumi/cli-ui": "^1.5.9",
 		"@oumi/swagger-api": "^1.5.1",
 		"@oumi/cli-shared-utils": "^1.4.0",
-		"@oumi/block-sdk": "^1.1.0",
-		"commander": "^8.0.0"
+		"@oumi/block-sdk": "^1.1.0"
 	},
 	"publishConfig": {
 		"access": "public"

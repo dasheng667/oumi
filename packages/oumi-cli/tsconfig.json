@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "outDir": "./lib",
+    "target": "ESNext",
+    "moduleResolution": "Node",
+    "module": "Commonjs",
+    "jsx": "preserve",
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "removeComments": true, // 是否移除注释
+    "resolveJsonModule": true,
+    "declaration": false
+  },
+  "include": ["src", "types"],
+  "exclude": ["./src/__tests__", "lib"]
+}

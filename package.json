@@ -12,7 +12,6 @@
     "lint-staged:js": "eslint --ext .js,.jsx,.ts,.tsx ",
     "lint:js": "eslint --fix packages/**/*.js packages/**/bin/*",
     "lint:prettier": "prettier --check \"packages/**/*\" --end-of-line auto",
-    "publish": "cd packages/oumi-cli && npm publish && cd ../oumi-cli-ui && npm publish && cd ../oumi-swagger-api && npm publish",
     "prettier": "prettier --write \"packages/**/*\"",
     "v": "node scripts/updateVersion.js"
   },
