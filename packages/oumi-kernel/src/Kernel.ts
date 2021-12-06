@@ -6,6 +6,7 @@ import { EventEmitter } from 'events';
 import { createDebug } from '@oumi/cli-shared-utils';
 import Config from './Config';
 import { mergePlugins, resolvePresetsOrPlugins } from './utils';
+import getPaths from './utils/getPaths';
 import { PluginType, IS_MODIFY_HOOK, IS_ADD_HOOK, IS_EVENT_HOOK } from './utils/constants';
 import Plugin from './Plugin';
 
@@ -43,7 +44,7 @@ export default class Kernel extends EventEmitter {
 
   // paths
   paths: {
-    cwd?: string;
+    appPath?: string;
     absNodeModulesPath?: string;
     absSrcPath?: string;
     absPagesPath?: string;
@@ -51,11 +52,10 @@ export default class Kernel extends EventEmitter {
     absTmpPath?: string;
   } = {};
 
-  env: string | undefined;
   args: any;
   debugger: any;
 
-  initialConfig: any;
+  config: any;
 
   constructor(options: IKernelOptions) {
     super();
@@ -74,6 +74,12 @@ export default class Kernel extends EventEmitter {
 
   async init() {
     this.initConfig();
+
+    this.paths = getPaths({
+      appPath: this.appPath,
+      config: this.userConfig!
+    });
+
     this.initPresetsAndPlugins();
     await this.applyPlugins('onReady');
   }
@@ -82,15 +88,15 @@ export default class Kernel extends EventEmitter {
     this.userConfig = new Config({
       appPath: this.appPath
     });
-    this.initialConfig = this.userConfig.initialConfig;
+    this.config = this.userConfig.initialConfig;
 
-    this.debugger('initConfig', this.initialConfig);
+    this.debugger('initConfig', this.config);
   }
 
   initPresetsAndPlugins() {
-    const { initialConfig } = this;
-    const allConfigPresets = mergePlugins(this.optsPresets || [], initialConfig.presets || [])();
-    const allConfigPlugins = mergePlugins(this.optsPlugins || [], initialConfig.plugins || [])();
+    const { config } = this;
+    const allConfigPresets = mergePlugins(this.optsPresets || [], config.presets || [])();
+    const allConfigPlugins = mergePlugins(this.optsPlugins || [], config.plugins || [])();
 
     this.plugins = new Map();
     this.extraPlugins = [];
@@ -152,7 +158,7 @@ export default class Kernel extends EventEmitter {
   initPluginCtx({ id, path, ctx }: { id: string; path: string; ctx: Kernel }) {
     const pluginCtx = new Plugin({ id, path, ctx });
     const internalMethods = ['onReady', 'onStart'];
-    const kernelApis = ['appPath', 'plugins', 'platforms', 'paths', 'helper', 'runOpts', 'initialConfig', 'applyPlugins'];
+    const kernelApis = ['appPath', 'plugins', 'paths', 'config', 'initialConfig', 'applyPlugins'];
     internalMethods.forEach((name) => {
       if (!this.methods.has(name)) {
         pluginCtx.registerMethod(name);

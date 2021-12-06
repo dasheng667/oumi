@@ -17,6 +17,7 @@
   'rcFolder',
   'PackageManager',
   'executeCommand',
+  'npm',
   'path',
   'fork'
 ].forEach(m => {
@@ -32,6 +33,7 @@ exports.fetch  = require('node-fetch')
 exports.yParser  = require('yargs-parser')
 exports.createDebug  = require('debug')
 exports.lodash  = require('lodash')
+exports.portfinder  = require('portfinder')
 
 Object.defineProperty(exports, 'installedBrowsers', {
   enumerable: true,

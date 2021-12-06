@@ -1,3 +1,4 @@
+import Portfinder from 'portfinder';
 import Lodash from 'lodash';
 import { Parser } from 'yargs-parser';
 import { Chalk } from 'chalk';
@@ -16,6 +17,8 @@ export const request: {
 export const lodash: typeof Lodash;
 
 export const spinner: Ora;
+
+export const portfinder: typeof Portfinder;
 
 export const yParser: Parser;
 
@@ -89,3 +92,13 @@ export const isLinux: boolean;
 export const isMacintosh: boolean;
 
 export const progress: any;
+
+
+// npm
+export function resolveNpm(pluginName: string, root: string): Promise<any>;
+
+export function resolveNpmSync(pluginName: string, root: string): any;
+
+export function getNpmPkgSync(npmName: string, root: string): any;
+
+export function getNpmPkg(npmName: string, root: string): Promise<any>;

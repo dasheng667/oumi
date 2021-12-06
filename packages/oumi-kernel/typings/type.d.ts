@@ -1,5 +1,3 @@
-import type Config from '../src/Config';
-
 export type IServicePathKeys = 'cwd' | 'absNodeModulesPath' | 'absOutputPath' | 'absSrcPath' | 'absPagesPath' | 'absTmpPath';
 
 export type IServicePaths = {
@@ -50,11 +48,22 @@ export enum PluginType {
   Plugin = 'Plugin'
 }
 
-export interface IApi {
-  pkg: string;
+export interface IApiPaths {
   appPath: string;
+  absNodeModulesPath: string;
+  absOutputPath: string;
+  absSrcPath: string;
+  absPagesPath: string;
+  absTmpPath: string;
+}
 
-  userConfig: Config;
+export interface IApi {
+  id: string;
+  path: string;
+
+  appPath: string;
+  config: any;
+  paths: IApiPaths;
 
   commands: Map<string, ICommand | string>;
   plugins: Map<string, IPlugin>;
@@ -67,4 +76,6 @@ export interface IApi {
   registerCommand: (command: IHook) => void;
 
   registerMethod: ({ name: fn }: { name: string; fn?: void }) => void;
+
+  applyPlugins: (args: string | { name: string; initialVal?: any; opts?: any }) => Promise<unknown>;
 }

@@ -30,6 +30,7 @@
 		"node-ipc": "^9.1.1",
 		"open": "^8.0.2",
 		"ora": "^5.3.0",
+		"portfinder": "^1.0.28",
 		"read-pkg": "^5.1.1",
 		"semver": "^7.3.4",
 		"strip-ansi": "^6.0.0",

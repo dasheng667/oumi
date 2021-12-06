@@ -22,17 +22,16 @@ export default class Kernel extends EventEmitter {
     hooks: Map<string, IHook[]>;
     methods: Map<string, ((...args: any[]) => void)[]>;
     paths: {
-        cwd?: string;
+        appPath?: string;
         absNodeModulesPath?: string;
         absSrcPath?: string;
         absPagesPath?: string;
         absOutputPath?: string;
         absTmpPath?: string;
     };
-    env: string | undefined;
     args: any;
     debugger: any;
-    initialConfig: any;
+    config: any;
     constructor(options: IKernelOptions);
     init(): Promise<void>;
     initConfig(): void;

@@ -3,8 +3,8 @@ import fs from 'fs';
 import Koa from 'koa';
 import body from 'koa-bodyparser';
 import koaStatic from 'koa-static';
-import portfinder from 'portfinder';
 import IO from 'koa-socket-2';
+import { portfinder } from '@oumi/cli-shared-utils';
 
 import controller from './middleware/controllers';
 import socket from './middleware/socket';
