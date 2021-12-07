@@ -10,3 +10,7 @@ locals.json
 .oumi
 
 packages/oumi-swagger-api/example/build
+
+packages/oumi-cli/lib
+packages/oumi-kernel/lib
+packages/oumi-webpack-runner/lib

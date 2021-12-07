@@ -5,10 +5,10 @@ import type { IApi } from '@oumi/kernel/typings/type';
 export default (api: IApi) => {
   let port: number;
   let hostname: string;
-  const { appPath, paths } = api;
+  const { appPath } = api;
 
   api.registerCommand({
-    name: 'dev',
+    name: 'webpack',
     async fn({ args }) {
       // console.log('dev.args', args);
 
@@ -22,11 +22,6 @@ export default (api: IApi) => {
       console.log('appPath = ', appPath);
       console.log('port = ', port);
       console.log('hostname = ', hostname);
-
-      const webpack = Webpack(appPath, {
-        watch: true,
-        paths
-      });
     }
   });
 };

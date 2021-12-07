@@ -85,8 +85,6 @@ export default (props: Props) => {
   };
 
   const onClickExport = () => {
-    // console.log('selectNode', selectNode)
-    // console.log('selectId', selectId)
     if (selectId.length <= 0) {
       message.warn('请选择需要导出的api');
     }

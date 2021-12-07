@@ -5,8 +5,8 @@ import devConfig from './config/dev.config';
 import type { IConfig } from './typings';
 
 async function runDev(appPath: string, config: IConfig) {
-  const conf = devConfig(appPath, config);
-  console.log('conf', conf);
+  const chain = devConfig(appPath, config);
+  console.log('config = ', chain.toConfig());
 }
 
 export default (appPath: string, config: IConfig) => {
