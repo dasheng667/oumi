@@ -2,7 +2,9 @@
 /* eslint-disable no-console */
 
 const path = require('path');
-const { yParser, fork } = require('@oumi/cli-shared-utils');
+const { yParser, fork, resolvePkg, getCwd } = require('@oumi/cli-shared-utils');
+const { Kernel } = require('@oumi/kernel');
+const plugins = require('../lib/plugins');
 
 const args = yParser(process.argv.slice(2), {
   alias: {
@@ -63,7 +65,23 @@ const name = args._[0];
       break;
 
     default:
-      console.log('default name');
+      {
+        if (name === 'build') {
+          process.env.NODE_ENV = 'production';
+        }
+
+        const kernel = new Kernel({
+          appPath: getCwd(),
+          pkg: resolvePkg(process.cwd()),
+          presets: [...plugins.default().plugins]
+        });
+
+        await kernel.run({
+          name,
+          args
+        });
+      }
+      break;
   }
 })();
 

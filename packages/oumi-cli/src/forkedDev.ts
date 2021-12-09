@@ -11,8 +11,6 @@ import plugins from './plugins/index';
 
     process.env.NODE_ENV = 'development';
 
-    // initWebpack();
-
     const kernel = new Kernel({
       appPath: getCwd(),
       pkg: resolvePkg(process.cwd()),

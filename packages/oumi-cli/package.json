@@ -17,6 +17,8 @@
 	"scripts": {
 		"start": "oumi ui",
 		"dev": "tsc -w",
+		"dev2": "cd ../oumi-kernel && tsc -w",
+		"dev3": "cd ../oumi-webpack-runner && tsc -w",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [

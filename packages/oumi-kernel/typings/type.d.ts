@@ -62,7 +62,7 @@ export interface IApi {
   path: string;
 
   appPath: string;
-  config: any;
+  config: any; // 用户配置文件
   paths: IApiPaths;
 
   commands: Map<string, ICommand | string>;

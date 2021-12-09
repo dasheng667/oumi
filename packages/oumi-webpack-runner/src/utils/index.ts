@@ -1,5 +1,3 @@
-import path from 'path';
+import { join } from 'path';
 
-export const getRootPath = function () {
-  return path.resolve(__dirname, '../../');
-};
+export const getUserConfig = (userConfig: any) => {};

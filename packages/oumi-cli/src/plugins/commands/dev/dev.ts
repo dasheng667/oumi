@@ -5,7 +5,7 @@ import type { IApi } from '@oumi/kernel/typings/type';
 export default (api: IApi) => {
   let port: number;
   let hostname: string;
-  const { appPath, paths } = api;
+  const { appPath, paths, config } = api;
 
   api.registerCommand({
     name: 'dev',
@@ -19,13 +19,10 @@ export default (api: IApi) => {
 
       hostname = process.env.HOST || api.config?.devServer?.host || '0.0.0.0';
 
-      console.log('appPath = ', appPath);
-      console.log('port = ', port);
-      console.log('hostname = ', hostname);
-
-      const webpack = Webpack(appPath, {
-        watch: true,
-        paths
+      Webpack(appPath, {
+        args,
+        port,
+        userConfig: config
       });
     }
   });

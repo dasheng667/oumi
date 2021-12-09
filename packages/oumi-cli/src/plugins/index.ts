@@ -6,6 +6,6 @@ const resolve = (p) => {
 
 export default () => {
   return {
-    plugins: [resolve('./plugins/commands/dev/dev')]
+    plugins: [resolve('./plugins/commands/dev/dev'), resolve('./plugins/commands/webpack/webpack')]
   };
 };
