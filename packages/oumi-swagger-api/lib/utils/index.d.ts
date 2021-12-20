@@ -2,6 +2,11 @@ import type { Query } from '../../typings/swagger';
 export declare const validataQuery: (requestData: any, requestPath: string, options: Query) => boolean;
 export declare const dataType: string[];
 /**
+ *  转换节点格式，返回必须带type的node
+ * @returns {object}   { "type": "string", "example": "100", "description": "名称"}
+ */
+export declare const normalNodeFormat: (node: any) => any;
+/**
  * 校验节点是不是声明类型，声明数据必有type
  * @param node 节点
  * @returns

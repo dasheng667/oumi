@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import chalk from 'chalk';
 import type { Query } from '../../typings/swagger';
 
@@ -28,13 +29,34 @@ export const validataQuery = function (requestData: any, requestPath: string, op
 export const dataType = ['string', 'number', 'array', 'object', 'integer', 'boolean', 'int32', 'int64', 'ref', 'file'];
 
 /**
+ *  转换节点格式，返回必须带type的node
+ * @returns {object}   { "type": "string", "example": "100", "description": "名称"}
+ */
+export const normalNodeFormat = (node: any) => {
+  const isNormal = node.type && typeof node.type === 'string';
+  if (isNormal) return node;
+  node.type = node.schema && node.schema.type;
+  if (node.type) {
+    if (node.schema) {
+      delete node.schema;
+    }
+    if (typeof node.in === 'string') {
+      delete node.in;
+    }
+  }
+  return node;
+};
+
+/**
  * 校验节点是不是声明类型，声明数据必有type
  * @param node 节点
  * @returns
  */
 export function verifyNodeIsDeclarationType(node: any) {
-  if (!node || node.type === undefined) return false;
-  return dataType.includes(node.type);
+  if (!node) return false;
+  const type = node.type || (node.schema && node.schema.type);
+  if (!type) return false;
+  return dataType.includes(type);
 }
 
 export function findResponseRef(request: any) {
@@ -54,7 +76,7 @@ export function findResponseRef(request: any) {
 }
 
 export function isObject(val: any) {
-  return Object.prototype.toString.call(val) === '[object Object]';
+  return val && Object.prototype.toString.call(val) === '[object Object]' && Object.keys(val).length > 0;
 }
 
 export function stringCase(str: string) {

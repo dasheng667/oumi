@@ -27,7 +27,7 @@ function getInterfaceType(value) {
         return type;
     }
     if (type) {
-        return (0, utils_1.stringCase)(type);
+        return utils_1.stringCase(type);
     }
     return 'any';
 }
@@ -44,12 +44,12 @@ function getInterfaceName(name) {
  * @param data
  * @returns
  */
-const interfaceTemp = (name, data) => {
+exports.interfaceTemp = (name, data) => {
     const interArr = Object.keys(data);
     if (interArr.length === 0) {
-        return `export type ${(0, utils_1.stringCase)(name)} = null; \n`;
+        return `export type ${utils_1.stringCase(name)} = null; \n`;
     }
-    let str = `export type ${(0, utils_1.stringCase)(name)} = { \n`;
+    let str = `export type ${utils_1.stringCase(name)} = { \n`;
     interArr.forEach((key) => {
         const val = data[key];
         const kname = val.name || key || '';
@@ -63,10 +63,9 @@ const interfaceTemp = (name, data) => {
     str += '} \n\n';
     return str;
 };
-exports.interfaceTemp = interfaceTemp;
 const getNameSpace = (namespace) => {
     if (namespace) {
-        return `${(0, utils_1.stringCase)(namespace)}.`;
+        return `${utils_1.stringCase(namespace)}.`;
     }
     return '';
 };
@@ -76,7 +75,7 @@ const getFunExportNameSpace = (namespace) => {
     }
     return 'export default ';
 };
-const requestTemp = (options) => {
+exports.requestTemp = (options) => {
     const { method = 'GET', url, params, fileType, namespace = '' } = options;
     if (fileType === 'ts') {
         return `${getFunExportNameSpace(namespace)}(params: ${getNameSpace(namespace)}Props, options?: {[key: string]: any}) => {
@@ -97,12 +96,9 @@ const requestTemp = (options) => {
   })
 } \n`;
 };
-exports.requestTemp = requestTemp;
-const namespaceTempHead = (name) => {
+exports.namespaceTempHead = (name) => {
     return `\n
-export declare namespace ${(0, utils_1.stringCase)(name)} { \n`;
+export declare namespace ${utils_1.stringCase(name)} { \n`;
 };
-exports.namespaceTempHead = namespaceTempHead;
 exports.namespaceTempFoot = `} \n`;
-const mockJSTemp = () => { };
-exports.mockJSTemp = mockJSTemp;
+exports.mockJSTemp = () => { };

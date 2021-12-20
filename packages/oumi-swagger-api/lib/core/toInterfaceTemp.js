@@ -10,7 +10,7 @@ function toInterfaceTemp(data) {
     let str = '';
     Object.keys(data).forEach((key) => {
         const val = data[key];
-        str += (0, template_1.interfaceTemp)(key, val);
+        str += template_1.interfaceTemp(key, val);
     });
     return str;
 }

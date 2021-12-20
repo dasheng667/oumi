@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+/* eslint-disable no-param-reassign */
 const utils_1 = require("../utils");
 /**
  * 模拟数据转response
@@ -14,7 +15,7 @@ function toResponseJSON(resData, options) {
                 console.log('数组的暂没有处理~');
             });
         }
-        else if (data && typeof data === 'object') {
+        else if (utils_1.isObject(data)) {
             Object.keys(data).forEach((key) => {
                 const value = { ...data[key] };
                 if (value.isArray) {
@@ -23,15 +24,14 @@ function toResponseJSON(resData, options) {
                     each(arrChild, value);
                     res[key] = [arrChild];
                 }
-                else if ((0, utils_1.verifyNodeIsDeclarationType)(value)) {
+                else if (utils_1.verifyNodeIsDeclarationType(value)) {
                     // 是一个正常的数据声明格式
                     res[key] = transformDataResult(value, options);
                 }
                 else {
-                    if (Number(key) === 0)
-                        return; // 防止不识别的类型导致死循环
-                    res[key] = {};
-                    each(res[key], value);
+                    // if (Number(key) === 0) return; // 防止不识别的类型导致死循环
+                    // res[key] = {};
+                    // each(res[key], value);
                 }
             });
         }
@@ -42,16 +42,17 @@ function toResponseJSON(resData, options) {
 exports.default = toResponseJSON;
 const getResultDefaultVal = (data, defaultValue, options) => {
     const { resultValueType = 'type' } = options || {};
-    const { explame, description } = data;
+    const { example, description } = data;
     if (resultValueType === 'type') {
         return defaultValue;
     }
-    return explame || description || defaultValue;
+    return example || description || defaultValue;
 };
 function transformDataResult(data, options) {
-    const { type, items, explame } = data;
-    if (explame)
-        return explame;
+    utils_1.normalNodeFormat(data);
+    const { type, items, example } = data;
+    if (example)
+        return example;
     const typeName = items && items.type ? items.type : type;
     if (type === 'array') {
         if (typeName === 'integer' || typeName === 'number') {

@@ -8,7 +8,7 @@ const path_1 = __importDefault(require("path"));
 const cli_shared_utils_1 = require("@oumi/cli-shared-utils");
 var cli_shared_utils_2 = require("@oumi/cli-shared-utils");
 Object.defineProperty(exports, "rcFolder", { enumerable: true, get: function () { return cli_shared_utils_2.rcFolder; } });
-const createId = (max = 6, randomString = '0123456789abcdef') => {
+exports.createId = (max = 6, randomString = '0123456789abcdef') => {
     const s = [];
     const hexDigits = randomString || '0123456789abcdef';
     for (let i = 0; i < max; i++) {
@@ -16,8 +16,7 @@ const createId = (max = 6, randomString = '0123456789abcdef') => {
     }
     return s.join('');
 };
-exports.createId = createId;
-const parseArgs = (args) => {
+exports.parseArgs = (args) => {
     const parts = args.split(/\s+/);
     const result = [];
     let arg;
@@ -42,8 +41,7 @@ const parseArgs = (args) => {
     }
     return result;
 };
-exports.parseArgs = parseArgs;
-const log = (...args) => {
+exports.log = (...args) => {
     const date = new Date();
     const timestamp = `${date.getHours().toString().padStart(2, '0')}:${date
         .getMinutes()
@@ -52,8 +50,7 @@ const log = (...args) => {
     const first = args.shift();
     console.log(`${cli_shared_utils_1.chalk.blue('UI')} ${cli_shared_utils_1.chalk.dim(timestamp)}`, cli_shared_utils_1.chalk.bold(first), ...args);
 };
-exports.log = log;
-const resolveModuleRoot = (filePath, id = '') => {
+exports.resolveModuleRoot = (filePath, id = '') => {
     {
         const index = filePath.lastIndexOf(`${path_1.default.sep}index.js`);
         if (index !== -1) {
@@ -81,8 +78,7 @@ const resolveModuleRoot = (filePath, id = '') => {
     }
     return filePath;
 };
-exports.resolveModuleRoot = resolveModuleRoot;
-const throttle = (fun, wait = 60) => {
+exports.throttle = (fun, wait = 60) => {
     let prevTime = 0;
     return function (...args) {
         const now = Date.now();
@@ -92,8 +88,7 @@ const throttle = (fun, wait = 60) => {
         }
     };
 };
-exports.throttle = throttle;
-const dataTransform = (arr) => {
+exports.dataTransform = (arr) => {
     if (Array.isArray(arr)) {
         const res = {};
         arr.forEach((item) => {
@@ -105,4 +100,3 @@ const dataTransform = (arr) => {
     }
     return null;
 };
-exports.dataTransform = dataTransform;

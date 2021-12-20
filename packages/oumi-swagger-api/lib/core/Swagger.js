@@ -37,11 +37,6 @@ const fs_1 = require("../utils/fs");
  * Swagger 拉取工具
  */
 class Swagger {
-    body;
-    responseData;
-    typescriptData;
-    queryList;
-    step;
     constructor(body) {
         if (typeof body === 'object') {
             this.body = body;
@@ -72,13 +67,13 @@ class Swagger {
             const apiData = paths[path];
             const { post, get, put } = apiData;
             const request = post || get || put;
-            if (!(0, utils_1.validataQuery)(request, path, options))
+            if (!utils_1.validataQuery(request, path, options))
                 return;
-            const ref = (0, utils_1.findResponseRef)(request);
-            const parametersData = (0, parameters_1.default)(definitions, request);
+            const ref = utils_1.findResponseRef(request);
+            const parametersData = parameters_1.default(definitions, request);
             if (!ref)
                 return;
-            const res = (0, eachDefinitions_1.default)({ definitions, ref });
+            const res = eachDefinitions_1.default({ definitions, ref });
             // console.log('query: ', path);
             queryList[path] = {
                 request: parametersData,
@@ -106,7 +101,7 @@ class Swagger {
         const json = {};
         keys.forEach((key) => {
             const { response } = this.queryList[key];
-            json[key] = (0, toResponseJSON_1.default)(response);
+            json[key] = toResponseJSON_1.default(response);
         });
         this.responseData = json;
         if (typeof callback === 'function') {
@@ -128,8 +123,8 @@ class Swagger {
         keys.forEach((key) => {
             const { request, response, methods } = this.queryList[key];
             json[key] = {
-                request: (0, toTypeScript_1.default)(request, 'Props'),
-                response: (0, toTypeScript_1.default)(response, 'Result'),
+                request: toTypeScript_1.default(request, 'Props'),
+                response: toTypeScript_1.default(response, 'Result'),
                 methods
             };
         });
@@ -150,8 +145,8 @@ class Swagger {
         let resultString = '';
         keys.forEach((key) => {
             const { request, response, methods } = this.typescriptData[key];
-            propsString += (0, toInterfaceTemp_1.default)(request);
-            resultString += (0, toInterfaceTemp_1.default)(response);
+            propsString += toInterfaceTemp_1.default(request);
+            resultString += toInterfaceTemp_1.default(response);
             if (typeof callback === 'function') {
                 callback({
                     [key]: {
@@ -180,12 +175,12 @@ class Swagger {
             // 写入目录
             if (fileType === 'dir') {
                 const fileName = path_1.default.join(outputPath, `${file}.json`);
-                (0, fs_1.writeJSON)(fileName, data[file]);
+                fs_1.writeJSON(fileName, data[file]);
             }
             else if (fileType === 'hump') {
-                const fileData = (0, utils_1.transformPath)(key, filterPathPrefix);
+                const fileData = utils_1.transformPath(key, filterPathPrefix);
                 const fileName = path_1.default.join(outputPath, `${fileData.key}.json`);
-                (0, fs_1.writeJSON)(fileName, data[file]);
+                fs_1.writeJSON(fileName, data[file]);
             }
         });
         return this;
@@ -207,11 +202,11 @@ class Swagger {
         let mockStr = '';
         keys.forEach((key) => {
             const { response, methods } = this.queryList[key];
-            mockStr += (0, mockjs_1.default)(key, methods, response, { fileType });
+            mockStr += mockjs_1.default(key, methods, response, { fileType });
         });
-        mockStr = [(0, mockjs_1.getMockHeaderTemp)(fileType), mockStr, mockjs_1.mockExportFooterTemp].join('\n');
+        mockStr = [mockjs_1.getMockHeaderTemp(fileType), mockStr, mockjs_1.mockExportFooterTemp].join('\n');
         if (writeLocalFile) {
-            (0, fs_1.writeFile)(`${outputPath}/_mock.${fileType === 'js' ? 'js' : 'ts'}`, mockStr, { allowRepeat: false });
+            fs_1.writeFile(`${outputPath}/_mock.${fileType === 'js' ? 'js' : 'ts'}`, mockStr, { allowRepeat: false });
         }
         if (typeof callback === 'function') {
             callback(mockStr);
@@ -235,8 +230,8 @@ class Swagger {
         const mergeOutput = (data) => {
             Object.keys(data).forEach((filePath) => {
                 const { propsString, resultString, methods } = data[filePath];
-                const pathData = (0, utils_1.transformPath)(filePath, filterPathPrefix);
-                const requestContent = (0, index_1.requestTemp)({
+                const pathData = utils_1.transformPath(filePath, filterPathPrefix);
+                const requestContent = index_1.requestTemp({
                     method: methods,
                     url: `/${pathData.path}`,
                     fileType,
@@ -246,7 +241,7 @@ class Swagger {
                     mergeTemp += [requestContent].join('\n');
                 }
                 else {
-                    mergeTemp += [(0, index_1.namespaceTempHead)(pathData.key), propsString, resultString, index_1.namespaceTempFoot, requestContent].join('\n');
+                    mergeTemp += [index_1.namespaceTempHead(pathData.key), propsString, resultString, index_1.namespaceTempFoot, requestContent].join('\n');
                 }
             });
         };
@@ -254,18 +249,18 @@ class Swagger {
         const outputFile = (data) => {
             Object.keys(data).forEach((filePath) => {
                 const { propsString, resultString, methods } = data[filePath];
-                const pathData = (0, utils_1.transformPath)(filePath, filterPathPrefix);
+                const pathData = utils_1.transformPath(filePath, filterPathPrefix);
                 const requestLibContent = `${requestLibPath} \n`;
-                const requestContent = (0, index_1.requestTemp)({
+                const requestContent = index_1.requestTemp({
                     method: methods,
                     url: `/${pathData.path}`,
                     fileType
                 });
                 if (fileType === 'js') {
-                    (0, fs_1.writeFile)(`${outputPath}/${pathData.path}.js`, [requestLibContent, requestContent].join('\n'));
+                    fs_1.writeFile(`${outputPath}/${pathData.path}.js`, [requestLibContent, requestContent].join('\n'));
                 }
                 else {
-                    (0, fs_1.writeFile)(`${outputPath}/${pathData.path}.ts`, [requestLibContent, propsString, resultString, requestContent].join('\n'));
+                    fs_1.writeFile(`${outputPath}/${pathData.path}.ts`, [requestLibContent, propsString, resultString, requestContent].join('\n'));
                 }
             });
         };
@@ -278,7 +273,7 @@ class Swagger {
             }
         });
         if (outputFileType === 'merge' && mergeTemp && outputFileName) {
-            (0, fs_1.writeFile)(`${outputPath}/${outputFileName}`, `${requestLibPath} \n ${mergeTemp}`, { allowRepeat: false });
+            fs_1.writeFile(`${outputPath}/${outputFileName}`, `${requestLibPath} \n ${mergeTemp}`, { allowRepeat: false });
         }
         return this;
     }

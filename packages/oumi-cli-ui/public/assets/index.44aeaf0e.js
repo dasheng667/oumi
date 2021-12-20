@@ -1,0 +1,1 @@
+import{R as o}from"./vendor.b6308d1a.js";import{C as r}from"./index.c6dfb110.js";import"./index.933877c2.js";var a=a=>(console.log("props",a),o.createElement(r,{title:"Dashboard"},"我是Dashboard"));export{a as default};

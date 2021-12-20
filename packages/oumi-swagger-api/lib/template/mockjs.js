@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildMockStr = exports.mockExportFooterTemp = exports.getMockHeaderTemp = void 0;
 const utils_1 = require("../utils");
-const getMockHeaderTemp = (fileType) => {
+exports.getMockHeaderTemp = (fileType) => {
     if (fileType === 'js') {
         return `const Mock = require('mockjs'); \n\n\n
 module.exports =  { \n`;
@@ -11,7 +11,6 @@ module.exports =  { \n`;
 import Mock from 'mockjs'; \n\n\n
 export default { \n`;
 };
-exports.getMockHeaderTemp = getMockHeaderTemp;
 exports.mockExportFooterTemp = `}`;
 // type MockData = MockItem & { isArray: boolean };
 const randomMockValue = (name = '', format = '') => {
@@ -67,7 +66,7 @@ const getMockValue = (item, key) => {
     }
     return '1';
 };
-const buildMockStr = function (data) {
+exports.buildMockStr = function (data) {
     if (utils_1.dataType.includes(data.type)) {
         return data.type === 'boolean' ? true : '1';
     }
@@ -97,14 +96,13 @@ const buildMockStr = function (data) {
                 const mockKey = getMockKey(item, key);
                 const mockVal = getMockValue(item, key);
                 const description = item.description ? `${space(level)} /** ${item.description} */\n` : '';
-                itemStr += `${description} ${space(level)}'${mockKey}': ${mockVal}, \n`;
+                itemStr += `${description} ${space(level)}'${mockKey}': ${typeof mockVal === 'string' ? `"${mockVal}"` : mockVal}, \n`;
             }
         });
         return itemStr;
     }
     return `{ \n ${deep(data, 0)} } \n `;
 };
-exports.buildMockStr = buildMockStr;
 const getMockContent = (funName, mockContent, fileType) => {
     if (fileType === 'ts') {
         return `(req: Request, res: Response, u: string) => {
@@ -119,8 +117,8 @@ const getMockContent = (funName, mockContent, fileType) => {
 };
 function mockTemp(apiPath, methods, response, options) {
     const { fileType } = options || {};
-    const funName = (0, utils_1.transformPath)(apiPath).key;
-    const mockContent = (0, exports.buildMockStr)(response && response.code && response.data ? response.data : response);
+    const funName = utils_1.transformPath(apiPath).key;
+    const mockContent = exports.buildMockStr(response && response.code && response.data ? response.data : response);
     const code = `"${methods.toLocaleUpperCase()} ${apiPath}": ${getMockContent(funName, mockContent, fileType)}`;
     return code;
 }

@@ -3,9 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.log = exports.transformPath = exports.stringCase = exports.isObject = exports.findResponseRef = exports.verifyNodeIsDeclarationType = exports.dataType = exports.validataQuery = void 0;
+exports.log = exports.transformPath = exports.stringCase = exports.isObject = exports.findResponseRef = exports.verifyNodeIsDeclarationType = exports.normalNodeFormat = exports.dataType = exports.validataQuery = void 0;
+/* eslint-disable no-param-reassign */
 const chalk_1 = __importDefault(require("chalk"));
-const validataQuery = function (requestData, requestPath, options) {
+exports.validataQuery = function (requestData, requestPath, options) {
     const { tags, description } = requestData;
     const { keyword, tag, path } = options;
     if (keyword) {
@@ -31,17 +32,38 @@ const validataQuery = function (requestData, requestPath, options) {
     }
     return true;
 };
-exports.validataQuery = validataQuery;
 exports.dataType = ['string', 'number', 'array', 'object', 'integer', 'boolean', 'int32', 'int64', 'ref', 'file'];
+/**
+ *  转换节点格式，返回必须带type的node
+ * @returns {object}   { "type": "string", "example": "100", "description": "名称"}
+ */
+exports.normalNodeFormat = (node) => {
+    const isNormal = node.type && typeof node.type === 'string';
+    if (isNormal)
+        return node;
+    node.type = node.schema && node.schema.type;
+    if (node.type) {
+        if (node.schema) {
+            delete node.schema;
+        }
+        if (typeof node.in === 'string') {
+            delete node.in;
+        }
+    }
+    return node;
+};
 /**
  * 校验节点是不是声明类型，声明数据必有type
  * @param node 节点
  * @returns
  */
 function verifyNodeIsDeclarationType(node) {
-    if (!node || node.type === undefined)
+    if (!node)
         return false;
-    return exports.dataType.includes(node.type);
+    const type = node.type || (node.schema && node.schema.type);
+    if (!type)
+        return false;
+    return exports.dataType.includes(type);
 }
 exports.verifyNodeIsDeclarationType = verifyNodeIsDeclarationType;
 function findResponseRef(request) {
@@ -56,7 +78,7 @@ function findResponseRef(request) {
 }
 exports.findResponseRef = findResponseRef;
 function isObject(val) {
-    return Object.prototype.toString.call(val) === '[object Object]';
+    return val && Object.prototype.toString.call(val) === '[object Object]' && Object.keys(val).length > 0;
 }
 exports.isObject = isObject;
 function stringCase(str) {

@@ -36,7 +36,7 @@ function remove(id, context) {
     return map.delete(id);
 }
 exports.remove = remove;
-const wrap = async (id, context, operation) => {
+exports.wrap = async (id, context, operation) => {
     set({ id }, context);
     let result;
     try {
@@ -51,4 +51,3 @@ const wrap = async (id, context, operation) => {
     remove(id, context);
     return result;
 };
-exports.wrap = wrap;

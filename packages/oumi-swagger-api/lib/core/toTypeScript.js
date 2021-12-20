@@ -13,7 +13,7 @@ function toTypeScript(data, interfaceName = 'props') {
     result[interfaceName] = props;
     function eachValue(value) {
         const res = {};
-        if ((0, utils_1.isObject)(value)) {
+        if (utils_1.isObject(value)) {
             Object.keys(value).forEach((key) => {
                 const val = { ...value[key] };
                 if (val.isArray) {
@@ -23,8 +23,8 @@ function toTypeScript(data, interfaceName = 'props') {
                     delete val.isArray;
                     result[key] = val;
                 }
-                else if ((0, utils_1.verifyNodeIsDeclarationType)(val)) {
-                    res[key] = val;
+                else if (utils_1.verifyNodeIsDeclarationType(val)) {
+                    res[key] = utils_1.normalNodeFormat(val);
                 }
                 else {
                     if (Number(key) === 0)
@@ -41,7 +41,7 @@ function toTypeScript(data, interfaceName = 'props') {
         }
         return res;
     }
-    if ((0, utils_1.isObject)(data)) {
+    if (utils_1.isObject(data)) {
         Object.keys(data).forEach((key) => {
             const value = data[key];
             if (value.isArray) {
@@ -59,9 +59,9 @@ function toTypeScript(data, interfaceName = 'props') {
                 delete val.isArray;
                 result[key] = eachValue(val);
             }
-            else if ((0, utils_1.verifyNodeIsDeclarationType)(value)) {
-                // 是一个正常的数据声明格式
-                props[key] = value;
+            else if (utils_1.verifyNodeIsDeclarationType(value)) {
+                // 是一个正常的数据声明格式 
+                props[key] = utils_1.normalNodeFormat(value);
             }
             else {
                 props[key] = {

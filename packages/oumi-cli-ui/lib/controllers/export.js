@@ -8,7 +8,7 @@ const utils_1 = require("@oumi/swagger-api/lib/utils");
 const template_1 = require("@oumi/swagger-api/lib/template");
 const cli_shared_utils_1 = require("@oumi/cli-shared-utils");
 const exportMockJSON = async (ctx) => {
-    const { id, searchPath } = ctx.request.query;
+    const { id, searchPath, isDownload = true } = ctx.request.query;
     const data = await ctx.model.userConfig.swagger.findById(id);
     const swaggerData = await cli_shared_utils_1.request.getJSON(data.href);
     const swagger = new swagger_api_1.default(swaggerData);
@@ -20,24 +20,32 @@ const exportMockJSON = async (ctx) => {
         }
         const trans = utils_1.transformPath(key[0], 'api');
         const json = res[key[0]];
+        if (!isDownload) {
+            ctx.returnSuccess(json);
+            return;
+        }
         ctx.set('Content-Type', 'application/json-my-attachment');
         ctx.set('content-disposition', `attachment; filename="${trans.key}.json"`);
         ctx.body = JSON.stringify(json, null, '\t');
     });
 };
 const exportMockFile = async (ctx) => {
-    const { id, searchPath } = ctx.request.query;
+    const { id, searchPath, isDownload = true } = ctx.request.query;
     const data = await ctx.model.userConfig.swagger.findById(id);
     const swaggerData = await cli_shared_utils_1.request.getJSON(data.href);
     const swagger = new swagger_api_1.default(swaggerData);
     swagger.query({ path: searchPath }).buildMockJS({ fileType: 'js', writeLocalFile: false, outputPath: 'none' }, (mockString) => {
+        if (!isDownload) {
+            ctx.returnSuccess(mockString);
+            return;
+        }
         ctx.set('Content-Type', 'application/json-my-attachment');
         ctx.set('content-disposition', `attachment; filename="_mock.js"`);
         ctx.body = mockString;
     });
 };
 const exportTSFile = async (ctx) => {
-    const { id, searchPath } = ctx.request.query;
+    const { id, searchPath, isDownload = true } = ctx.request.query;
     const data = await ctx.model.userConfig.swagger.findById(id);
     const swaggerData = await cli_shared_utils_1.request.getJSON(data.href);
     const swagger = new swagger_api_1.default(swaggerData);
@@ -67,6 +75,10 @@ const exportTSFile = async (ctx) => {
         }
         const trans = utils_1.transformPath(key[0], 'api');
         mergeOutput(res);
+        if (!isDownload) {
+            ctx.returnSuccess(mergeTemp);
+            return;
+        }
         ctx.set('Content-Type', 'application/json-my-attachment');
         ctx.set('content-disposition', `attachment; filename="${trans.key}.ts"`);
         ctx.body = `import request from '@/api/request'; \n ${mergeTemp}`;

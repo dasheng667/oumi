@@ -5,16 +5,21 @@ import React from 'react';
 // import parserHtml from 'prettier/parser-html';
 import { docco, dark, github } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import SyntaxHighlighter from 'react-syntax-highlighter';
+import { Button, message } from 'antd';
+import copy from 'copy-to-clipboard';
+
+import './index.less';
 
 export interface IProps {
+  isCopy?: boolean;
   code: string | object;
-  lang?: 'json' | 'xml' | 'jsx';
+  lang?: 'json' | 'xml' | 'jsx' | 'javascript';
   style?: 'github';
 }
 
 export default function (props: IProps) {
   let { code } = props;
-  const { style = 'github', lang = 'json' } = props;
+  const { style = 'github', lang = 'json', isCopy = false } = props;
   const styleMap = { docco, dark, github };
 
   if (typeof code !== 'string' && lang === 'json') {
@@ -39,8 +44,18 @@ export default function (props: IProps) {
     console.error(e);
   }
 
+  const toCopy = () => {
+    copy(typeof code === 'object' ? JSON.stringify(code, null, 2) : code);
+    message.success('复制成功');
+  };
+
   return (
     <div className="preview-code" style={{ fontSize: 12 }}>
+      {isCopy && (
+        <Button className="copy-btn" onClick={toCopy} size="small" type="primary">
+          复制
+        </Button>
+      )}
       <SyntaxHighlighter language={lang} style={styleMap[style] || github} wrapLongLines>
         {code}
       </SyntaxHighlighter>

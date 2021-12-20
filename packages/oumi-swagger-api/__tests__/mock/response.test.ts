@@ -64,3 +64,33 @@ export const response_file = {
     type: 'string'
   }
 };
+
+export const responseInSchema = {
+  phoneNum: {
+    in: 'body',
+    name: 'phoneNum',
+    description: '手机号',
+    required: true,
+    schema: {
+      type: 'string'
+    }
+  },
+  sendId: {
+    in: 'body',
+    name: 'sendId',
+    description: '业务点id',
+    required: true,
+    schema: {
+      type: 'string'
+    }
+  },
+  code: {
+    in: 'body',
+    name: 'code',
+    description: '编码',
+    required: true,
+    schema: {
+      type: 'string'
+    }
+  }
+};

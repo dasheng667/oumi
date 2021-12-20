@@ -1,11 +1,20 @@
 import toResponseJSON from '../src/core/toResponseJSON';
-import { response1, response_file } from './mock/response.test';
+import { response1, response_file, responseInSchema } from './mock/response.test';
 
-describe('测试 response', () => {
+describe('test toResponseJSON', () => {
   it('response1', () => {
     expect(toResponseJSON(response1)).toEqual({
       addTime: 'string',
       companyId: ['1']
+    });
+  });
+
+  it('responseInSchema', () => {
+    const res = toResponseJSON(responseInSchema);
+    expect(res).toEqual({
+      phoneNum: 'string',
+      sendId: 'string',
+      code: 'string'
     });
   });
 

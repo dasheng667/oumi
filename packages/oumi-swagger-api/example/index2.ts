@@ -4,9 +4,9 @@ import { writeFile } from './utils';
 
 const swagger = new Swagger();
 
-swagger.fetchApi('***').then((res) => {
+swagger.fetchApi('https://**/api-docs').then((res) => {
   swagger
-    .query({ path: ['scanOrder/scanTotalOrderResult', 'mall/didiOrder/get'] }, (queryList) => {
+    .query({ path: ['common/phoneSecurity/checkPhoneCode'] }, (queryList) => {
       writeFile(`./build/queryList.json`, queryList);
     })
     .toResponseJSON((json) => {
