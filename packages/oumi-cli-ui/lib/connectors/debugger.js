@@ -19,7 +19,7 @@ exports.assertSelect = [
     { name: '不包含', value: 'ninclude', handler: (v1, v2) => (typeof v1 === 'string' ? v1.indexOf(v2) == -1 : null) },
     { name: '为空', value: 'empty', handler: (v1) => !v1 }
 ];
-exports.urlStringify = (url, query) => {
+const urlStringify = (url, query) => {
     let fetchUrl = url;
     const index = fetchUrl.indexOf('?');
     let urlParams = '';
@@ -36,7 +36,8 @@ exports.urlStringify = (url, query) => {
     }
     return fetchUrl;
 };
-exports.getRequestContent = (arr) => {
+exports.urlStringify = urlStringify;
+const getRequestContent = (arr) => {
     if (Array.isArray(arr)) {
         const res = {};
         arr.forEach((item) => {
@@ -48,6 +49,7 @@ exports.getRequestContent = (arr) => {
     }
     return null;
 };
+exports.getRequestContent = getRequestContent;
 const handlerAssert = (key, v1, v2) => {
     const find = exports.assertSelect.find((v) => v.value === key);
     if (find) {
@@ -61,7 +63,7 @@ const handlerAssert = (key, v1, v2) => {
         success: false
     };
 };
-exports.getAssertResult = (body, assertList) => {
+const getAssertResult = (body, assertList) => {
     if (!body || !assertList || typeof body !== 'object' || !Array.isArray(assertList))
         return null;
     const result = [];
@@ -80,3 +82,4 @@ exports.getAssertResult = (body, assertList) => {
     });
     return result;
 };
+exports.getAssertResult = getAssertResult;

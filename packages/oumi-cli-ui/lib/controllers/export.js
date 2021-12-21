@@ -20,7 +20,7 @@ const exportMockJSON = async (ctx) => {
         }
         const trans = utils_1.transformPath(key[0], 'api');
         const json = res[key[0]];
-        if (!isDownload) {
+        if (isDownload === '0') {
             ctx.returnSuccess(json);
             return;
         }
@@ -35,7 +35,7 @@ const exportMockFile = async (ctx) => {
     const swaggerData = await cli_shared_utils_1.request.getJSON(data.href);
     const swagger = new swagger_api_1.default(swaggerData);
     swagger.query({ path: searchPath }).buildMockJS({ fileType: 'js', writeLocalFile: false, outputPath: 'none' }, (mockString) => {
-        if (!isDownload) {
+        if (isDownload === '0') {
             ctx.returnSuccess(mockString);
             return;
         }
@@ -75,7 +75,7 @@ const exportTSFile = async (ctx) => {
         }
         const trans = utils_1.transformPath(key[0], 'api');
         mergeOutput(res);
-        if (!isDownload) {
+        if (isDownload === '0') {
             ctx.returnSuccess(mergeTemp);
             return;
         }

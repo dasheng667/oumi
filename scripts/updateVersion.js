@@ -15,12 +15,12 @@ const publishVersion = [
   {
     name: '@oumi/cli',
     packagePath: path.resolve('./packages/oumi-cli/package.json'),
-    version: '1.6.0'
+    version: '1.6.1'
   },
   {
     name: '@oumi/cli-ui',
     packagePath: path.resolve('./packages/oumi-cli-ui/package.json'),
-    version: '1.6.0'
+    version: '1.6.1'
   },
   {
     name: '@oumi/swagger-api',
