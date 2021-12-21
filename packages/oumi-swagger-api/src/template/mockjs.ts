@@ -38,7 +38,7 @@ const getMockKey = (item: MockItem, key: string) => {
   const { format, type } = item;
   const random = randomMockValue(key, format);
   if (random) return key;
-  if (type && type.indexOf('int') > -1) {
+  if (typeof type === 'string' && type.indexOf('int') > -1) {
     return `${key}|1-999`;
   }
   if (type === 'string') {
@@ -54,7 +54,7 @@ const getMockValue = (item: MockItem, key) => {
   const { format, type } = item;
   const random = randomMockValue(key, format);
   if (random) return random;
-  if (type && type.indexOf('int') > -1) {
+  if (typeof type === 'string' && type.indexOf('int') > -1) {
     return 1;
   }
   if (type === 'string') {

@@ -60,7 +60,7 @@ function toTypeScript(data, interfaceName = 'props') {
                 result[key] = eachValue(val);
             }
             else if (utils_1.verifyNodeIsDeclarationType(value)) {
-                // 是一个正常的数据声明格式 
+                // 是一个正常的数据声明格式
                 props[key] = utils_1.normalNodeFormat(value);
             }
             else {

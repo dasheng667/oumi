@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.log = exports.transformPath = exports.stringCase = exports.isObject = exports.findResponseRef = exports.verifyNodeIsDeclarationType = exports.normalNodeFormat = exports.dataType = exports.validataQuery = void 0;
 /* eslint-disable no-param-reassign */
 const chalk_1 = __importDefault(require("chalk"));
-exports.validataQuery = function (requestData, requestPath, options) {
+const validataQuery = function (requestData, requestPath, options) {
     const { tags, description } = requestData;
     const { keyword, tag, path } = options;
     if (keyword) {
@@ -32,12 +32,13 @@ exports.validataQuery = function (requestData, requestPath, options) {
     }
     return true;
 };
+exports.validataQuery = validataQuery;
 exports.dataType = ['string', 'number', 'array', 'object', 'integer', 'boolean', 'int32', 'int64', 'ref', 'file'];
 /**
  *  转换节点格式，返回必须带type的node
  * @returns {object}   { "type": "string", "example": "100", "description": "名称"}
  */
-exports.normalNodeFormat = (node) => {
+const normalNodeFormat = (node) => {
     const isNormal = node.type && typeof node.type === 'string';
     if (isNormal)
         return node;
@@ -52,6 +53,7 @@ exports.normalNodeFormat = (node) => {
     }
     return node;
 };
+exports.normalNodeFormat = normalNodeFormat;
 /**
  * 校验节点是不是声明类型，声明数据必有type
  * @param node 节点
