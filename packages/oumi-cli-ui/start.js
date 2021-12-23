@@ -1,4 +1,4 @@
-const server = require('./lib');
+const server = require('./lib/src');
 
 const host = 'localhost';
 

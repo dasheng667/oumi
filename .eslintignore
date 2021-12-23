@@ -10,7 +10,6 @@ _mock.js
 .less
 .scss
 /packages/cli-shared-utils
-/packages/oumi-swagger-api/lib
-/packages/block-sdk/lib
 /packages/oumi-swagger-api/example
-/packages/oumi-cli-ui/lib
+/packages/oumi-cli-ui/public
+/packages/*/lib

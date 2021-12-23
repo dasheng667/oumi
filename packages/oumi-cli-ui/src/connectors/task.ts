@@ -9,7 +9,7 @@ import * as folders from './folders';
 import terminate from '../utils/terminate';
 import cwd from './cwd';
 import { log, parseArgs } from '../utils';
-import type { TaskItem, Log, SocketContext } from '../../typings';
+import type { TaskItem, Log, SocketContext } from '../typings';
 
 const MAX_LOGS = 2000;
 const WIN_ENOENT_THRESHOLD = 500; // ms

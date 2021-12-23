@@ -4,6 +4,9 @@
 	"description": "shared utilities for oumi-cli packages",
 	"types": "index.d.ts",
 	"main": "index.js",
+	"scripts": {
+		"build": "tsc"
+	},
 	"repository": {
 		"type": "git",
 		"url": "",

@@ -1,6 +1,6 @@
 import { readPackage } from '../connectors/folders';
 import { list } from '../connectors/task';
-import type { Context } from '../../typings';
+import type { Context } from '../typings';
 
 const getTasksByProject = async (ctx: Context) => {
   const data = await ctx.model.projectList.findCurrent();

@@ -2,7 +2,7 @@ import fs from 'fs';
 // import fetch from '../utils/fetch';
 import GitUrlParse from 'git-url-parse';
 import { getBlockListFromGit, downloadFileToLocal } from '@oumi/block-sdk';
-import type { Context } from '../../typings';
+import type { Context } from '../typings';
 
 /**
  * 资产控制器

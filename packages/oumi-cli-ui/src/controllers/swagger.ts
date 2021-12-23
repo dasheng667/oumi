@@ -3,7 +3,7 @@ import fs from 'fs';
 import Swagger from '@oumi/swagger-api';
 import { request } from '@oumi/cli-shared-utils';
 // import { writeJSON } from '@oumi/swagger-api/lib/utils/fs';
-import type { Context, Next } from '../../typings';
+import type { Context, Next } from '../typings';
 
 const getSwaggerInfo = async (ctx: Context) => {
   const { id } = ctx.request.body;

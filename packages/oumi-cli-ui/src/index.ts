@@ -5,6 +5,7 @@ import body from 'koa-bodyparser';
 import koaStatic from 'koa-static';
 import portfinder from 'portfinder';
 import IO from 'koa-socket-2';
+import { getRootPath } from './utils';
 
 import controller from './middleware/controllers';
 import socket from './middleware/socket';
@@ -22,7 +23,7 @@ interface IProps {
 }
 
 const pathJoin = (p: string) => {
-  return path.join(__dirname, '../', p);
+  return path.join(getRootPath(), './', p);
 };
 
 export default async (options: IProps): Promise<{ port: number }> => {

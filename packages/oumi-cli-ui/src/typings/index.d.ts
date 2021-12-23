@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import type { Context as KoaContext } from 'koa';
-import type modelDB from '../src/model/db';
+import type modelDB from '../model/db';
 
 export { Response, Request } from 'koa';
 

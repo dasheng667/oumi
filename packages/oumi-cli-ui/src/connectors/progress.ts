@@ -1,6 +1,6 @@
 // Subs
 import channels from './channels';
-import type { SocketContext } from '../../typings/index';
+import type { SocketContext } from '../typings/index';
 
 const map = new Map();
 

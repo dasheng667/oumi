@@ -2,7 +2,7 @@
 import type Koa from 'koa';
 import path from 'path';
 import fs from 'fs';
-import type { Context, Next, IOServer } from '../../typings/index';
+import type { Context, Next, IOServer } from '../typings/index';
 
 const resolve = (dir: string) => {
   return path.resolve(__dirname, '../', dir);

@@ -4,7 +4,7 @@ import Swagger from '@oumi/swagger-api';
 import { transformPath } from '@oumi/swagger-api/lib/utils';
 import { requestTemp, namespaceTempHead, namespaceTempFoot } from '@oumi/swagger-api/lib/template';
 import { request } from '@oumi/cli-shared-utils';
-import type { Context } from '../../typings';
+import type { Context } from '../typings';
 
 const exportMockJSON = async (ctx: Context) => {
   const { id, searchPath, isDownload = true }: any = ctx.request.query;

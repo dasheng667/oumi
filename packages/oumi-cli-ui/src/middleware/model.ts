@@ -1,4 +1,4 @@
-import type { Next, Context } from '../../typings/index';
+import type { Next, Context } from '../typings/index';
 
 export default () => {
   const modelDb = require('../model/db').default;

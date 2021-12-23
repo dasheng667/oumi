@@ -6,7 +6,7 @@ import low from 'lowdb';
 import FileSync from 'lowdb/adapters/FileSync';
 import * as utils from '../utils';
 import { readConfigFile } from '../utils/file';
-import type { SwaggerItem, BlocksItem, GlobalRequestParams } from '../../typings';
+import type { SwaggerItem, BlocksItem, GlobalRequestParams } from '../typings';
 
 type EnvType = 'envList' | 'var' | 'params';
 

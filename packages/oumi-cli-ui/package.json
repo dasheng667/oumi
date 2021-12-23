@@ -8,15 +8,15 @@
 		"url": "git+https://github.com/dasheng667/oumi.git"
 	},
 	"scripts": {
-		"start": "cross-env OUMI_CLI_DEV=true node ./start.js",
+		"start": "node ./start.js",
 		"serve": "cross-env OUMI_CLI_DEV=true nodemon --watch src/**/*.ts --exec \"ts-node\" ./dev.ts",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build": "tsc"
 	},
 	"files": [
 		"lib",
 		"sh",
-		"public",
-		"typings"
+		"public"
 	],
 	"keywords": [
 		"oumi",

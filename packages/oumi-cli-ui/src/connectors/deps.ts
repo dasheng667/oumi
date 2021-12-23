@@ -1,20 +1,12 @@
 import path from 'path';
-import {
-  fsExtra as fs,
-  LRU,
-  chalk,
-  request,
-  resolveModule,
-  PackageManager,
-  progress as installProgress
-} from '@oumi/cli-shared-utils';
+import { fsExtra as fs, LRU, chalk, request, resolveModule, PackageManager, progress as installProgress } from '@oumi/cli-shared-utils';
 
 import * as progress from './progress';
 import cwd from './cwd';
 import * as folders from './folders';
 import { log, resolveModuleRoot, throttle } from '../utils/index';
 import channels from './channels';
-import type { SocketContext } from '../../typings/index';
+import type { SocketContext } from '../typings/index';
 
 interface IOptions {
   id: string;
@@ -98,9 +90,7 @@ function invalidatePackage({ id, file }: IOptions) {
 function getLink({ id, file }: IOptions, context?: SocketContext) {
   const pkg = folders.readPackage(file, context);
   if (!pkg) return '';
-  return (
-    pkg.homepage || (pkg.repository && pkg.repository.url) || `https://www.npmjs.com/package/${id.replace('/', '%2F')}`
-  );
+  return pkg.homepage || (pkg.repository && pkg.repository.url) || `https://www.npmjs.com/package/${id.replace('/', '%2F')}`;
 }
 
 function findDependencies(deps: any, type: string, file: string, context?: SocketContext) {

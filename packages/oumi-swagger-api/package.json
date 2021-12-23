@@ -10,8 +10,8 @@
 		"typings"
 	],
 	"scripts": {
-		"tsc": "tsc",
-		"start": "ts-node ./example/index.ts"
+		"start": "ts-node ./example/index.ts",
+		"build": "tsc"
 	},
 	"keywords": [
 		"oumi",

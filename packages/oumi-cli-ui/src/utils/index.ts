@@ -4,6 +4,14 @@ import { chalk } from '@oumi/cli-shared-utils';
 
 export { rcFolder } from '@oumi/cli-shared-utils';
 
+export const getRootPath = () => {
+  // 主要是解决tsc的build，会生成多个目录
+  if (process.env.OUMI_CLI_DEV) {
+    return path.join(__dirname, '../../');
+  }
+  return path.join(__dirname, '../../../');
+};
+
 /* eslint-disable no-restricted-syntax */
 export const createId = (max = 6, randomString = '0123456789abcdef') => {
   const s = [];
@@ -39,10 +47,10 @@ export const parseArgs = (args: any) => {
 
 export const log = (...args: any) => {
   const date = new Date();
-  const timestamp = `${date.getHours().toString().padStart(2, '0')}:${date
-    .getMinutes()
+  const timestamp = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}.${date
+    .getSeconds()
     .toString()
-    .padStart(2, '0')}.${date.getSeconds().toString().padStart(2, '0')}`;
+    .padStart(2, '0')}`;
   const first = args.shift();
   console.log(`${chalk.blue('UI')} ${chalk.dim(timestamp)}`, chalk.bold(first), ...args);
 };
