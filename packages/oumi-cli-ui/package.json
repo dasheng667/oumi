@@ -1,6 +1,6 @@
 {
 	"name": "@oumi/cli-ui",
-	"version": "1.6.4",
+	"version": "1.6.5",
 	"description": "@oumi/cli-ui 可视化项目管理器UI",
 	"main": "lib/src/index.js",
 	"repository": {
