@@ -1,11 +1,17 @@
 {
   "npmClient": "yarn",
   "useWorkspaces": true,
-  "version": "1.0.0",
-  "packages": ["packages/*"],
+  "version": "1.6.3",
+  "packages": [
+    "packages/*"
+  ],
+  "workspaces": [
+    "packages/*"
+  ],
   "command": {
     "publish": {
-      "message": "chore(release): publish %s"
+      "ignoreChanges": ["ignored-file", "*.md"],
+      "message": "chore(release): publish"
     },
     "create": {
       "homepage": "https://github.com/dasheng91/oumi",

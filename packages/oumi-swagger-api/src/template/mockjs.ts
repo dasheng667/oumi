@@ -98,7 +98,7 @@ export const buildMockStr = function (data: any): string | boolean | number {
         const mockKey = getMockKey(item, key);
         const mockVal = getMockValue(item, key);
         const description = item.description ? `${space(level)} /** ${item.description} */\n` : '';
-        itemStr += `${description} ${space(level)}'${mockKey}': ${typeof mockVal === 'string' ? `"${mockVal}"` : mockVal}, \n`;
+        itemStr += `${description} ${space(level)}'${mockKey}': ${mockVal === '1' ? `"${mockVal}"` : mockVal}, \n`;
       }
     });
     return itemStr;
