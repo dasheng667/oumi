@@ -12,8 +12,8 @@
     "lint-staged:js": "eslint --ext .js,.jsx,.ts,.tsx ",
     "lint:js": "eslint --fix packages/**/*.js packages/**/bin/*",
     "lint:prettier": "prettier --check \"packages/**/*\" --end-of-line auto",
-    "build": "babel --m=CommonJS src --out-dir dist",
-		"publish": "lerna publish",
+    "build": "lerna run build --no-private --ignore @oumi/ui-frontend",
+		"publish": "lerna publish --no-private --ignore @oumi/ui-frontend",
     "prettier": "prettier --write \"packages/**/*\"",
     "v": "node scripts/updateVersion.js"
   },

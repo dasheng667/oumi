@@ -37,7 +37,7 @@ export const getBlockListFromGit = async (gitUrl, options?: DownloadOptions) => 
       const { body } = await got(url);
       stopSpinner();
       return JSON.parse(body);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error.body);
       failSpinner('404');
     }
@@ -82,7 +82,7 @@ export const getBlockListFromGit = async (gitUrl, options?: DownloadOptions) => 
 
     stopSpinner();
     return filterTree;
-  } catch (error) {
+  } catch (error: any) {
     console.error(error.body);
     failSpinner('404');
     return [];

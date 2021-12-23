@@ -58,7 +58,7 @@ async function downloadFileFormOC({
     const content = base64.decode(data.content);
     onComplete();
     writeFile(destPath, content);
-  } catch (e) {
+  } catch (e: any) {
     const { response } = e;
     const { data } = response || {};
     if (data && data.message) {

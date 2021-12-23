@@ -9,5 +9,8 @@ locals.json
 .dev
 .oumi
 
+dist
 packages/oumi-swagger-api/example/build
 packages/*/lib
+!packages/cli-shared-utils/lib
+!packages/oumi-cli/lib
