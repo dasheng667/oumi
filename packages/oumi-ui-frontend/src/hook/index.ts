@@ -41,7 +41,8 @@ export const useRequest = <T>(url: string, options?: Options) => {
     (urlParams?: any, options2?: Options2<T>) => {
       setLoading(true);
       return new Promise((resolve, reject) => {
-        request[methods](url, { ...params, ...urlParams }, { errorMsg, cancelToken: source.token } as any)
+        const requestParams = methods === 'post' ? { ...params, ...urlParams } : { params: { ...params, ...urlParams } };
+        request[methods](url, requestParams, { errorMsg, cancelToken: source.token } as any)
           .then((res: any) => {
             setLoading(false);
             setData(res);

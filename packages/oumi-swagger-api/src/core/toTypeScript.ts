@@ -1,4 +1,4 @@
-import { verifyNodeIsDeclarationType, isObject } from '../utils';
+import { verifyNodeIsDeclarationType, isObject, normalNodeFormat } from '../utils';
 
 /**
  * 模拟数据转typescript
@@ -23,7 +23,7 @@ export default function toTypeScript(data: any, interfaceName: string = 'props')
           delete val.isArray;
           result[key] = val;
         } else if (verifyNodeIsDeclarationType(val)) {
-          res[key] = val;
+          res[key] = normalNodeFormat(val);
         } else {
           if (Number(key) === 0) return; // 防止不识别的类型导致死循环
           res[key] = {
@@ -57,7 +57,7 @@ export default function toTypeScript(data: any, interfaceName: string = 'props')
         result[key] = eachValue(val);
       } else if (verifyNodeIsDeclarationType(value)) {
         // 是一个正常的数据声明格式
-        props[key] = value;
+        props[key] = normalNodeFormat(value);
       } else {
         props[key] = {
           type: key

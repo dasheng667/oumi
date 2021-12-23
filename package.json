@@ -13,6 +13,11 @@
     "lint:js": "eslint --fix packages/**/*.js packages/**/bin/*",
     "lint:prettier": "prettier --check \"packages/**/*\" --end-of-line auto",
     "prettier": "prettier --write \"packages/**/*\"",
+    "build": "lerna run build",
+		"publish": "lerna publish --no-private --ignore @oumi/ui-frontend",
+    "v:patch": "lerna version patch --no-private",
+		"v:major": "lerna version major --no-private",
+		"v:minor": "lerna version minor --no-private",
     "v": "node scripts/updateVersion.js"
   },
   "repository": {

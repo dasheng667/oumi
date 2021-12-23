@@ -2,6 +2,7 @@ import util from 'util';
 import cp from 'child_process';
 import path from 'path';
 import { isWindows, isLinux, isMacintosh } from '@oumi/cli-shared-utils';
+import { getRootPath } from './index';
 
 const execFile = util.promisify(cp.execFile);
 const spawn = util.promisify(cp.spawn);
@@ -21,7 +22,7 @@ export default async function (childProcess: any, cwd: any) {
     }
   } else if (isLinux || isMacintosh) {
     try {
-      const cmd = path.resolve(__dirname, '../../sh/terminate.sh');
+      const cmd = path.resolve(getRootPath(), './sh/terminate.sh');
       const result: any = await spawn(cmd, [childProcess.pid.toString()], {
         cwd
       });

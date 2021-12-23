@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
-import { Checkbox, Drawer, Tabs, Tag, Button, Space, Tooltip } from 'antd';
+import { Checkbox, Drawer, Tabs, Tag, Button, Space, Tooltip, Dropdown, Menu, Spin } from 'antd';
 import { toResponseJSON } from '@src/utils';
-import { useDownloadFile } from '@src/hook';
-import { CaretDownOutlined, CaretRightOutlined, LoadingOutlined, FileTextOutlined, ControlOutlined, ApiOutlined } from '@ant-design/icons';
+import { useDownloadFile, useRequest } from '@src/hook';
+import {
+  CaretDownOutlined,
+  CaretRightOutlined,
+  LoadingOutlined,
+  FileTextOutlined,
+  ControlOutlined,
+  ApiOutlined,
+  DownOutlined,
+  CloudDownloadOutlined
+} from '@ant-design/icons';
 import Code from '../../../Components/Code';
 
 const { TabPane } = Tabs;
@@ -13,6 +22,9 @@ const SwaggerList = (props: any) => {
   const [drawerData, setDrawerData] = useState<any>(null);
   const [defaultActiveKey, setDefaultActiveKey] = useState('1');
   const { downloadFile } = useDownloadFile();
+  const { request: requestJson, loading: loadingJson } = useRequest('/api/export/json', { lazy: true, methods: 'get' });
+  const { request: requestTS, loading: loadingTS } = useRequest('/api/export/typescript', { lazy: true, methods: 'get' });
+  const { request: requestMock, loading: loadingMock } = useRequest('/api/export/mock', { lazy: true, methods: 'get' });
 
   const onAllChange = (e: React.MouseEvent, item: any) => {
     const all = Object.keys(expandData[item.id] || {});
@@ -73,6 +85,46 @@ const SwaggerList = (props: any) => {
       </>
     );
   };
+
+  const onTabClick = (key: string) => {
+    setDefaultActiveKey(key);
+    const params = { isDownload: 0, id: tabsId, searchPath: drawerData?.key };
+    if (key === '3' && !drawerData.code_Response) {
+      requestJson(params).then((res) => {
+        setDrawerData({ ...drawerData, code_Response: res });
+      });
+    }
+    if (key === '4' && !drawerData.code_Mock) {
+      requestMock(params).then((res) => {
+        setDrawerData({ ...drawerData, code_Mock: res });
+      });
+    }
+    if (key === '5' && !drawerData.code_TS) {
+      requestTS(params).then((res) => {
+        setDrawerData({ ...drawerData, code_TS: res });
+      });
+    }
+  };
+
+  const menu = (
+    <Menu>
+      <Menu.Item onClick={() => downLoadMock(drawerData && drawerData.key)}>
+        <span>
+          <FileTextOutlined /> 导出 Response
+        </span>
+      </Menu.Item>
+      <Menu.Item onClick={() => downLoadMockJS(drawerData && drawerData.key)}>
+        <span>
+          <ApiOutlined /> 导出 Mock
+        </span>
+      </Menu.Item>
+      <Menu.Item onClick={() => downLoadTS(drawerData && drawerData.key)}>
+        <span>
+          <ControlOutlined /> 导出 TS
+        </span>
+      </Menu.Item>
+    </Menu>
+  );
 
   return (
     <div className="swagger-list">
@@ -146,53 +198,19 @@ const SwaggerList = (props: any) => {
         visible={visible}
         width={880}
         extra={
-          <Space>
-            <Tooltip title="导出包含 Response 结果的文件" placement="bottom">
-              <Button
-                size="small"
-                type="default"
-                danger
-                icon={<FileTextOutlined />}
-                onClick={() => downLoadMock(drawerData && drawerData.key)}
-              >
-                导出
-              </Button>
-            </Tooltip>
-            <Tooltip title="导出 Mockjs 格式的模拟数据文件" placement="bottom">
-              <Button
-                size="small"
-                type="default"
-                danger
-                icon={<ApiOutlined />}
-                onClick={() => downLoadMockJS(drawerData && drawerData.key)}
-              >
-                导出Mock
-              </Button>
-            </Tooltip>
-            <Tooltip title="导出 Typescript 格式的接口类型定义文件" placement="bottom">
-              <Button
-                size="small"
-                type="primary"
-                danger
-                icon={<ControlOutlined />}
-                onClick={() => downLoadTS(drawerData && drawerData.key)}
-              >
-                导出TS
-              </Button>
-            </Tooltip>
-          </Space>
+          <div style={{ paddingRight: 50 }}>
+            <Dropdown overlay={menu}>
+              <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
+                <CloudDownloadOutlined /> 导出数据 <DownOutlined />
+              </a>
+            </Dropdown>
+          </div>
         }
       >
         <div style={{ position: 'relative', top: -10, overflow: 'hidden' }}>
           <Space>路径:{drawerData && drawerData.key}</Space>
         </div>
-        <Tabs
-          className="tabs-oumi"
-          activeKey={defaultActiveKey}
-          type="card"
-          onTabClick={(key) => setDefaultActiveKey(key)}
-          style={{ marginBottom: 32 }}
-        >
+        <Tabs className="tabs-oumi" activeKey={defaultActiveKey} type="card" onTabClick={onTabClick} style={{ marginBottom: 32 }}>
           <TabPane tab="默认" key="1" forceRender={false}>
             <h3 className="mbm5">请求头（Request）：</h3>
             <Code code={drawerData && toResponseJSON(drawerData.request, { resultValueType: 'type' })} />
@@ -204,6 +222,18 @@ const SwaggerList = (props: any) => {
             <Code code={drawerData && drawerData.request} />
             <h3 className="mbm5">响应（Response）：</h3>
             <Code code={drawerData && drawerData.response} />
+          </TabPane>
+          <TabPane tab="Response" key="3">
+            {loadingJson && <Spin />}
+            <Code code={drawerData?.code_Response} isCopy />
+          </TabPane>
+          <TabPane tab="Mock" key="4">
+            {loadingMock && <Spin />}
+            <Code code={drawerData?.code_Mock} lang="javascript" isCopy />
+          </TabPane>
+          <TabPane tab="TypeScript" key="5">
+            {loadingTS && <Spin />}
+            <Code code={drawerData?.code_TS} lang="javascript" isCopy />
           </TabPane>
         </Tabs>
       </Drawer>

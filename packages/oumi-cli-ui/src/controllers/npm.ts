@@ -1,6 +1,6 @@
 // import fs from 'fs';
 import { request } from '@oumi/cli-shared-utils';
-import type { Context } from '../../typings';
+import type { Context } from '../typings';
 
 /**
  * 资产控制器

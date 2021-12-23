@@ -1,4 +1,5 @@
-import { verifyNodeIsDeclarationType } from '../utils';
+/* eslint-disable no-param-reassign */
+import { verifyNodeIsDeclarationType, normalNodeFormat, isObject } from '../utils';
 
 interface Options {
   /** 生成的response，其值的类型 */
@@ -17,10 +18,9 @@ export default function toResponseJSON(resData: any, options?: Options) {
       data.forEach((value) => {
         console.log('数组的暂没有处理~');
       });
-    } else if (data && typeof data === 'object') {
+    } else if (isObject(data)) {
       Object.keys(data).forEach((key) => {
         const value = { ...data[key] };
-
         if (value.isArray) {
           delete value.isArray;
           const arrChild = {};
@@ -30,9 +30,9 @@ export default function toResponseJSON(resData: any, options?: Options) {
           // 是一个正常的数据声明格式
           res[key] = transformDataResult(value, options);
         } else {
-          if (Number(key) === 0) return; // 防止不识别的类型导致死循环
-          res[key] = {};
-          each(res[key], value);
+          // if (Number(key) === 0) return; // 防止不识别的类型导致死循环
+          // res[key] = {};
+          // each(res[key], value);
         }
       });
     }
@@ -43,16 +43,17 @@ export default function toResponseJSON(resData: any, options?: Options) {
 
 const getResultDefaultVal = (data: any, defaultValue: any, options?: Options) => {
   const { resultValueType = 'type' } = options || {};
-  const { explame, description } = data;
+  const { example, description } = data;
   if (resultValueType === 'type') {
     return defaultValue;
   }
-  return explame || description || defaultValue;
+  return example || description || defaultValue;
 };
 
 function transformDataResult(data: any, options?: Options) {
-  const { type, items, explame } = data;
-  if (explame) return explame;
+  normalNodeFormat(data);
+  const { type, items, example } = data;
+  if (example) return example;
   const typeName = items && items.type ? items.type : type;
   if (type === 'array') {
     if (typeName === 'integer' || typeName === 'number') {

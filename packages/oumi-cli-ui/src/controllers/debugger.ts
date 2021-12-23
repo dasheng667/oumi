@@ -3,7 +3,7 @@ import querystring from 'qs';
 import pkg from '../../package.json';
 import { fetch } from '@oumi/cli-shared-utils';
 import { urlStringify, getRequestContent, getAssertResult } from '../connectors/debugger';
-import type { Context } from '../../typings';
+import type { Context } from '../typings';
 
 const getList = async (ctx: Context) => {
   const res = ctx.model.debugger.getList();

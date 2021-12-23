@@ -3,7 +3,7 @@ import fs from 'fs';
 import * as utilsFile from '../utils/file';
 import { request } from '@oumi/cli-shared-utils';
 import { getVersion } from '../connectors/deps';
-import type { Context } from '../../typings';
+import type { Context } from '../typings';
 
 const resolve = (dir: string) => {
   return path.resolve(__dirname, '../', dir);

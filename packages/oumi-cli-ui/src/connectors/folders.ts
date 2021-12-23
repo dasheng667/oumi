@@ -3,7 +3,7 @@
 import path from 'path';
 import { fsExtra as fs, LRU } from '@oumi/cli-shared-utils';
 // import cwd from './cwd';
-import type { SocketContext } from '../../typings/index';
+import type { SocketContext } from '../typings/index';
 
 const pkgCache = new LRU({
   max: 500,

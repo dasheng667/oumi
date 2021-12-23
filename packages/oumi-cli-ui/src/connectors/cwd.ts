@@ -3,7 +3,7 @@ import channels from './channels';
 import fs from 'fs';
 import path from 'path';
 import modelDb from '../model/db';
-import type { SocketContext } from '../../typings/index';
+import type { SocketContext } from '../typings/index';
 
 let cwd = process.cwd();
 

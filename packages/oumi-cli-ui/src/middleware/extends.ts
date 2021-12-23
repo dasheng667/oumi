@@ -1,4 +1,4 @@
-import type { Next } from '../../typings/index';
+import type { Next } from '../typings/index';
 
 export default () => {
   return async function extend(ctx: any, next: Next) {

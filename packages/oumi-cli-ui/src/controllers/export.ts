@@ -4,10 +4,10 @@ import Swagger from '@oumi/swagger-api';
 import { transformPath } from '@oumi/swagger-api/lib/utils';
 import { requestTemp, namespaceTempHead, namespaceTempFoot } from '@oumi/swagger-api/lib/template';
 import { request } from '@oumi/cli-shared-utils';
-import type { Context } from '../../typings';
+import type { Context } from '../typings';
 
 const exportMockJSON = async (ctx: Context) => {
-  const { id, searchPath }: any = ctx.request.query;
+  const { id, searchPath, isDownload = true }: any = ctx.request.query;
 
   const data = await ctx.model.userConfig.swagger.findById(id);
   const swaggerData: any = await request.getJSON(data.href);
@@ -23,6 +23,11 @@ const exportMockJSON = async (ctx: Context) => {
     const trans = transformPath(key[0], 'api');
     const json = res[key[0]];
 
+    if (isDownload === '0') {
+      ctx.returnSuccess(json);
+      return;
+    }
+
     ctx.set('Content-Type', 'application/json-my-attachment');
     ctx.set('content-disposition', `attachment; filename="${trans.key}.json"`);
     ctx.body = JSON.stringify(json, null, '\t');
@@ -30,13 +35,18 @@ const exportMockJSON = async (ctx: Context) => {
 };
 
 const exportMockFile = async (ctx: Context) => {
-  const { id, searchPath }: any = ctx.request.query;
+  const { id, searchPath, isDownload = true }: any = ctx.request.query;
 
   const data = await ctx.model.userConfig.swagger.findById(id);
   const swaggerData: any = await request.getJSON(data.href);
   const swagger = new Swagger(swaggerData);
 
   swagger.query({ path: searchPath }).buildMockJS({ fileType: 'js', writeLocalFile: false, outputPath: 'none' }, (mockString: string) => {
+    if (isDownload === '0') {
+      ctx.returnSuccess(mockString);
+      return;
+    }
+
     ctx.set('Content-Type', 'application/json-my-attachment');
     ctx.set('content-disposition', `attachment; filename="_mock.js"`);
     ctx.body = mockString;
@@ -44,7 +54,7 @@ const exportMockFile = async (ctx: Context) => {
 };
 
 const exportTSFile = async (ctx: Context) => {
-  const { id, searchPath }: any = ctx.request.query;
+  const { id, searchPath, isDownload = true }: any = ctx.request.query;
 
   const data = await ctx.model.userConfig.swagger.findById(id);
   const swaggerData: any = await request.getJSON(data.href);
@@ -81,6 +91,11 @@ const exportTSFile = async (ctx: Context) => {
 
       const trans = transformPath(key[0], 'api');
       mergeOutput(res);
+
+      if (isDownload === '0') {
+        ctx.returnSuccess(mergeTemp);
+        return;
+      }
 
       ctx.set('Content-Type', 'application/json-my-attachment');
       ctx.set('content-disposition', `attachment; filename="${trans.key}.ts"`);

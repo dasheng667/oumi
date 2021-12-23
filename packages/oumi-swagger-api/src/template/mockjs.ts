@@ -38,7 +38,7 @@ const getMockKey = (item: MockItem, key: string) => {
   const { format, type } = item;
   const random = randomMockValue(key, format);
   if (random) return key;
-  if (type && type.indexOf('int') > -1) {
+  if (typeof type === 'string' && type.indexOf('int') > -1) {
     return `${key}|1-999`;
   }
   if (type === 'string') {
@@ -54,7 +54,7 @@ const getMockValue = (item: MockItem, key) => {
   const { format, type } = item;
   const random = randomMockValue(key, format);
   if (random) return random;
-  if (type && type.indexOf('int') > -1) {
+  if (typeof type === 'string' && type.indexOf('int') > -1) {
     return 1;
   }
   if (type === 'string') {
@@ -98,7 +98,7 @@ export const buildMockStr = function (data: any): string | boolean | number {
         const mockKey = getMockKey(item, key);
         const mockVal = getMockValue(item, key);
         const description = item.description ? `${space(level)} /** ${item.description} */\n` : '';
-        itemStr += `${description} ${space(level)}'${mockKey}': ${mockVal}, \n`;
+        itemStr += `${description} ${space(level)}'${mockKey}': ${mockVal === '1' ? `"${mockVal}"` : mockVal}, \n`;
       }
     });
     return itemStr;

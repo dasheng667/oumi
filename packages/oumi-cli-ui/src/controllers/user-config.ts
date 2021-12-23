@@ -1,5 +1,5 @@
 import { request } from '@oumi/cli-shared-utils';
-import type { Context } from '../../typings';
+import type { Context } from '../typings';
 
 const getUserConfig = (ctx: Context) => {
   const data = ctx.model.userConfig.get() || {};

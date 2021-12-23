@@ -1,6 +1,6 @@
 {
 	"name": "@oumi/swagger-api",
-	"version": "1.5.1",
+	"version": "1.6.4",
 	"description": "远程拉取swagger内容，生成json模拟数据、typescript文件",
 	"author": "dasheng <345263463@qq.com> (http://www.yuque.com/qqhh)",
 	"license": "none",
@@ -10,8 +10,8 @@
 		"typings"
 	],
 	"scripts": {
-		"tsc": "tsc",
-		"start": "ts-node ./example/index.ts"
+		"start": "ts-node ./example/index.ts",
+		"build": "tsc"
 	},
 	"keywords": [
 		"oumi",
@@ -28,8 +28,8 @@
 	},
 	"dependencies": {
 		"chalk": "^4.1.1",
-		"request": "^2.88.2",
-		"fs-extra": "^10.0.0"
+		"fs-extra": "^10.0.0",
+		"request": "^2.88.2"
 	},
 	"devDependencies": {
 		"@types/jest": "^26.0.23",
@@ -50,6 +50,7 @@
 		"testRegex": "/__tests__/.*\\.(ts|tsx|js)$"
 	},
 	"publishConfig": {
+		"registry": "https://registry.npmjs.org/",
 		"access": "public"
 	}
 }
