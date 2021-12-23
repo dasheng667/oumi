@@ -36,6 +36,7 @@
     "xterm-addon-fit": "^0.5.0",
     "xterm-addon-web-links": "^0.4.0"
   },
+  "private": true,
   "resolutions": {
     "@types/react": "^17.0.14"
   }
