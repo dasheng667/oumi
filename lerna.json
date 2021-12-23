@@ -1,7 +1,7 @@
 {
   "npmClient": "yarn",
   "useWorkspaces": true,
-  "version": "1.6.2",
+  "version": "1.6.3",
   "packages": [
     "packages/*"
   ],
@@ -10,7 +10,10 @@
   ],
   "command": {
     "publish": {
-      "ignoreChanges": ["ignored-file", "*.md"],
+      "ignoreChanges": [
+        "ignored-file",
+        "*.md"
+      ],
       "message": "chore(release): publish"
     },
     "create": {

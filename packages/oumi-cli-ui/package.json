@@ -1,6 +1,6 @@
 {
 	"name": "@oumi/cli-ui",
-	"version": "1.6.2",
+	"version": "1.6.3",
 	"description": "@oumi/cli-ui 可视化项目管理器UI",
 	"main": "lib/index.js",
 	"repository": {
@@ -25,7 +25,7 @@
 	"author": "dasheng",
 	"license": "MIT",
 	"dependencies": {
-		"@oumi/block-sdk": "^1.1.0",
+		"@oumi/block-sdk": "^1.6.3",
 		"git-url-parse": "^11.5.0",
 		"jsonpath": "^1.1.1",
 		"koa": "^2.13.1",
