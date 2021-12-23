@@ -50,6 +50,7 @@
 		"testRegex": "/__tests__/.*\\.(ts|tsx|js)$"
 	},
 	"publishConfig": {
+		"registry": "https://registry.npmjs.org/",
 		"access": "public"
 	}
 }
