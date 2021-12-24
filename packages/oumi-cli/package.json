@@ -16,10 +16,10 @@
 	],
 	"scripts": {
 		"start": "oumi ui",
+		"build": "tsc",
 		"dev": "tsc -w",
 		"dev2": "cd ../oumi-kernel && tsc -w",
-		"dev3": "cd ../oumi-webpack-runner && tsc -w",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"dev3": "cd ../oumi-webpack-runner && tsc -w"
 	},
 	"keywords": [
 		"oumi",
@@ -31,8 +31,10 @@
 		"@oumi/block-sdk": "^1.6.4",
 		"@oumi/cli-shared-utils": "^1.6.4",
 		"@oumi/cli-ui": "^1.6.5",
+		"@oumi/kernel": "^1.0.0",
 		"@oumi/swagger-api": "^1.6.4",
-		"commander": "^8.0.0"
+		"@oumi/webpack-runner": "^1.0.0",
+		"@oumi/babel-preset": "^1.0.0"
 	},
 	"publishConfig": {
 		"registry": "https://registry.npmjs.org/",

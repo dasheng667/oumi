@@ -93,6 +93,8 @@ export const isMacintosh: boolean;
 
 export const progress: any;
 
+export function logInspect(data: unknown): void;
+
 
 // npm
 export function resolveNpm(pluginName: string, root: string): Promise<any>;

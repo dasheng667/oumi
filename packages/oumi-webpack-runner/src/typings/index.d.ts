@@ -1,6 +1,7 @@
 import type { IApiPaths } from '@oumi/kernel/typings/type';
 import type webpack from 'webpack';
 import type WebpackChain from 'webpack-chain';
+import type { Configuration } from 'webpack';
 
 export type Env = 'development' | 'production';
 
@@ -87,4 +88,25 @@ export interface BaseIConfig {
   publicPath?: string;
   styleLoader?: object;
   [key: string]: any;
+}
+
+export interface IWebpackEntryOpts {
+  appPath: string;
+  env: Env;
+  config?: BaseIConfig;
+  entry?: Record<string, string>;
+  hot?: boolean;
+  port?: number;
+  sourceRoot?: string;
+  staticDir?: string;
+  inlineLimit?: number;
+  babelOpts?: object;
+  babelOptsForDep?: object;
+  targets?: any;
+  browserslist?: any;
+  modifyBabelOpts?: (opts: object, args?: any) => Promise<any>;
+  modifyBabelPresetOpts?: (opts: object, args?: any) => Promise<any>;
+  chainWebpack?: (webpackConfig: any, args: any) => Promise<any>;
+  miniCSSExtractPluginPath?: string;
+  miniCSSExtractPluginLoaderPath?: string;
 }

@@ -19,6 +19,7 @@
   'executeCommand',
   'npm',
   'path',
+  'log',
   'fork'
 ].forEach(m => {
   Object.assign(exports, require(`./lib/${m}`))

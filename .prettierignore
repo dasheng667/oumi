@@ -32,3 +32,5 @@ locals.json
 /packages/oumi-cli-ui/lib
 /packages/oumi-kernel/lib
 /packages/oumi-webpack-runner/lib
+
+/packages/babel-preset

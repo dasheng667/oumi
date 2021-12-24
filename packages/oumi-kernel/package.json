@@ -4,14 +4,15 @@
 	"description": "@oumi/kernel",
 	"author": "dasheng <345263463@qq.com> (http://www.yuque.com/qqhh)",
 	"license": "none",
-	"module": "src/index.ts",
 	"main": "lib/index.js",
+	"module": "src/index.ts",
 	"files": [
 		"lib",
 		"typings"
 	],
 	"scripts": {
-		"dev": "tsc -w"
+		"dev": "tsc -w",
+		"build": "tsc"
 	},
 	"keywords": [
 		"oumi",

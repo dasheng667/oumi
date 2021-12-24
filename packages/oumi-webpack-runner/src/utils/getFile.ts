@@ -2,7 +2,7 @@ import { existsSync } from 'fs';
 import { join } from 'path';
 import { winPath } from '@oumi/cli-shared-utils';
 
-type FileType = 'javascript' | 'css';
+type FileType = 'javascript' | 'css' | 'html';
 
 interface IGetFileOpts {
   base: string;
@@ -12,6 +12,7 @@ interface IGetFileOpts {
 
 const extsMap: Record<FileType, string[]> = {
   javascript: ['.ts', '.tsx', '.js', '.jsx'],
+  html: ['.html'],
   css: ['.less', '.sass', '.scss', '.stylus', '.css']
 };
 

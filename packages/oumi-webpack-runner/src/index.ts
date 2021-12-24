@@ -1,5 +1,6 @@
 import { basename, extname, join } from 'path';
 import WebpackDevServer from 'webpack-dev-server';
+import { logInspect } from '@oumi/cli-shared-utils';
 import Webpack from 'webpack';
 import getConfig from './config/getConfig';
 import devServerOptions from './config/devServer.config';
@@ -65,13 +66,17 @@ export default async (appPath: string, config: MainProps) => {
     entry = files[0].path!;
   }
 
-  const webpackConfig = await getConfig({
+  const webpack = await getConfig({
     appPath,
     entry: {
       [basename(entry, extname(entry))]: entry
     },
     env: process.env.NODE_ENV as any
   });
+
+  const webpackConfig = webpack.toConfig();
+
+  logInspect(webpackConfig);
 
   if (isDev) {
     try {

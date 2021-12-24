@@ -1,30 +1,25 @@
 import { join } from 'path';
 import Chain from 'webpack-chain';
+// import { logInspect } from '@oumi/cli-shared-utils';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import type { Configuration } from 'webpack';
-import type { BaseIConfig, Env } from '../typings';
+import { getBabelOpts } from '@oumi/babel-preset';
+import plugins from './plugins';
+import type { IWebpackEntryOpts } from '../typings';
 
-export interface IOpts {
-  appPath: string;
-  env: Env;
-  config?: BaseIConfig;
-  entry?: Record<string, string>;
-  hot?: boolean;
-  port?: number;
-  staticDir?: string;
-  inlineLimit?: number;
-  babelOpts?: object;
-  babelOptsForDep?: object;
-  targets?: any;
-  browserslist?: any;
-  modifyBabelOpts?: (opts: object, args?: any) => Promise<any>;
-  modifyBabelPresetOpts?: (opts: object, args?: any) => Promise<any>;
-  chainWebpack?: (webpackConfig: any, args: any) => Promise<any>;
-  miniCSSExtractPluginPath?: string;
-  miniCSSExtractPluginLoaderPath?: string;
-}
+const babelImportPlugins = [
+  {
+    libraryName: 'antd',
+    libraryDirectory: 'es',
+    style: true
+  },
+  {
+    libraryName: 'antd-mobile',
+    libraryDirectory: 'es',
+    style: true
+  }
+];
 
-export default async function getConfig(opts: IOpts): Promise<Configuration> {
+export default async function getConfig(opts: IWebpackEntryOpts): Promise<Chain> {
   const { appPath, entry, config = {}, env, staticDir = 'static', inlineLimit = 2048 } = opts;
 
   const isDev = env === 'development';
@@ -32,6 +27,10 @@ export default async function getConfig(opts: IOpts): Promise<Configuration> {
   const webpackChain = new Chain();
 
   webpackChain.mode(env);
+
+  const babelOpts: any = getBabelOpts({
+    import: babelImportPlugins
+  });
 
   // entry
   if (entry) {
@@ -119,34 +118,15 @@ export default async function getConfig(opts: IOpts): Promise<Configuration> {
       }
     });
 
-  const babelImportPlugins = [
-    [
-      'import',
-      {
-        libraryName: 'antd',
-        libraryDirectory: 'es',
-        style: true
-      }
-    ],
-    [
-      'import',
-      {
-        libraryName: 'antd-mobile',
-        libraryDirectory: 'es',
-        style: true
-      }
-    ]
-  ];
-
   webpackChain.module
-    .rule('babel-loader')
+    .rule('js')
     .test(/\.(js|jsx|ts|tsx)$/)
     .use('babel-loader')
     .loader('babel-loader')
     .options({
-      presets: [['@babel/preset-env', { modules: false }], '@babel/preset-typescript', '@babel/preset-react'],
-      plugins: [...babelImportPlugins, isDev && require('react-refresh/babel')].filter(Boolean),
-      cacheDirectory: true
+      ...babelOpts
+      // TODO，plugins注意会覆盖，后续完善
+      // plugins: [...babelImportPlugins, isDev && require('react-refresh/babel')].filter(Boolean),
     })
     .end();
 
@@ -180,5 +160,7 @@ export default async function getConfig(opts: IOpts): Promise<Configuration> {
     })
     .end();
 
-  return webpackChain.toConfig();
+  plugins(webpackChain, opts);
+
+  return webpackChain;
 }
