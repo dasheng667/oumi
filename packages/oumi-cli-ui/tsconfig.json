@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "rootDir": "./src",
     "outDir": "./lib",
     "target": "ESNext",
     "moduleResolution": "Node",
@@ -23,7 +24,7 @@
     "src/**/*"
   ],
   "exclude": [
-    "src/public",
+    "public",
     "node_modules",
     "dist",
     "bin",

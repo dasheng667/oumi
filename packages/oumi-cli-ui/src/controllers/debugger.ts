@@ -1,6 +1,5 @@
 /* eslint-disable no-underscore-dangle */
 import querystring from 'qs';
-import pkg from '../../package.json';
 import { fetch } from '@oumi/cli-shared-utils';
 import { urlStringify, getRequestContent, getAssertResult } from '../connectors/debugger';
 import type { Context } from '../typings';
@@ -118,7 +117,7 @@ const runTask = async (ctx: Context) => {
     }
 
     const requestHeader = {
-      'User-Agent': `${pkg.name}/${pkg.version}`,
+      'User-Agent': `oumi-cli`,
       Accept: '*/*',
       'Cache-Control': 'no-cache',
       Host: ctx.request.headers.host,

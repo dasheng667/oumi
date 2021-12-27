@@ -2,7 +2,7 @@
 	"name": "@oumi/cli-ui",
 	"version": "1.6.6",
 	"description": "@oumi/cli-ui 可视化项目管理器UI",
-	"main": "lib/src/index.js",
+	"main": "lib/index.js",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/dasheng667/oumi.git"
