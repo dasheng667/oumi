@@ -12,5 +12,6 @@ locals.json
 dist
 packages/oumi-swagger-api/example/build
 packages/*/lib
+packages/oumi-cli-ui/public
 !packages/cli-shared-utils/lib
 !packages/oumi-cli/lib
