@@ -5,11 +5,7 @@ import { chalk } from '@oumi/cli-shared-utils';
 export { rcFolder } from '@oumi/cli-shared-utils';
 
 export const getRootPath = () => {
-  // 主要是解决tsc的build，会生成多个目录
-  if (process.env.OUMI_CLI_DEV) {
-    return path.join(__dirname, '../../');
-  }
-  return path.join(__dirname, '../../../');
+  return path.join(__dirname, '../../');
 };
 
 /* eslint-disable no-restricted-syntax */
