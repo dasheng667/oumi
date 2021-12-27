@@ -1,10 +1,9 @@
 {
   "name": "oumi",
-  "version": "1.0.0",
+  "version": "1.6.7",
   "workspaces": [
     "packages/*"
   ],
-  "private": true,
   "description": "oumi 前端工具包",
   "main": "index.js",
   "scripts": {
@@ -14,10 +13,10 @@
     "lint:prettier": "prettier --check \"packages/**/*\" --end-of-line auto",
     "prettier": "prettier --write \"packages/**/*\"",
     "build": "lerna run build",
-		"publish": "lerna publish --no-private --ignore @oumi/ui-frontend",
+    "publish": "lerna publish --no-private",
     "v:patch": "lerna version patch --no-private",
-		"v:major": "lerna version major --no-private",
-		"v:minor": "lerna version minor --no-private",
+    "v:major": "lerna version major --no-private",
+    "v:minor": "lerna version minor --no-private",
     "v": "node scripts/updateVersion.js"
   },
   "repository": {
@@ -42,7 +41,6 @@
     ]
   },
   "devDependencies": {
-    "@types/node": "^15.3.0",
     "@babel/core": "^7.14.6",
     "@babel/plugin-proposal-class-properties": "^7.14.5",
     "@babel/plugin-proposal-decorators": "^7.14.5",
@@ -50,6 +48,7 @@
     "@babel/preset-react": "^7.14.5",
     "@babel/preset-typescript": "^7.14.5",
     "@types/koa-static": "^4.0.2",
+    "@types/node": "^15.3.0",
     "@types/node-fetch": "^2.5.12",
     "@typescript-eslint/eslint-plugin": "^4.28.3",
     "@typescript-eslint/parser": "^4.28.3",
