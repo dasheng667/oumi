@@ -2,7 +2,7 @@
 	"name": "@oumi/cli",
 	"version": "1.6.8",
 	"description": "@oumi/cli 项目管理器脚手架",
-	"main": "index.js",
+	"main": "lib/index.js",
 	"bin": {
 		"oumi": "bin/oumi.js"
 	},
@@ -10,9 +10,16 @@
 		"type": "git",
 		"url": "git+https://github.com/dasheng667/oumi.git"
 	},
+	"files": [
+		"bin",
+		"lib"
+	],
 	"scripts": {
 		"start": "oumi ui",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"build": "tsc",
+		"dev": "tsc -w",
+		"dev2": "cd ../oumi-kernel && tsc -w",
+		"dev3": "cd ../oumi-webpack-runner && tsc -w"
 	},
 	"keywords": [
 		"oumi",
@@ -23,9 +30,11 @@
 	"dependencies": {
 		"@oumi/block-sdk": "^1.6.4",
 		"@oumi/cli-shared-utils": "^1.6.4",
-		"@oumi/cli-ui": "^1.6.8",
-		"@oumi/swagger-api": "^1.6.6",
-		"commander": "^8.0.0"
+		"@oumi/cli-ui": "^1.6.5",
+		"@oumi/kernel": "^1.0.0",
+		"@oumi/swagger-api": "^1.6.4",
+		"@oumi/webpack-runner": "^1.0.0",
+		"@oumi/babel-preset": "^1.0.0"
 	},
 	"publishConfig": {
 		"registry": "https://registry.npmjs.org/",

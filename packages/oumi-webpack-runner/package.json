@@ -1,0 +1,54 @@
+{
+  "name": "@oumi/webpack-runner",
+  "version": "1.0.0",
+  "description": "webpack for oumi",
+  "main": "lib/index.js",
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dasheng667/oumi.git"
+  },
+  "files": [
+    "lib"
+  ],
+  "keywords": [
+    "oumi",
+    "cli",
+    "webpack"
+  ],
+  "author": "dasheng",
+  "license": "MIT",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "dependencies": {
+    "@babel/core": "7.16.0",
+    "babel-loader": "^8.2.3",
+    "autoprefixer": "^10.4.0",
+    "css-loader": "^6.5.1",
+    "fibers": "^5.0.0",
+    "html-webpack-plugin": "^5.5.0",
+    "less": "^4.1.2",
+    "less-loader": "^10.2.0",
+    "mini-css-extract-plugin": "^2.4.5",
+    "postcss": "^8.4.4",
+    "postcss-loader": "^6.2.1",
+    "postcss-plugin-constparse": "^3.3.15",
+    "postcss-pxtransform": "^3.3.15",
+    "react-refresh": "^0.11.0",
+    "sass": "^1.44.0",
+    "sass-loader": "^12.3.0",
+    "style-loader": "^3.3.1",
+    "stylus": "^0.55.0",
+    "stylus-loader": "^6.2.0",
+    "terser-webpack-plugin": "^5.2.5",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.64.4",
+    "webpack-chain": "^6.5.1",
+    "webpack-dev-server": "^4.6.0"
+  }
+}

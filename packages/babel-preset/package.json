@@ -1,0 +1,28 @@
+{
+	"name": "@oumi/babel-preset",
+	"version": "1.0.0",
+	"description": "oumi babel-preset",
+	"main": "index.js",
+	"scripts": {},
+	"files": [
+		"compiled",
+		"preset",
+		"index.js"
+	],
+	"repository": {
+		"type": "git",
+		"url": "",
+		"directory": "packages/babel-preset"
+	},
+	"keywords": [],
+	"author": "dasheng",
+	"license": "MIT",
+	"homepage": "",
+	"dependencies": {
+		"@babel/runtime": "7.16.0"
+	},
+	"publishConfig": {
+		"registry": "https://registry.npmjs.org/",
+		"access": "public"
+	}
+}

@@ -15,22 +15,30 @@
 	"license": "MIT",
 	"homepage": "",
 	"dependencies": {
+		"@types/lodash": "^4.14.177",
 		"chalk": "^4.1.0",
+		"debug": "^4.3.3",
 		"execa": "^1.0.0",
 		"fs-extra": "^10.0.0",
 		"joi": "^17.4.0",
 		"launch-editor": "^2.2.1",
+		"lodash": "^4.17.21",
 		"lru-cache": "^6.0.0",
 		"node-fetch": "^2.6.1",
 		"node-ipc": "^9.1.1",
 		"open": "^8.0.2",
 		"ora": "^5.3.0",
+		"portfinder": "^1.0.28",
 		"read-pkg": "^5.1.1",
 		"semver": "^7.3.4",
-		"strip-ansi": "^6.0.0"
+		"strip-ansi": "^6.0.0",
+		"yargs-parser": "^21.0.0"
 	},
 	"publishConfig": {
 		"registry": "https://registry.npmjs.org/",
 		"access": "public"
+	},
+	"devDependencies": {
+		"@types/node": "^16.11.11"
 	}
 }

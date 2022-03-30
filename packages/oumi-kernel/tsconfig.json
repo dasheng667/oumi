@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "outDir": "./lib",
+    "target": "ESNext",
+    "moduleResolution": "Node",
+    "module": "Commonjs",
+    "jsx": "preserve",
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "removeComments": false, // 是否移除注释
+    "resolveJsonModule": true,
+    "declaration": true
+  },
+  "include": [
+    "src",
+    "typings"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "bin",
+    "**/*.spec.ts",
+    "lib",
+    "fixtures",
+    "examples"
+  ]
+}

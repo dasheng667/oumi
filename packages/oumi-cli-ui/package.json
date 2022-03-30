@@ -9,7 +9,7 @@
 	},
 	"scripts": {
 		"start": "node ./start.js",
-		"serve": "cross-env OUMI_CLI_DEV=true nodemon --watch src/**/*.ts --exec \"ts-node\" ./dev.ts",
+		"serve": "cross-env OUMI_CLI_DEV=true nodemon \"ts-node\" ./dev.ts",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "tsc"
 	},
@@ -43,6 +43,7 @@
 	},
 	"devDependencies": {
 		"@types/jsonpath": "^0.2.0",
-		"cross-env": "^7.0.3"
+		"cross-env": "^7.0.3",
+		"nodemon": "^2.0.15"
 	}
 }

@@ -1,3 +1,6 @@
+import Portfinder from 'portfinder';
+import Lodash from 'lodash';
+import { Parser } from 'yargs-parser';
 import { Chalk } from 'chalk';
 import { Ora } from 'ora';
 import { RequestInfo, RequestInit, Response } from 'node-fetch';
@@ -11,7 +14,13 @@ export const request: {
   get: (url: string, opt?: any) => Promise<any>;
 }
 
+export const lodash: typeof Lodash;
+
 export const spinner: Ora;
+
+export const portfinder: typeof Portfinder;
+
+export const yParser: Parser;
 
 export const fetch: ( url: RequestInfo, init?: RequestInit ) => Promise<Response>;
 
@@ -27,9 +36,17 @@ export function pauseSpinner(): void;
 
 export function resumeSpinner(): void;
 
+export function getCwd(): string;
+
+export function resolvePkg(path?: string): object;
+
+export function fork({ scriptPath }: {scriptPath: string}): any;
+
 export const chalk: Chalk;
 
 export const rcFolder: string;
+
+export function createDebug(str: string): void;
 
 export const execa: any;
 
@@ -48,6 +65,10 @@ export function createFileSync(filePath: string): void;
 export function ensureDirSync(filePath: string): void;
 
 export function writeFile(filePath: string, content: string, options?: { isCreateFile: boolean }): void;
+
+export function winPath(path: string): string;
+
+export function getModuleExport(exports: any): any;
 
 
 export const base64: {
@@ -71,3 +92,15 @@ export const isLinux: boolean;
 export const isMacintosh: boolean;
 
 export const progress: any;
+
+export function logInspect(data: unknown): void;
+
+
+// npm
+export function resolveNpm(pluginName: string, root: string): Promise<any>;
+
+export function resolveNpmSync(pluginName: string, root: string): any;
+
+export function getNpmPkgSync(npmName: string, root: string): any;
+
+export function getNpmPkg(npmName: string, root: string): Promise<any>;

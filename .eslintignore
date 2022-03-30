@@ -13,3 +13,4 @@ _mock.js
 /packages/oumi-swagger-api/example
 /packages/oumi-cli-ui/public
 /packages/*/lib
+/packages/babel-preset

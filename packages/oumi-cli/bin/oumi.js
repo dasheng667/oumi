@@ -1,18 +1,90 @@
 #!/usr/bin/env node
+/* eslint-disable no-console */
 
-const program = require('commander');
+const path = require('path');
+const { yParser, fork, resolvePkg, getCwd } = require('@oumi/cli-shared-utils');
+const { Kernel } = require('@oumi/kernel');
+const plugins = require('../lib/plugins');
 
-program.version(`@oumi/cli ${require('../package').version}`).usage('<command> [options]');
+const args = yParser(process.argv.slice(2), {
+  alias: {
+    version: ['v'],
+    help: ['h']
+  },
+  boolean: ['version']
+});
 
-program
-  .command('ui')
-  .description('start and open the oumi ui')
-  .option('-H, --host <host>', 'Host used for the UI server (default: localhost)')
-  .option('-p, --port <port>', 'Port used for the UI server (by default search for available port)')
-  .option('-D, --dev', 'Run in dev mode')
-  .action((options) => {
-    // eslint-disable-next-line global-require
-    require('../lib/ui')(options);
-  });
+const name = args._[0];
 
-program.parse(process.argv);
+// console.log('args', args, name);
+
+(async () => {
+  if (!name) {
+    if (args.v || args.V) {
+      console.log(getPkgVersion());
+    } else {
+      console.log('Usage: oumi <command> [options]');
+      console.log();
+      console.log('Options:');
+      console.log('  -v, --version       output the version number');
+      console.log('  -h, --help          output usage information');
+      console.log();
+      console.log('Commands:');
+      console.log('  ui                  Front end GUI Project Manager');
+      console.log('  init [projectName]  Init a project with default template');
+      console.log('  create              Create page for project');
+      console.log('  help [cmd]          display help for [cmd]');
+    }
+    return;
+  }
+
+  switch (name) {
+    case 'ui':
+      {
+        const { port, host } = args;
+        require('../lib/ui')({ port, host });
+      }
+      break;
+
+    case 'dev':
+      {
+        const child = fork({
+          scriptPath: require.resolve('../lib/forkedDev')
+        });
+
+        process.on('SIGINT', () => {
+          child.kill('SIGINT');
+          process.exit(0);
+        });
+
+        process.on('SIGTERM', () => {
+          child.kill('SIGTERM');
+          process.exit(1);
+        });
+      }
+      break;
+
+    default:
+      {
+        if (name === 'build') {
+          process.env.NODE_ENV = 'production';
+        }
+
+        const kernel = new Kernel({
+          appPath: getCwd(),
+          pkg: resolvePkg(process.cwd()),
+          presets: [...plugins.default().plugins]
+        });
+
+        await kernel.run({
+          name,
+          args
+        });
+      }
+      break;
+  }
+})();
+
+function getPkgVersion() {
+  return require(path.join('../', 'package.json')).version;
+}
