@@ -4,7 +4,7 @@
 	"description": "@oumi/cli 项目管理器脚手架",
 	"main": "lib/index.js",
 	"bin": {
-		"oumi_test": "bin/oumi.js"
+		"oumi": "bin/oumi.js"
 	},
 	"repository": {
 		"type": "git",
