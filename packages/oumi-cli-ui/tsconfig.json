@@ -6,7 +6,7 @@
     "moduleResolution": "Node",
     "module": "Commonjs",
     "jsx": "preserve",
-    "allowJs": true,
+    "allowJs": false,
     "skipLibCheck": true,
     "strictNullChecks": false,
     "esModuleInterop": true,
