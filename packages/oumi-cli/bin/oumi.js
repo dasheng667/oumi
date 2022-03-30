@@ -3,8 +3,8 @@
 
 const path = require('path');
 const { yParser, fork, resolvePkg, getCwd } = require('@oumi/cli-shared-utils');
-const { Kernel } = require('@oumi/kernel');
-const plugins = require('../lib/plugins');
+// const { Kernel } = require('@oumi/kernel');
+// const plugins = require('../lib/plugins');
 
 const args = yParser(process.argv.slice(2), {
   alias: {
@@ -46,40 +46,47 @@ const name = args._[0];
       }
       break;
 
-    case 'dev':
-      {
-        const child = fork({
-          scriptPath: require.resolve('../lib/forkedDev')
-        });
+    // case 'dev':
+    //   {
+    //     const child = fork({
+    //       scriptPath: require.resolve('../lib/forkedDev')
+    //     });
 
-        process.on('SIGINT', () => {
-          child.kill('SIGINT');
-          process.exit(0);
-        });
+    //     process.on('SIGINT', () => {
+    //       child.kill('SIGINT');
+    //       process.exit(0);
+    //     });
 
-        process.on('SIGTERM', () => {
-          child.kill('SIGTERM');
-          process.exit(1);
-        });
-      }
-      break;
+    //     process.on('SIGTERM', () => {
+    //       child.kill('SIGTERM');
+    //       process.exit(1);
+    //     });
+    //   }
+    //   break;
+
+    // default:
+    //   {
+    //     if (name === 'build') {
+    //       process.env.NODE_ENV = 'production';
+    //     }
+
+    //     const kernel = new Kernel({
+    //       appPath: getCwd(),
+    //       pkg: resolvePkg(process.cwd()),
+    //       presets: [...plugins.default().plugins]
+    //     });
+
+    //     await kernel.run({
+    //       name,
+    //       args
+    //     });
+    //   }
+    //   break;
 
     default:
       {
-        if (name === 'build') {
-          process.env.NODE_ENV = 'production';
-        }
-
-        const kernel = new Kernel({
-          appPath: getCwd(),
-          pkg: resolvePkg(process.cwd()),
-          presets: [...plugins.default().plugins]
-        });
-
-        await kernel.run({
-          name,
-          args
-        });
+        const msg = '待开发中...';
+        console.log(`${name} ${msg}`);
       }
       break;
   }

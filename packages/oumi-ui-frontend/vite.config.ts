@@ -19,6 +19,7 @@ export default defineConfig({
       }
     },
     fs: {
+      strict: false,
       // 可以为项目根目录的上一级提供服务
       allow: ['../oumi-swagger-api']
     }

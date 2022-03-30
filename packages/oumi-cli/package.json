@@ -31,10 +31,7 @@
 		"@oumi/block-sdk": "^1.6.4",
 		"@oumi/cli-shared-utils": "^1.6.4",
 		"@oumi/cli-ui": "^1.6.5",
-		"@oumi/kernel": "^1.0.0",
-		"@oumi/swagger-api": "^1.6.4",
-		"@oumi/webpack-runner": "^1.0.0",
-		"@oumi/babel-preset": "^1.0.0"
+		"@oumi/swagger-api": "^1.6.4"
 	},
 	"publishConfig": {
 		"registry": "https://registry.npmjs.org/",
