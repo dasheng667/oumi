@@ -9,7 +9,7 @@
 	},
 	"scripts": {
 		"start": "node ./start.js",
-		"serve": "cross-env OUMI_CLI_DEV=true nodemon \"ts-node\" ./dev.ts",
+		"serve": "cross-env OUMI_CLI_DEV=true nodemon",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "tsc"
 	},

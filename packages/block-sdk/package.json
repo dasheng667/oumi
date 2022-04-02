@@ -5,6 +5,7 @@
 	"author": "dasheng <345263463@qq.com> (http://www.yuque.com/qqhh)",
 	"license": "none",
 	"main": "lib/index.js",
+	"module": "src/index.ts",
 	"files": [
 		"lib"
 	],

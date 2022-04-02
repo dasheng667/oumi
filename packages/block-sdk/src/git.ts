@@ -1,4 +1,4 @@
-import { got, chalk, startSpinner, stopSpinner, failSpinner } from '@oumi/cli-shared-utils';
+import { got, chalk, startSpinner, stopSpinner, failSpinner, request } from '@oumi/cli-shared-utils';
 import GitUrlParse from 'git-url-parse';
 
 export type DownloadOptions = {
@@ -88,3 +88,16 @@ export const getBlockListFromGit = async (gitUrl, options?: DownloadOptions) => 
     return [];
   }
 };
+
+// export const queryGitRepositoryFile = async (url: string) => {
+//   const parse = GitUrlParse(url);
+//   console.log("parse:", parse);
+//   try {
+//     // const url = `https://raw.githubusercontent.com/${owner}/${name}/${ref}/umi-block.json`;
+//     const res: any = await request.get(url);
+//     const content = await res.text();
+//     return content;
+//   } catch (e: any) {
+//     throw new Error(e);
+//   }
+// };

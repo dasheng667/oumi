@@ -5,6 +5,8 @@ export type ListItem = {
   href?: string;
   default?: boolean;
   collection?: boolean;
+  projectId?: boolean;
+  source?: string; // 来源github gitlab。默认github
 };
 
 export type Blocks = {

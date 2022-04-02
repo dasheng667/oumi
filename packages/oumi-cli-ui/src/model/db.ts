@@ -196,7 +196,15 @@ const modelDb = {
   userBlocks: {
     KEY: 'userBlocks',
     get() {
-      return db.get(this.KEY).value();
+      const dbBlocks = db.get(this.KEY).value();
+      const find = modelDb.projectList.findCurrent();
+      if (find && find.path) {
+        const file = readConfigFile(find.path);
+        if (file && Array.isArray(file.blocks)) {
+          return [...dbBlocks, ...file.blocks];
+        }
+      }
+      return dbBlocks;
     },
     add(data: BlocksItem) {
       if (!this.get()) {

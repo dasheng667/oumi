@@ -1,7 +1,7 @@
 import fs from 'fs';
 // import fetch from '../utils/fetch';
 import GitUrlParse from 'git-url-parse';
-import { getBlockListFromGit, downloadFileToLocal } from '@oumi/block-sdk';
+import { getBlockListFromGit, downloadFileToLocal, getBlockListFromGitLab, queryRepositoryFile } from '@oumi/block-sdk';
 import type { Context } from '../typings';
 
 /**
@@ -10,9 +10,14 @@ import type { Context } from '../typings';
  * @returns
  */
 
+const isGitLab = (body: any) => {
+  const { source, projectId } = body;
+  return source === 'gitlab' && projectId;
+};
+
 const getUserBlockList = (ctx: Context) => {
-  const data = ctx.model.userBlocks.get();
-  return ctx.returnSuccess(data || []);
+  const data: any[] = ctx.model.userBlocks.get() || [];
+  return ctx.returnSuccess(data.sort((a, b) => (a.order > b.order ? 1 : -1)));
 };
 
 const pushBlockItem = (ctx: Context) => {
@@ -69,6 +74,26 @@ const getBlockListFormGit = async (ctx: Context) => {
   }
 };
 
+const getBlocks = async (ctx: Context) => {
+  const { url, useBuiltJSON = true } = ctx.request.body;
+  try {
+    if (isGitLab(ctx.request.body)) {
+      const data = await getBlockListFromGitLab(url);
+      return ctx.returnSuccess(data);
+    }
+    return await getBlockListFormGit(ctx);
+  } catch (e) {
+    return ctx.returnError(e);
+  }
+};
+
+const getRepositoryFile = async (ctx: Context) => {
+  const { url } = ctx.request.body;
+  const is = isGitLab(ctx.request.body);
+  const res = await queryRepositoryFile(url, { isGitLab: is });
+  ctx.returnSuccess(res);
+};
+
 const downloadFile = async (ctx: Context) => {
   const { destPath, url } = ctx.request.body;
 
@@ -101,7 +126,9 @@ export default {
   'POST /api/block/pushItem': pushBlockItem,
   'POST /api/block/removeItem': removeBlockItem,
 
-  'POST /api/block/getListFormGit': getBlockListFormGit,
+  // 'POST /api/block/getListFormGit': getBlockListFormGit,
+  'POST /api/block/getBlocks': getBlocks,
+  'POST /api/block/getFileContent': getRepositoryFile,
 
   'POST /api/block/downloadFile': downloadFile
 };

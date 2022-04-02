@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Spin, Tabs } from 'antd';
+import { Spin, Tabs, Space, Button } from 'antd';
+import { CloudDownloadOutlined, EyeOutlined } from '@ant-design/icons';
 import type { ListItem, Blocks } from '@src/typings/app';
 import { useRequest } from '@src/hook';
 
@@ -8,6 +9,7 @@ const { TabPane } = Tabs;
 type Props = {
   item: ListItem;
   addToProject: (block: Blocks) => void;
+  viewToProject?: (block: Blocks) => void;
 };
 
 const BLOCKS_KEY = 'OUMI_BLOCKS';
@@ -30,20 +32,14 @@ function pushSessionBlocks(data: object) {
 }
 
 export default (props: Props) => {
-  const { item, addToProject } = props;
+  const { item, addToProject, viewToProject } = props;
 
   const [blockData, setBlockData] = useState<Record<string, Blocks[]>>({});
 
-  const {
-    data,
-    loading,
-    error,
-    request: requestBlocks,
-    source,
-    setData
-  } = useRequest<Blocks[]>('/api/block/getListFormGit', { lazy: true });
+  const { data, loading, error, request: requestBlocks, source, setData } = useRequest<Blocks[]>('/api/block/getBlocks', { lazy: true });
 
   const runGetBlocks = () => {
+    setBlockData({});
     if (item && item.href) {
       const blocks = getSessionBlocks();
       if (blocks) {
@@ -53,7 +49,11 @@ export default (props: Props) => {
           return;
         }
       }
-      requestBlocks({ url: item.href, useBuiltJSON: true });
+      const params = { url: item.href, useBuiltJSON: true };
+      if (item.source) {
+        Object.assign(params, { source: item.source, projectId: item.projectId });
+      }
+      requestBlocks(params);
     }
   };
 
@@ -62,7 +62,7 @@ export default (props: Props) => {
     return () => {
       source.cancel();
     };
-  }, []);
+  }, [item]);
 
   useEffect(() => {
     if (!data || !Array.isArray(data)) return;
@@ -91,13 +91,13 @@ export default (props: Props) => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="error-blocks">
-        请求失败，<a>https://raw.githubusercontent.com</a>域名有波动，<a onClick={runGetBlocks}>稍后重试</a>。
-      </div>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <div className="error-blocks">
+  //       请求失败，<a>https://raw.githubusercontent.com</a>域名有波动，<a onClick={runGetBlocks}>稍后重试</a>。
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="blocks-container">
@@ -113,7 +113,16 @@ export default (props: Props) => {
                       return (
                         <div className="blocks-list__item" key={cItem.path}>
                           <div className="handler">
-                            <span onClick={() => addToProject(cItem)}>添加到项目</span>
+                            <Space>
+                              <Button type="primary" onClick={() => viewToProject && viewToProject(cItem)} icon={<EyeOutlined />}>
+                                查看
+                              </Button>
+                              <Button type="primary" onClick={() => addToProject(cItem)} danger icon={<CloudDownloadOutlined />}>
+                                下载
+                              </Button>
+                              {/* <span onClick={() => addToProject(cItem)}>查看</span> */}
+                              {/* <span onClick={() => addToProject(cItem)}>添加到项目</span> */}
+                            </Space>
                           </div>
                           <div className="img">
                             <img src={cItem.img} alt="" />
