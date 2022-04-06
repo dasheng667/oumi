@@ -3,18 +3,19 @@ import { Modal, Alert, message } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { useRequest } from '@src/hook';
-import type { Blocks } from '@src/typings/app';
+import type { Blocks, ListItem } from '@src/typings/app';
 import type { SelectInfo, SelectNode } from '@src/Components/FolderTree';
 import FolderTree from '@src/Components/FolderTree';
 
 type Props = {
   modalData: Blocks | null;
+  currentTab: ListItem | null;
   setModalVisible: (flag: null) => void;
 };
 
 const App = (props: Props) => {
   const history = useHistory();
-  const { modalData, setModalVisible } = props;
+  const { modalData, currentTab, setModalVisible } = props;
   const title = modalData && modalData.name ? `添加 - ${modalData?.name} ` : '添加到项目';
   const [selectNode, setSelectNode] = useState<SelectNode | null>(null);
   const { data, loading, request } = useRequest('/api/block/downloadFile', { lazy: true });
@@ -25,13 +26,15 @@ const App = (props: Props) => {
 
     request({
       destPath: selectNode?.dirPath,
-      url: modalData.url
+      url: modalData.url,
+      path: modalData.path,
+      projectId: currentTab?.projectId
     })
       .then((res) => {
         if (res) {
-          message.success('下载文件完成');
+          message.success('导出模板成功');
         } else {
-          message.error('下载文件异常');
+          message.error('导出异常');
         }
         setModalVisible(null);
       })

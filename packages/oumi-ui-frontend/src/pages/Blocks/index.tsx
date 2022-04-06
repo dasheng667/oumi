@@ -76,7 +76,7 @@ export default (props: Props) => {
           {currentTab && <Blocks item={currentTab} addToProject={addToProject} viewToProject={viewToProject} />}
         </div>
 
-        <DownloadModal modalData={modalData} setModalVisible={setModalData} />
+        <DownloadModal modalData={modalData} currentTab={currentTab} setModalVisible={setModalData} />
 
         <ViewCode modalData={codeBlockItem} currentTab={currentTab} setModalVisible={setCodeItemItem} />
       </div>

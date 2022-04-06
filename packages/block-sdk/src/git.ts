@@ -6,6 +6,12 @@ export type DownloadOptions = {
   recursive?: boolean;
   downloadSource?: 'raw' | 'api';
   token?: string;
+  path?: string; // 文件路径
+  projectId?: number; // gitlab需要projectId
+};
+
+export const isGithub = (url: string) => {
+  return url.indexOf('github') > -1;
 };
 
 /**
@@ -19,6 +25,30 @@ export const genBlockName = (name) =>
     .map((p) => p.toLowerCase())
     .join('/');
 
+/**
+ * gitlab
+ * @param url gitlab url
+ * http://www.explame.com/api/v4/projects/001/repository/tree
+ */
+export const getBlockTreeByGitlab = async (url: string, options?: DownloadOptions) => {
+  const { projectId, path } = options;
+  const parse = GitUrlParse(url);
+  const { protocol, resource, port } = parse;
+  const hrefPort = port && port !== 80 ? `:${port}` : '';
+  const urlPath = encodeURIComponent(`${path}/src`); // 默认规则，每个目录src
+  const href = `${protocol}://${resource}${hrefPort}/api/v4/projects/${projectId}/repository/tree?path=${urlPath}`;
+  startSpinner('🔍', `find gitlab block list form ${chalk.yellow(href)}`);
+  try {
+    const content = await request.get(href);
+    stopSpinner();
+    const res = await content.json();
+    return res;
+  } catch (e) {
+    console.error(e);
+    return [];
+  }
+};
+
 export const getBlockListFromGit = async (gitUrl, options?: DownloadOptions) => {
   const ignoreFile = ['_scripts', 'tests'];
   const {
@@ -26,6 +56,10 @@ export const getBlockListFromGit = async (gitUrl, options?: DownloadOptions) => 
     recursive = false, // git递归
     token = ''
   } = options || {};
+
+  if (!isGithub(gitUrl)) {
+    return await getBlockTreeByGitlab(gitUrl, options);
+  }
 
   const { name, owner, resource, ref = 'master' } = GitUrlParse(gitUrl);
 
@@ -41,10 +75,6 @@ export const getBlockListFromGit = async (gitUrl, options?: DownloadOptions) => 
       console.error(error.body);
       failSpinner('404');
     }
-    return [];
-  }
-
-  if (resource !== 'github.com') {
     return [];
   }
 
@@ -89,15 +119,47 @@ export const getBlockListFromGit = async (gitUrl, options?: DownloadOptions) => 
   }
 };
 
-// export const queryGitRepositoryFile = async (url: string) => {
-//   const parse = GitUrlParse(url);
-//   console.log("parse:", parse);
-//   try {
-//     // const url = `https://raw.githubusercontent.com/${owner}/${name}/${ref}/umi-block.json`;
-//     const res: any = await request.get(url);
-//     const content = await res.text();
-//     return content;
-//   } catch (e: any) {
-//     throw new Error(e);
-//   }
-// };
+export const getGitlabRawUrl = (url: string) => {
+  const parse = GitUrlParse(url);
+  let newUrl = url;
+
+  if (parse.filepathtype === 'blob') {
+    newUrl = newUrl.replace('/blob/', '/raw/');
+  }
+
+  return newUrl;
+};
+
+export const getBlockListFromGitLab = async (url: string) => {
+  try {
+    const json: any = await request.getJSON(getGitlabRawUrl(url));
+    if (!json) {
+      throw new Error('空 blocks');
+    }
+    if (!Array.isArray(json.list)) {
+      throw new Error('blocks 缺少根字段list');
+    }
+    return json.list;
+  } catch (e: any) {
+    throw new Error(e);
+  }
+};
+
+export const queryRepositoryFile = async (url: string, { isGitLab }: { isGitLab: boolean }) => {
+  try {
+    if (isGitLab) {
+      const href = `${getGitlabRawUrl(url)}/src/index.tsx`;
+      const res: any = await request.get(href);
+      const content = await res.text();
+      return content;
+    }
+    const parse = GitUrlParse(url);
+    const { owner, name, ref, filepath } = parse;
+    const fetchUrl = `https://raw.githubusercontent.com/${owner}/${name}/${ref}/${filepath}/src/index.tsx`;
+    const res: any = await request.get(fetchUrl);
+    const content = await res.text();
+    return content;
+  } catch (e: any) {
+    throw new Error(e);
+  }
+};

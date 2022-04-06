@@ -10,9 +10,8 @@ import type { Context } from '../typings';
  * @returns
  */
 
-const isGitLab = (body: any) => {
-  const { source, projectId } = body;
-  return source === 'gitlab' && projectId;
+const isGitLab = (url) => {
+  return url.indexOf('github') === -1;
 };
 
 const getUserBlockList = (ctx: Context) => {
@@ -77,7 +76,7 @@ const getBlockListFormGit = async (ctx: Context) => {
 const getBlocks = async (ctx: Context) => {
   const { url, useBuiltJSON = true } = ctx.request.body;
   try {
-    if (isGitLab(ctx.request.body)) {
+    if (isGitLab(url)) {
       const data = await getBlockListFromGitLab(url);
       return ctx.returnSuccess(data);
     }
@@ -89,13 +88,13 @@ const getBlocks = async (ctx: Context) => {
 
 const getRepositoryFile = async (ctx: Context) => {
   const { url } = ctx.request.body;
-  const is = isGitLab(ctx.request.body);
+  const is = isGitLab(url);
   const res = await queryRepositoryFile(url, { isGitLab: is });
   ctx.returnSuccess(res);
 };
 
 const downloadFile = async (ctx: Context) => {
-  const { destPath, url } = ctx.request.body;
+  const { destPath, path, url, projectId } = ctx.request.body;
 
   if (!destPath || typeof destPath !== 'string') {
     return ctx.returnError(`参数异常`);
@@ -111,7 +110,7 @@ const downloadFile = async (ctx: Context) => {
     if (config && config.access_token) {
       token = config.access_token;
     }
-    const data: any = await downloadFileToLocal(url, destPath, { recursive: true, downloadSource: 'api', token });
+    const data: any = await downloadFileToLocal(url, destPath, { path, projectId, recursive: true, downloadSource: 'api', token });
     return ctx.returnSuccess(data);
   } catch (e) {
     if (typeof e === 'string' && e.indexOf('API rate limit exceeded') > -1) {

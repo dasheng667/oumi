@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Spin, Tabs, Space, Button } from 'antd';
-import { CloudDownloadOutlined, EyeOutlined } from '@ant-design/icons';
+import { Spin, Tabs, Space, Button, Tooltip, Image } from 'antd';
+import { CloudDownloadOutlined, EyeOutlined, CodepenOutlined } from '@ant-design/icons';
 import type { ListItem, Blocks } from '@src/typings/app';
 import { useRequest } from '@src/hook';
 
@@ -35,6 +35,7 @@ export default (props: Props) => {
   const { item, addToProject, viewToProject } = props;
 
   const [blockData, setBlockData] = useState<Record<string, Blocks[]>>({});
+  const [visible, setVisible] = useState('');
 
   const { data, loading, error, request: requestBlocks, source, setData } = useRequest<Blocks[]>('/api/block/getBlocks', { lazy: true });
 
@@ -59,9 +60,9 @@ export default (props: Props) => {
 
   useEffect(() => {
     runGetBlocks();
-    return () => {
-      source.cancel();
-    };
+    // return () => {
+    //   source.cancel();
+    // };
   }, [item]);
 
   useEffect(() => {
@@ -114,16 +115,36 @@ export default (props: Props) => {
                         <div className="blocks-list__item" key={cItem.path}>
                           <div className="handler">
                             <Space>
-                              <Button type="primary" onClick={() => viewToProject && viewToProject(cItem)} icon={<EyeOutlined />}>
-                                查看
-                              </Button>
-                              <Button type="primary" onClick={() => addToProject(cItem)} danger icon={<CloudDownloadOutlined />}>
-                                下载
-                              </Button>
+                              <Tooltip title="预览图片">
+                                <Button onClick={() => setVisible(cItem.path)} icon={<EyeOutlined />}></Button>
+                              </Tooltip>
+                              <Tooltip title="代码">
+                                <Button
+                                  type="primary"
+                                  onClick={() => viewToProject && viewToProject(cItem)}
+                                  icon={<CodepenOutlined />}
+                                ></Button>
+                              </Tooltip>
+                              <Tooltip title="导出">
+                                <Button type="primary" onClick={() => addToProject(cItem)} danger icon={<CloudDownloadOutlined />}></Button>
+                              </Tooltip>
                               {/* <span onClick={() => addToProject(cItem)}>查看</span> */}
                               {/* <span onClick={() => addToProject(cItem)}>添加到项目</span> */}
                             </Space>
                           </div>
+
+                          <Image
+                            width={200}
+                            style={{ display: 'none' }}
+                            preview={{
+                              visible: visible === cItem.path,
+                              src: cItem.img,
+                              onVisibleChange: (value) => {
+                                setVisible('');
+                              }
+                            }}
+                          />
+
                           <div className="img">
                             <img src={cItem.img} alt="" />
                           </div>

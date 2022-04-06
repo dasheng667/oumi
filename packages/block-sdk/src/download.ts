@@ -3,7 +3,7 @@ import { join } from 'path';
 import { existsSync, createWriteStream } from 'fs';
 import { spawn, chalk, spinner, ensureDirSync, writeFile, request, base64 } from '@oumi/cli-shared-utils';
 import type { DownloadOptions } from './git';
-import { getBlockListFromGit } from './git';
+import { getBlockListFromGit, isGithub } from './git';
 import GitUrlParse from 'git-url-parse';
 import { Octokit } from '@octokit/core';
 
@@ -70,19 +70,51 @@ async function downloadFileFormOC({
 }
 
 /**
+ * 遍历gitlab tree。 实现文件下载。
+ */
+const downloadFileByGitlab = async ({
+  url,
+  path,
+  projectId,
+  destPath,
+  name,
+  onComplete,
+  onError
+}: {
+  url: string;
+  path: string;
+  projectId: number;
+  name: string;
+  destPath: string;
+  onComplete: any;
+  onError: any;
+}) => {
+  const parse = GitUrlParse(url);
+  const { protocol, resource, port } = parse;
+  const urlPort = port && port !== 80 ? `:${port}` : '';
+  const urlPath = encodeURIComponent(path);
+  const href = `${protocol}://${resource}${urlPort}/api/v4/projects/${projectId}/repository/files/${urlPath}/raw?ref=master`;
+  request
+    .get(href)
+    .then(async (res) => {
+      const content = await res.text();
+      writeFile(destPath, content);
+      onComplete();
+    })
+    .catch((err) => {
+      return onError();
+    });
+};
+
+/**
  * 下载git项目中的其中一个目录
  */
 export async function downloadFileToLocal(url: string, outputPath: string, options?: DownloadOptions) {
   const { filepath, source, owner, resource, name: repo, ref = 'master' } = GitUrlParse(url);
-  const { downloadSource, token } = options || {};
+  const { downloadSource, token, path, projectId } = options || {};
 
   if (!existsSync(outputPath)) {
     throw new Error(`${outputPath} 必须是一个目录`);
-  }
-
-  // 不是github的
-  if (resource !== 'github.com') {
-    return null;
   }
 
   spinner.start(`🗃️ start download File: ${url}`);
@@ -107,7 +139,7 @@ export async function downloadFileToLocal(url: string, outputPath: string, optio
         ensureDirSync(destPath);
       }
 
-      if (item.type === 'blob') {
+      if (item.type === 'blob' || item.type === 'tree') {
         tasks++;
 
         const onComplete = (retryCount) => {
@@ -132,7 +164,17 @@ export async function downloadFileToLocal(url: string, outputPath: string, optio
           }
         };
 
-        if (downloadSource === 'api') {
+        if (!isGithub(url)) {
+          downloadFileByGitlab({
+            url,
+            path: item.path,
+            name: item.name,
+            projectId,
+            destPath,
+            onComplete,
+            onError
+          });
+        } else if (downloadSource === 'api') {
           downloadFileFormOC({
             url: item.url,
             destPath,

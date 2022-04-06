@@ -39,7 +39,7 @@ export default (props: Props) => {
   };
 
   return (
-    <Drawer title="查看" visible={!!modalData} onClose={onClose} width={900}>
+    <Drawer title="代码预览" visible={!!modalData} onClose={onClose} width={900}>
       {renderContent()}
     </Drawer>
   );
