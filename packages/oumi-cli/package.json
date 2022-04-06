@@ -1,6 +1,6 @@
 {
 	"name": "@oumi/cli",
-	"version": "1.6.9",
+	"version": "1.7.0",
 	"description": "@oumi/cli 项目管理器脚手架",
 	"main": "lib/index.js",
 	"bin": {
@@ -30,7 +30,7 @@
 	"dependencies": {
 		"@oumi/block-sdk": "^1.6.9",
 		"@oumi/cli-shared-utils": "^1.6.9",
-		"@oumi/cli-ui": "^1.6.9",
+		"@oumi/cli-ui": "^1.7.0",
 		"@oumi/swagger-api": "^1.6.4"
 	},
 	"publishConfig": {
