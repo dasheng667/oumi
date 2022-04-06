@@ -1,6 +1,6 @@
 {
   "name": "@oumi/webpack-runner",
-  "version": "1.0.0",
+  "version": "1.6.9",
   "description": "webpack for oumi",
   "main": "lib/index.js",
   "scripts": {
@@ -27,8 +27,8 @@
   },
   "dependencies": {
     "@babel/core": "7.16.0",
-    "babel-loader": "^8.2.3",
     "autoprefixer": "^10.4.0",
+    "babel-loader": "^8.2.3",
     "css-loader": "^6.5.1",
     "fibers": "^5.0.0",
     "html-webpack-plugin": "^5.5.0",

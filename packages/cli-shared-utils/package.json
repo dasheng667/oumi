@@ -1,6 +1,6 @@
 {
 	"name": "@oumi/cli-shared-utils",
-	"version": "1.6.4",
+	"version": "1.6.9",
 	"description": "shared utilities for oumi-cli packages",
 	"types": "index.d.ts",
 	"main": "index.js",
