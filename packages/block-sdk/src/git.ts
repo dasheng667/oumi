@@ -32,6 +32,9 @@ export const genBlockName = (name) =>
  */
 export const getBlockTreeByGitlab = async (url: string, options?: DownloadOptions) => {
   const { projectId, path } = options;
+  if (!projectId) {
+    throw new Error('gitlab项目 projectId 不能为空');
+  }
   const parse = GitUrlParse(url);
   const { protocol, resource, port } = parse;
   const hrefPort = port && port !== 80 ? `:${port}` : '';
@@ -57,6 +60,7 @@ export const getBlockListFromGit = async (gitUrl, options?: DownloadOptions) => 
     token = ''
   } = options || {};
 
+  // 非github，默认gitlab。
   if (!isGithub(gitUrl)) {
     return await getBlockTreeByGitlab(gitUrl, options);
   }

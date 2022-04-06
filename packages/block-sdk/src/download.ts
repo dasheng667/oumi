@@ -91,6 +91,12 @@ const downloadFileByGitlab = async ({
 }) => {
   const parse = GitUrlParse(url);
   const { protocol, resource, port } = parse;
+
+  if (!projectId) {
+    onError('gitlab项目 projectId 不能为空');
+    return;
+  }
+
   const urlPort = port && port !== 80 ? `:${port}` : '';
   const urlPath = encodeURIComponent(path);
   const href = `${protocol}://${resource}${urlPort}/api/v4/projects/${projectId}/repository/files/${urlPath}/raw?ref=master`;
@@ -119,6 +125,8 @@ export async function downloadFileToLocal(url: string, outputPath: string, optio
 
   spinner.start(`🗃️ start download File: ${url}`);
   const tree = await getBlockListFromGit(url, options);
+
+  console.log('tree:', tree);
 
   if (tree.length === 0) {
     spinner.fail('length === 0');
