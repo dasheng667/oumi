@@ -6,7 +6,7 @@
     "dev": "vite",
     "serve": "cd ../oumi-cli-ui && npm run serve",
     "tsc": "cd ../oumi-cli-ui && tsc",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "serve2": "vite preview"
   },
   "devDependencies": {

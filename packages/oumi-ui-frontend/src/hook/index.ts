@@ -46,6 +46,7 @@ export const useRequest = <T>(url: string, options?: Options) => {
           .then((res: any) => {
             setLoading(false);
             setData(res);
+            setError(null);
             if (typeof onSuccess === 'function') {
               onSuccess(res);
             }

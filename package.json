@@ -13,6 +13,7 @@
     "lint:js": "eslint --fix packages/**/*.js packages/**/bin/*",
     "lint:prettier": "prettier --check \"packages/**/*\" --end-of-line auto",
     "prettier": "prettier --write \"packages/**/*\"",
+    "dev": "ts-node -r ./scripts/dev/devServe.js",
     "build": "lerna run build",
     "publish": "lerna publish --no-private",
     "v:patch": "lerna version patch --no-private",
@@ -63,6 +64,7 @@
     "ts-jest": "^27.0.3",
     "ts-node": "^10.2.1",
     "typescript": "^4.3.5",
+    "zx": "4.1.0",
     "yorkie": "^2.0.0"
   },
   "engines": {
