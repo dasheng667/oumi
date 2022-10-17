@@ -3,7 +3,7 @@ import asyncComponent from './asyncComponent';
 import { Redirect } from 'react-router-dom';
 import { ShoppingOutlined, ApiOutlined, SettingOutlined, SolutionOutlined, CodepenOutlined, BugOutlined } from '@ant-design/icons';
 import type { IRouter } from '@src/typings/app';
-import App from './Root';
+import Layout from './Layout';
 
 export const menuList = [
   {
@@ -40,7 +40,7 @@ export const menuList = [
 
 const router: IRouter[] = [
   {
-    component: App,
+    component: Layout,
     routes: [
       {
         path: '/',
@@ -58,7 +58,7 @@ const router: IRouter[] = [
 
       {
         path: '/dashboard',
-        label: 'Dashboard',
+        label: '仪表盘',
         exact: true,
         component: asyncComponent(() => import(`../pages/Dashboard`))
       },
@@ -72,33 +72,33 @@ const router: IRouter[] = [
 
       {
         path: '/tasks',
-        label: 'Tasks',
+        label: '任务',
         component: asyncComponent(() => import(`../pages/Tasks`))
       },
 
       {
         path: '/tasks/:id',
-        label: 'Tasks',
+        label: '任务',
         component: asyncComponent(() => import(`../pages/Tasks`))
       },
 
       {
         path: '/blocks',
-        label: 'Blocks',
+        label: '资产',
         exact: true,
         component: asyncComponent(() => import(`../pages/Blocks`))
       },
 
       {
         path: '/config',
-        label: 'Config',
+        label: '配置',
         exact: true,
         component: asyncComponent(() => import(`../pages/Config`))
       },
 
       {
         path: '/deps',
-        label: 'Deps',
+        label: '依赖',
         exact: true,
         component: asyncComponent(() => import(`../pages/Deps`))
       },
@@ -116,35 +116,6 @@ const router: IRouter[] = [
         exact: true,
         component: asyncComponent(() => import(`../pages/Debugger`))
       }
-
-      // {
-      //   path: '/dashboard',
-      //   label: 'dashboard',
-      //   component: asyncComponent(() => import(`../pages/Dashboard`)),
-
-      //   routes: [
-      //     {
-      //       name: 'tasks',
-      //       path: '/dashboard/tasks',
-      //       exact: true,
-      //       component: asyncComponent(() => import(`../pages/Tasks`))
-      //     },
-
-      //     {
-      //       name: 'Swagger',
-      //       path: '/dashboard/swagger',
-      //       exact: true,
-      //       component: asyncComponent(() => import(`../pages/Swagger`))
-      //     },
-
-      //     {
-      //       name: 'Config',
-      //       path: '/dashboard/config',
-      //       exact: true,
-      //       component: asyncComponent(() => import(`../pages/Config`))
-      //     }
-      //   ]
-      // },
     ]
   }
 ];

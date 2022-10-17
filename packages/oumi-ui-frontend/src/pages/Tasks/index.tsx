@@ -151,7 +151,8 @@ export default () => {
 
   const onClickTaskItem = (item: any) => {
     const { name, id } = item;
-    history.push(`/tasks/${name}`);
+    // 注释新路由
+    // history.push(`/tasks/${name}`);
     setCurrentTask({ ...item });
     socket.emit('get_task_logs', id);
   };

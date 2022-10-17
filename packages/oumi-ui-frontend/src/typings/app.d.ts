@@ -29,5 +29,7 @@ export type IRouter = {
   redirect?: string;
   component?: any;
 
+  meta?: Partial<{ title: string }>;
+
   routes?: IRouter[];
 };
