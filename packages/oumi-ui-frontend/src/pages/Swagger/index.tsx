@@ -2,6 +2,7 @@ import React, { memo, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CloseCircleOutlined } from '@ant-design/icons';
 import { Tabs, Spin, message, Popover, Form } from 'antd';
+import { useHistory } from 'react-router-dom';
 import { useRequest } from '@src/hook';
 import { createId } from '@src/utils';
 import Search from './Components/Search';
@@ -10,7 +11,7 @@ import SwaggerList from './Components/SwaggerList';
 import ProjectDirs from './Components/ProjectDirs';
 import getTags from './getTags';
 
-import './index.less';
+import './less/index.less';
 
 const { TabPane } = Tabs;
 
@@ -25,6 +26,7 @@ const NoSwagger = () => {
 };
 
 export default memo(() => {
+  const history = useHistory();
   const [tabsId, setTabsId] = useState('');
   const { data, error, loading: loadingGet } = useRequest<any[]>('/api/config/swagger/get');
   const [form] = Form.useForm();
@@ -49,6 +51,8 @@ export default memo(() => {
     if (swaggerData && Array.isArray(swaggerData.tags)) {
       setSwaggerList(getTags(swaggerData));
       // setSwaggerList(swaggerData.tags.map((item: any) => ({ ...item, id: createId(8) })));
+    } else {
+      setSwaggerList([]);
     }
   }, [swaggerData]);
 
@@ -174,6 +178,11 @@ export default memo(() => {
     }
   };
 
+  const onSwaggerApiClick = (res: any) => {
+    console.log('onSwaggerApiClick.res:', res);
+    history.push(`/swagger${res.url}?tabsId=${tabsId}&searchTag=${res.item.name}`, { title: res.title });
+  };
+
   const content = (
     <div className="popover-selected">
       <a onClick={() => clearSelectId()}>清空所有</a>
@@ -191,11 +200,27 @@ export default memo(() => {
 
   return (
     <Container isMain title="Swagger" className="ui-swagger-container">
-      <Tabs className="tabs-oumi" type="card" defaultActiveKey={tabsId} onTabClick={onTabClick}>
+      {/* <Tabs className="tabs-oumi" type="card" defaultActiveKey={tabsId} onTabClick={onTabClick}>
         {data && data.map((item) => <TabPane tab={item.name} key={item.id} />)}
-      </Tabs>
+      </Tabs> */}
 
-      <div className="tabs-content">
+      <div className="swagger-menu-list">
+        <h3>Swagger列表</h3>
+        {data &&
+          data.map((item) => {
+            return (
+              <div
+                key={item.id}
+                className={`swagger-menu-list__item ${tabsId === item.id ? 'active' : ''}`}
+                onClick={() => onTabClick(item.id)}
+              >
+                {item.name}
+              </div>
+            );
+          })}
+      </div>
+
+      <div className="swagger-main-content">
         {loadingSwagger && (
           <div className="fetch-loading">
             <Spin />
@@ -221,6 +246,7 @@ export default memo(() => {
             expandCacheId={expandCacheId}
             expandData={expandData}
             onClickSwaggerHead={onClickSwaggerHead}
+            onSwaggerApiClick={onSwaggerApiClick}
           />
           <ProjectDirs selectId={selectId} setSelectId={setSelectId} configId={tabsId} />
         </div>

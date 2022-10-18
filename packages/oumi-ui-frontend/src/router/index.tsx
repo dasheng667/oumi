@@ -71,6 +71,13 @@ const router: IRouter[] = [
       },
 
       {
+        path: '/swagger/:path',
+        label: 'Swagger-Detail',
+        multiple: true,
+        component: asyncComponent(() => import(`../pages/Swagger/detail`))
+      },
+
+      {
         path: '/tasks',
         label: '任务',
         component: asyncComponent(() => import(`../pages/Tasks`))

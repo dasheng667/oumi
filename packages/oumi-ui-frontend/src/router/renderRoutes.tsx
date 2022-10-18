@@ -8,6 +8,14 @@ export default function renderRoutes(routes: any, extraProps = {}, switchProps =
       {routes.map((route: any, i: any) => (
         <CacheRoute
           key={route.key || i}
+          cacheKey={
+            route.multiple
+              ? (props) => {
+                  return props.location!.pathname;
+                }
+              : route.path
+          }
+          multiple={route.multiple}
           path={route.path}
           exact={route.exact}
           strict={route.strict}

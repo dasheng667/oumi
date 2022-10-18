@@ -25,9 +25,23 @@ input, button {
   height: 100vh;
   overflow: hidden;
   > div.root-container-main-tab{ 
-    height: 50px;
+    height: 40px;
     flex-shrink: 0;
     flex: 0 auto;
+    border-bottom: 1px solid #a4cef5;
+    .ant-tabs-nav{
+      margin-bottom: 0;
+    }
+    .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab-active{
+      background: #1890ff;
+      color: #fff;
+    }
+    .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn{
+      color: #fff;
+    }
+    .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-remove{
+      color: #fff;
+    }
   }
   > div, > div .wrapper-container{
     display: flex;
@@ -79,6 +93,9 @@ input, button {
 }
 .mbm10{
   margin-bottom: 10px;
+}
+.mtm20{
+  margin-top: 20px;
 }
 
 .rel{

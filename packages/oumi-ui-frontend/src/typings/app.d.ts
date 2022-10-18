@@ -27,6 +27,7 @@ export type IRouter = {
 
   exact?: boolean;
   redirect?: string;
+  multiple?: boolean;
   component?: any;
 
   meta?: Partial<{ title: string }>;

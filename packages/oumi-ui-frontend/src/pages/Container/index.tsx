@@ -109,34 +109,36 @@ export default memo((props: { title: string; className?: string; isMain?: boolea
   return (
     <div className="wrapper-container">
       <div className="container-body">
-        <div className="header">
-          <h2>{title}</h2>
-          <div className="right-menu">
-            <Space>
-              <Badge count={count} offset={[-10, 6]}>
-                <Dropdown overlay={NotificationContainer} placement="bottomRight" trigger={['click']}>
-                  <span className="icon icon-radius">
-                    <BellOutlined />
-                  </span>
-                </Dropdown>
-              </Badge>
-              <span className="icon icon-radius">
-                <Tooltip title="我要加入开源">
-                  <a href="https://github.com/dasheng667/oumi" target="_blank">
-                    <GithubOutlined />
-                  </a>
-                </Tooltip>
-              </span>
-              <span className="icon icon-radius">
-                <Tooltip title="向我反馈">
-                  <a href="mailto:345263463@qq.com">
-                    <MailOutlined />
-                  </a>
-                </Tooltip>
-              </span>
-            </Space>
+        {title && (
+          <div className="header">
+            <h2>{title}</h2>
+            <div className="right-menu">
+              <Space>
+                <Badge count={count} offset={[-10, 6]}>
+                  <Dropdown overlay={NotificationContainer} placement="bottomRight" trigger={['click']}>
+                    <span className="icon icon-radius">
+                      <BellOutlined />
+                    </span>
+                  </Dropdown>
+                </Badge>
+                <span className="icon icon-radius">
+                  <Tooltip title="我要加入开源">
+                    <a href="https://github.com/dasheng667/oumi" target="_blank">
+                      <GithubOutlined />
+                    </a>
+                  </Tooltip>
+                </span>
+                <span className="icon icon-radius">
+                  <Tooltip title="向我反馈">
+                    <a href="mailto:345263463@qq.com">
+                      <MailOutlined />
+                    </a>
+                  </Tooltip>
+                </span>
+              </Space>
+            </div>
           </div>
-        </div>
+        )}
         <div className={`container-main ${className || ''}`}>{children}</div>
       </div>
     </div>

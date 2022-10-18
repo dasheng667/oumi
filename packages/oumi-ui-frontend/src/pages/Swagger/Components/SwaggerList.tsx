@@ -17,7 +17,17 @@ import Code from '../../../Components/Code';
 const { TabPane } = Tabs;
 
 const SwaggerList = (props: any) => {
-  const { swaggerList, expandData = {}, expandCacheId, loadingId, onClickSwaggerHead, setSelectId, selectId, tabsId } = props;
+  const {
+    swaggerList,
+    expandData = {},
+    expandCacheId,
+    loadingId,
+    onClickSwaggerHead,
+    setSelectId,
+    selectId,
+    tabsId,
+    onSwaggerApiClick
+  } = props;
   const [visible, setVisible] = useState(false);
   const [drawerData, setDrawerData] = useState<any>(null);
   const [defaultActiveKey, setDefaultActiveKey] = useState('1');
@@ -51,13 +61,21 @@ const SwaggerList = (props: any) => {
     setVisible(flag);
   };
 
-  const clickShowDrawer = (value: any, key: string) => {
-    setDrawerVisible(true);
-    setDefaultActiveKey('1');
-    setDrawerData(null);
-    setTimeout(() => {
-      setDrawerData({ ...value, key });
-    }, 200);
+  const clickShowDrawer = (value: any, key: string, item: any) => {
+    // setDrawerVisible(true);
+    // setDefaultActiveKey('1');
+    // setDrawerData(null);
+    // setTimeout(() => {
+    //   setDrawerData({ ...value, key });
+    // }, 200);
+    if (typeof onSwaggerApiClick === 'function') {
+      onSwaggerApiClick({
+        title: value.description,
+        methods: value.methods,
+        url: key,
+        item
+      });
+    }
   };
 
   const downLoadMock = (path: string) => {
@@ -166,10 +184,10 @@ const SwaggerList = (props: any) => {
                               <Checkbox value={key} onChange={() => onChange(key)} checked={selectId.includes(key)} />
                             </span>
                             <span className="methods">{(value.methods || 'get').toLocaleUpperCase()}</span>
-                            <span className="path" onClick={() => clickShowDrawer(value, key)}>
+                            <span className="path" onClick={() => clickShowDrawer(value, key, item)}>
                               {key}
                             </span>
-                            <span className="desc" title={value.description} onClick={() => clickShowDrawer(value, key)}>
+                            <span className="desc" title={value.description} onClick={() => clickShowDrawer(value, key, item)}>
                               {value.description}
                             </span>
                             <span className="bg">

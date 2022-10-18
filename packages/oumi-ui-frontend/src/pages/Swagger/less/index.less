@@ -4,6 +4,8 @@
 
 .ui-swagger-container{
   min-height: auto;
+  display: flex;
+
   > .ant-tabs{
     .ant-tabs-tab{
       padding-left: 30px;
@@ -11,8 +13,33 @@
     }
   }
 
-  .tabs-content{
+  .swagger-menu-list{
+    width: 250px;
+    height: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+    margin-right: 15px;
+    padding-right: 10px;
+    &__item{
+      width: 100%;
+      border-bottom: 1px solid #ebebeb;
+      line-height: 35px;
+      padding-left: 10px;
+      padding-right: 10px;
+      cursor: pointer;
+      &:hover{
+        background: rgb(243, 242, 242);
+      }
+      &.active{
+        background: #1890ff;
+        color: #fff;
+      }
+    }
+  }
+
+  .tabs-content, .swagger-main-content{
     position: relative;
+    flex: 1;
     .selected{
       .span{
         font-weight: 700;
