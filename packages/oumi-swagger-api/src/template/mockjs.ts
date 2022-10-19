@@ -21,39 +21,84 @@ type MockItem = {
 
 // type MockData = MockItem & { isArray: boolean };
 
-const randomMockValue = (name: string = '', format: string = '') => {
-  if (name.indexOf('time') > -1 || format.indexOf('time') > -1) return `Mock.Random.date('yyyy-MM-dd')`;
-  if (name.indexOf('email') > -1) return 'Mock.Random.email()';
-  if (name.indexOf('url') > -1) return 'Mock.Random.url()';
-  if (name.indexOf('ip') > -1) return 'Mock.Random.ip()';
-  if (name.indexOf('province') > -1) return 'Mock.Random.province()';
-  if (name.indexOf('city') > -1) return 'Mock.Random.city()';
-  if (name.indexOf('county') > -1) return 'Mock.Random.county()';
-  if (name.indexOf('address') > -1) return 'Mock.Random.region()';
-  if (name.endsWith('Id')) return 'Mock.Random.id()';
+const descMatchValue = (description: string) => {
+  if (typeof description === 'string') {
+    const res = description.match(/(\d+)/g);
+    if (res && Array.isArray(res)) {
+      return `'${res}'.split(',')`;
+    }
+  }
   return false;
 };
 
+const randomMockValue = (name: string = '', format: string = '', description?: string) => {
+  if (name === 'remark') return `'@ctitle(3, 10)'`;
+  if (name.endsWith('Count') || name.endsWith('Num') || name.endsWith('Min') || name.endsWith('Max')) return `'@integer(1, 100)'`;
+  if (name.endsWith('Day') || name.endsWith('Days')) return `'@now'`;
+  if (name.endsWith('Text')) return `'@title'`;
+  if (name.endsWith('Name')) return `'@ctitle'`;
+  if (name.indexOf('time') > -1 || format.indexOf('time') > -1 || name.endsWith('Date') || name.endsWith('Time')) return `'@date'`;
+  if (name.indexOf('email') > -1) return `'@email'`;
+  if (name.indexOf('url') > -1) return `'@url'`;
+  if (name.indexOf('ip') > -1) return `'@ip'`;
+  if (name.indexOf('province') > -1 || name.endsWith('Address') || name === 'address') return `'@province'`;
+  if (name.indexOf('city') > -1) return `'@city'`;
+  if (name.indexOf('county') > -1) return `'@county'`;
+  if (name.indexOf('address') > -1) return `'@region'`;
+  if (name.endsWith('Id') || name.endsWith('Code') || name.endsWith('Key')) return `'@id'`;
+  if (name.endsWith('Img') || name.endsWith('Image'))
+    return `[
+    Mock.Random.image('200x100', '#FF6600'),
+    Mock.Random.image('800x500', '#4A7BF7', 'who am i'),
+  ].join(',')`;
+
+  if (name.endsWith('Type') || name.endsWith('Status')) return descMatchValue(description) || `'${name}'`;
+  return `'${name}'`;
+};
+
+// const randomMockValue = (name: string = '', format: string = '') => {
+//   if (name.indexOf('time') > -1 || format.indexOf('time') > -1) return `Mock.Random.date('yyyy-MM-dd')`;
+//   if (name.indexOf('email') > -1) return 'Mock.Random.email()';
+//   if (name.indexOf('url') > -1) return 'Mock.Random.url()';
+//   if (name.indexOf('ip') > -1) return 'Mock.Random.ip()';
+//   if (name.indexOf('province') > -1) return 'Mock.Random.province()';
+//   if (name.indexOf('city') > -1) return 'Mock.Random.city()';
+//   if (name.indexOf('county') > -1) return 'Mock.Random.county()';
+//   if (name.indexOf('address') > -1) return 'Mock.Random.region()';
+//   if (name.endsWith('Id')) return 'Mock.Random.id()';
+//   return false;
+// };
+
 const getMockKey = (item: MockItem, key: string) => {
-  const { format, type } = item;
-  const random = randomMockValue(key, format);
-  if (random) return key;
-  if (typeof type === 'string' && type.indexOf('int') > -1) {
-    return `${key}|1-999`;
-  }
-  if (type === 'string') {
-    return `${key}|3-10`;
-  }
-  if (type === 'boolean') {
-    return `${key}|1`;
+  const { format, type, description } = item;
+  if (key.endsWith('Type') || key.endsWith('Status')) {
+    const is = descMatchValue(description);
+    return is ? `${key}|1` : key; // 如果是数组，生成 'key|1'，mock取其中一个
   }
   return key;
 };
+// const getMockKey = (item: MockItem, key: string) => {
+//   const { format, type, description } = item;
+//   const random = randomMockValue(key, format, description);
+//   if (random) return key;
+//   if (typeof type === 'string' && type.indexOf('int') > -1) {
+//     return `${key}|1-999`;
+//   }
+//   if (type === 'string') {
+//     return `${key}|3-10`;
+//   }
+//   if (type === 'boolean') {
+//     return `${key}|1`;
+//   }
+//   return key;
+// };
 
 const getMockValue = (item: MockItem, key) => {
-  const { format, type } = item;
-  const random = randomMockValue(key, format);
+  const { format, type, description } = item;
+  const random = randomMockValue(key, format, description);
   if (random) return random;
+  return key;
+  // 更改了规则， 下面暂时不要。
   if (typeof type === 'string' && type.indexOf('int') > -1) {
     return 1;
   }
@@ -89,7 +134,7 @@ export const buildMockStr = function (data: any): string | boolean | number {
         const item2 = { ...item };
         delete item2.isArray;
 
-        itemStr += `${space(level)}'${`${key}|1-10`}': [{ \n ${deep(item2, level + 1)} ${space(level)}}], \n`;
+        itemStr += `${space(level)}'${`${key}`}': [...Array(10)].map(() => ({ \n ${deep(item2, level + 1)} ${space(level)}  })), \n`;
       } else if (item.type === undefined && Object.keys(item).length > 0) {
         const item2 = { ...item };
         delete item2.isArray;
@@ -98,7 +143,7 @@ export const buildMockStr = function (data: any): string | boolean | number {
         const mockKey = getMockKey(item, key);
         const mockVal = getMockValue(item, key);
         const description = item.description ? `${space(level)} /** ${item.description} */\n` : '';
-        itemStr += `${description} ${space(level)}'${mockKey}': ${mockVal === '1' ? `"${mockVal}"` : mockVal}, \n`;
+        itemStr += `${description} ${space(level)}'${mockKey}': ${mockVal}, \n`;
       }
     });
     return itemStr;

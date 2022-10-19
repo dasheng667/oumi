@@ -24,13 +24,21 @@ input, button {
   flex: 1;
   height: 100vh;
   overflow: hidden;
-  > div.root-container-main-tab{ 
-    height: 40px;
+  .root-container-main-tab{ 
+    height: 49px;
     flex-shrink: 0;
     flex: 0 auto;
     border-bottom: 1px solid #a4cef5;
     .ant-tabs-nav{
       margin-bottom: 0;
+    }
+    .ant-tabs-top > .ant-tabs-nav::before{
+      display: none;
+    }
+    .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab{
+      padding-top: 13px!important;
+      padding-bottom: 13px!important;
+      border: 0;
     }
     .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab-active{
       background: #1890ff;
@@ -43,11 +51,18 @@ input, button {
       color: #fff;
     }
   }
+}
+
+#root-content{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  overflow: hidden;
   > div, > div .wrapper-container{
-    display: flex;
-    flex: 1;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
-    // overflow-y: auto;
   }
 }
 
@@ -94,8 +109,17 @@ input, button {
 .mbm10{
   margin-bottom: 10px;
 }
+.mlm20{
+  margin-left: 20px;
+}
+.mrm20{
+  margin-right: 20px;
+}
 .mtm20{
   margin-top: 20px;
+}
+.mtm40{
+  margin-top: 40px;
 }
 
 .rel{

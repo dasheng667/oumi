@@ -1,15 +1,16 @@
-import React, { memo, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { CloseCircleOutlined } from '@ant-design/icons';
-import { Tabs, Spin, message, Popover, Form } from 'antd';
+import React, { memo, useEffect, useState, useRef } from 'react';
+import { Link, useRouteMatch } from 'react-router-dom';
+import { CloseCircleOutlined, ExportOutlined } from '@ant-design/icons';
+import { Tabs, Spin, message, Popover, Form, Button } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { useRequest } from '@src/hook';
 import { createId } from '@src/utils';
 import Search from './Components/Search';
 import Container from '../Container';
 import SwaggerList from './Components/SwaggerList';
-import ProjectDirs from './Components/ProjectDirs';
+// import ProjectDirs from './Components/ProjectDirs';
 import getTags from './getTags';
+import DrawerDirs from './Components/DrawerDirs';
 
 import './less/index.less';
 
@@ -25,16 +26,17 @@ const NoSwagger = () => {
   );
 };
 
-const colors = ['#CCCCFF', '#CCFFFF', '#FFCCCC', '#FFCC99', '#99CCCC'];
-// const colors = ['#FFFFCC','#CCFFFF','#FFCCCC','#FFCC99','#CCFF99','#CCCCCC','#FFCCCC','#CCCCFF','#CCFFCC','#99CCCC','#FFCC99','#FFCCCC','#FFCC99','#FFFFCC','#99CCCC'];
-
 export default memo(() => {
   const history = useHistory();
-  const [tabsId, setTabsId] = useState('');
+  const { params }: any = useRouteMatch();
+  const tabsId = params?.id;
+  // const [visible, setVisible] = useState(false);
   const { data, error, loading: loadingGet } = useRequest<any[]>('/api/config/swagger/get');
   const [form] = Form.useForm();
+  const dirsRef = useRef<any>(null);
 
   const { data: swaggerData, loading: loadingSwagger, request: requestSwagger } = useRequest<any>('/api/swagger/info', { lazy: true });
+  const { data: buildData, loading, request: requestSwaggerBuild } = useRequest('/api/swagger/build', { lazy: true });
 
   const { request: requestSearchSwagger } = useRequest<any>('/api/swagger/search', { lazy: true });
 
@@ -59,22 +61,21 @@ export default memo(() => {
     }
   }, [swaggerData]);
 
-  // useEffect(() => {
-  //   if (tabsId) {
-  //     const searchName = form.getFieldValue('name');
-  //     setSelectId([]);
-  //     if (!searchName) {
-  //       requestSwagger({ id: tabsId });
-  //     } else {
-  //       onFinish({ name: searchName });
-  //     }
-  //   }
-  // }, [tabsId]);
+  useEffect(() => {
+    if (tabsId) {
+      const searchName = form.getFieldValue('name');
+      setSelectId([]);
+      if (!searchName) {
+        requestSwagger({ id: tabsId });
+      } else {
+        onFinish({ name: searchName });
+      }
+    }
+  }, []);
 
-  const onTabClick = (id: string, name: string) => {
-    // setTabsId(key);
-    history.push(`/swagger/${id}`, { title: name });
-  };
+  // const onTabClick = (key: string) => {
+  //   setTabsId(key);
+  // };
 
   // 展开子列表
   const onClickSwaggerHead = (item: any) => {
@@ -182,6 +183,11 @@ export default memo(() => {
     }
   };
 
+  const onSwaggerApiClick = (res: any) => {
+    // console.log('onSwaggerApiClick.res:', res);
+    history.push(`/doc${res.url}?tabsId=${tabsId}&searchTag=${res.item.name}`, { title: res.title });
+  };
+
   const content = (
     <div className="popover-selected">
       <a onClick={() => clearSelectId()}>清空所有</a>
@@ -197,33 +203,77 @@ export default memo(() => {
     </div>
   );
 
-  let colorIndex = 0;
+  const title = swaggerData?.info?.title || '-';
+
+  const onEnterExport = (selectNode: any) => {
+    if (selectId.length <= 0) {
+      message.warn('请选择需要导出的api');
+      return Promise.reject();
+    }
+    if (selectNode && selectId.length > 0) {
+      const { dirPath } = selectNode;
+      return requestSwaggerBuild({
+        outputPath: dirPath,
+        searchContent: selectId,
+        configId: tabsId
+      }).then((res) => {
+        message.success('导出文档成功~');
+        setSelectId([]);
+        return Promise.resolve(true);
+      });
+    }
+    return Promise.reject();
+  };
 
   return (
-    <Container isMain title="Swagger" className="ui-swagger-container">
-      {/* <Tabs className="tabs-oumi" type="card" defaultActiveKey={tabsId} onTabClick={onTabClick}>
-        {data && data.map((item) => <TabPane tab={item.name} key={item.id} />)}
-      </Tabs> */}
+    <Container isMain title={title} className="ui-swagger-container">
+      <div className="swagger-main-content">
+        {loadingSwagger && (
+          <div className="fetch-loading">
+            <Spin />
+          </div>
+        )}
 
-      <div className="swagger-menu-list">
-        {data &&
-          data.map((item) => {
-            if (colorIndex > colors.length - 1) {
-              colorIndex = 0;
-            }
-            const color = colors[colorIndex];
-            colorIndex++;
-            return (
-              <div
-                key={item.id}
-                style={{ background: color }}
-                className={`swagger-menu-list__item ${tabsId === item.id ? 'active' : ''}`}
-                onClick={() => onTabClick(item.id, item.name)}
-              >
-                {item.name}
-              </div>
-            );
-          })}
+        <div className="selected flex align-items">
+          <Search form={form} onFinish={onFinish} />
+
+          <div className="mlm10">
+            <Button
+              type="primary"
+              danger
+              icon={<ExportOutlined />}
+              disabled={selectId.length === 0}
+              onClick={() => {
+                dirsRef.current?.show();
+              }}
+            >
+              导出文档
+            </Button>
+          </div>
+
+          <Popover content={content} title="已选中" placement="bottom">
+            <div className="plp2">
+              已选中<span className="span">{selectId.length}</span>个
+            </div>
+          </Popover>
+        </div>
+
+        <div className="body-flex">
+          <SwaggerList
+            tabsId={tabsId}
+            selectId={selectId}
+            setSelectId={setSelectId}
+            swaggerList={swaggerList}
+            loadingId={loadingId}
+            expandCacheId={expandCacheId}
+            expandData={expandData}
+            onClickSwaggerHead={onClickSwaggerHead}
+            onSwaggerApiClick={onSwaggerApiClick}
+          />
+          {/* <ProjectDirs selectId={selectId} setSelectId={setSelectId} configId={tabsId} /> */}
+
+          <DrawerDirs onOk={onEnterExport} ref={dirsRef} />
+        </div>
       </div>
     </Container>
   );

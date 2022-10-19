@@ -40,7 +40,7 @@ export const useRequest = <T>(url: string, options?: Options) => {
   const fetch = useCallback(
     (urlParams?: any, options2?: Options2<T>) => {
       setLoading(true);
-      return new Promise((resolve, reject) => {
+      return new Promise<T>((resolve, reject) => {
         const requestParams = methods === 'post' ? { ...params, ...urlParams } : { params: { ...params, ...urlParams } };
         request[methods](url, requestParams, { errorMsg, cancelToken: source.token } as any)
           .then((res: any) => {

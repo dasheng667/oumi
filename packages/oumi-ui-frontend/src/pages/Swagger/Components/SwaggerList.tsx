@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Checkbox, Drawer, Tabs, Tag, Button, Space, Tooltip, Dropdown, Menu, Spin } from 'antd';
-import { toResponseJSON } from '@src/utils';
+// import { toResponseJSON } from '@src/utils';
 import { useDownloadFile, useRequest } from '@src/hook';
 import {
   CaretDownOutlined,
@@ -12,7 +12,7 @@ import {
   DownOutlined,
   CloudDownloadOutlined
 } from '@ant-design/icons';
-import Code from '../../../Components/Code';
+// import Code from '../../../Components/Code';
 
 const { TabPane } = Tabs;
 
@@ -204,7 +204,7 @@ const SwaggerList = (props: any) => {
           );
         })}
 
-      <Drawer
+      {/* <Drawer
         title={
           <span>
             <RenderMethods /> {(drawerData && (drawerData.description || drawerData.key)) || ''}
@@ -254,7 +254,7 @@ const SwaggerList = (props: any) => {
             <Code code={drawerData?.code_TS} lang="javascript" isCopy />
           </TabPane>
         </Tabs>
-      </Drawer>
+      </Drawer> */}
     </div>
   );
 };

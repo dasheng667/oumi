@@ -133,7 +133,7 @@ const modelDb = {
         if (find && find.path) {
           const file = readConfigFile(find.path);
           if (file && Array.isArray(file.swaggerList)) {
-            return (file.swaggerList as SwaggerItem[]).map((v) => ({ ...v, default: true }));
+            return (file.swaggerList as SwaggerItem[]).map((v, i) => ({ ...v, id: v.id || `${i + 1}`, default: true }));
           }
         }
         return [];

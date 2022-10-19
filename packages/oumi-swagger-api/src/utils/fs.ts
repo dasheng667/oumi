@@ -7,24 +7,24 @@ import { log } from './index';
  * @param filePath
  * @param callback
  */
-export const createFileSync = (filePath: string, callback?: (err, data) => void) => {
-  fs.ensureFile(filePath, (err, data) => {
+export const createFileSync = (filePath: string, callback?: (err) => void) => {
+  fs.ensureFile(filePath, (err: any) => {
     if (typeof callback === 'function') {
-      callback(err, data);
+      callback(err);
     }
   });
 };
 
-export function writeJSON(filePath: string, data, callback?: (err, data) => void) {
+export function writeJSON(filePath: string, data, callback?: (err) => void) {
   fs.createFileSync(filePath);
-  fs.writeFile(filePath, JSON.stringify(data, null, '\t'), null, (err, data2) => {
+  fs.writeFile(filePath, JSON.stringify(data, null, '\t'), null, (err) => {
     if (err) {
       log.red(`写入失败: ${filePath} `, err);
     } else {
       log.green(`写入成功: ${filePath}`);
     }
     if (typeof callback === 'function') {
-      callback(err, data2);
+      callback(err);
     }
   });
 }

@@ -51,9 +51,7 @@ export const interfaceTemp = (name: string, data: any) => {
   interArr.forEach((key: any) => {
     const val = data[key];
     const kname = val.name || key || '';
-    const description = val.description
-      ? `  /** 备注：${val.description} ${val.example ? `示例：${val.example}` : ''} */ \n`
-      : '';
+    const description = val.description ? `  /** 备注：${val.description} ${val.example ? `示例：${val.example}` : ''} */ \n` : '';
     const content = ` ${getInterfaceName(kname)}${val.required === false ? '?' : ''}: ${getInterfaceType(val)}; \n`;
     str += description;
     str += content;
@@ -76,21 +74,13 @@ const getFunExportNameSpace = (namespace: string) => {
   return 'export default ';
 };
 
-export const requestTemp = (options: {
-  method: string;
-  url: string;
-  params?: any;
-  fileType?: 'js' | 'ts';
-  namespace?: string;
-}) => {
+export const requestTemp = (options: { method: string; url: string; params?: any; fileType?: 'js' | 'ts'; namespace?: string }) => {
   const { method = 'GET', url, params, fileType, namespace = '' } = options;
   if (fileType === 'ts') {
-    return `${getFunExportNameSpace(namespace)}(params: ${getNameSpace(
-      namespace
-    )}Props, options?: {[key: string]: any}) => {
+    return `${getFunExportNameSpace(namespace)}(params: ${getNameSpace(namespace)}Props, options?: {[key: string]: any}) => {
   return request<${getNameSpace(namespace)}Result>({
     url: '${url}',
-    methods: '${method.toLocaleUpperCase()}',
+    method: '${method.toLocaleUpperCase()}',
     data: params,
     ...(options || {})
   })
@@ -100,7 +90,7 @@ export const requestTemp = (options: {
   return `export default function(params, options){
   return request({
     url: '${url}',
-    methods: '${method.toLocaleUpperCase()}',
+    method: '${method.toLocaleUpperCase()}',
     data: params,
     ...(options || {})
   })

@@ -4,7 +4,8 @@
 
 .ui-swagger-container{
   min-height: auto;
-  display: flex;
+  height: 100%;
+  overflow: auto!important;
 
   > .ant-tabs{
     .ant-tabs-tab{
@@ -13,26 +14,41 @@
     }
   }
 
+  .swagger-info-title{
+    font-weight: bold;
+    margin-right: 30px;
+    font-size: 18px;
+  }
+
   .swagger-menu-list{
-    width: 250px;
-    height: 100%;
-    overflow: hidden;
-    overflow-y: auto;
-    margin-right: 15px;
-    padding-right: 10px;
+    padding-right: 50px;
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(5, 200px);
+    // grid-template-rows: repeat(auto-fill, 150px);
+    grid-row-gap: 20px;
+    grid-column-gap: 20px;
     &__item{
       width: 100%;
-      border-bottom: 1px solid #ebebeb;
-      line-height: 35px;
-      padding-left: 10px;
-      padding-right: 10px;
+      height: 100px;
+      padding: 5px 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      align-content: center;
+      text-align: center;
+      font-size: 16px;
+      border-radius: 10px;
       cursor: pointer;
+      transition: all .35s;
       &:hover{
-        background: rgb(243, 242, 242);
+        // background: rgb(242, 248, 255);
+        box-shadow: 0 0 6px 6px rgba(0, 0, 0, .06);
+        // transform: translateY(-10px);
+        transform: scale(1.05);
       }
       &.active{
-        background: #1890ff;
-        color: #fff;
+        
       }
     }
   }
@@ -61,7 +77,7 @@
       border-radius: 2px;
     }
     .swagger-list{
-      width: 60%;
+      width: 100%;
       margin-right: 20px;
     }
     .dirs{

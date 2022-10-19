@@ -27,7 +27,7 @@ const CacheTab = memo(() => {
         value: v,
         callback: ({ isCurrent, prevItem }: any) => {
           if (isCurrent) {
-            history.replace(prevItem.pathname);
+            history.replace(prevItem.pathname + prevItem.search);
           }
         }
       }
@@ -44,7 +44,7 @@ const CacheTab = memo(() => {
 
   return (
     <div className="root-container-main-tab">
-      <Tabs className="cache-tabs" type="editable-card" hideAdd activeKey={activeKey} onEdit={handleTabRemove} onChange={onChange}>
+      <Tabs className="root-cache-tabs" type="editable-card" hideAdd activeKey={activeKey} onEdit={handleTabRemove} onChange={onChange}>
         {state.cacheList.map((item) => {
           const find = routerAll?.find((v) => v.path === item.pathname);
           const title = item.state ? item.state?.title : find?.label;
@@ -79,7 +79,7 @@ const Layout = memo(({ route }: any) => {
       <CacheContext.Provider value={value}>
         <div className="root-container">
           <CacheTab />
-          {renderRoutes(route.routes)}
+          <div id="root-content">{renderRoutes(route.routes)}</div>
         </div>
       </CacheContext.Provider>
     </>
