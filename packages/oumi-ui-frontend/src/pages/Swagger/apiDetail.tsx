@@ -2,10 +2,11 @@ import React, { memo, useEffect, useState, useRef } from 'react';
 import qs from 'qs';
 import copy from 'copy-to-clipboard';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import { CopyOutlined, ExportOutlined } from '@ant-design/icons';
+import { CopyOutlined, ExportOutlined, EditOutlined } from '@ant-design/icons';
 import { toResponseJSON } from '@src/utils';
 import { Tabs, Spin, Table, Popover, Input, message, Button, Space } from 'antd';
 import { useRequest } from '@src/hook';
+import { isValidField } from '@src/utils';
 import Container from '../Container';
 import Code from '../../Components/Code';
 import DrawerExport from './Components/DrawerExport';
@@ -15,11 +16,23 @@ import DrawerExport from './Components/DrawerExport';
 
 import './less/detail.less';
 
-const ApiInfo = (props: any) => {
-  const { api = {}, url, onExport } = props;
+const ApiInfo = (props: { api: any; title: string; url: string; tabsId: string; searchTag: string; onExport: () => void }) => {
+  const { api = {}, url, onExport, tabsId, searchTag, title } = props;
+  const history = useHistory();
+
   return (
     <div className="api-info-content">
       <Space style={{ marginBottom: 20 }}>
+        <Button
+          icon={<EditOutlined />}
+          type="primary"
+          onClick={() => {
+            history.push(`/editor${url}?tabsId=${tabsId}&searchTag=${searchTag}`, { title: `<edit>${title}` });
+          }}
+        >
+          编辑器
+        </Button>
+
         <Button icon={<ExportOutlined />} type="primary" danger onClick={onExport}>
           导出文档
         </Button>
@@ -49,17 +62,6 @@ const ApiInfo = (props: any) => {
       </div> */}
     </div>
   );
-};
-
-// 判断是否是有效字段，因为swagger的数据也是json。response也是json
-const isValidField = (data: any) => {
-  if (typeof data.type === 'string') {
-    if (Object.keys(data).length === 1) return false;
-    if (data.format || data.example || data.description || typeof data.items === 'object') {
-      return false;
-    }
-  }
-  return true;
 };
 
 const ApiTable = (props: any) => {
@@ -158,7 +160,9 @@ export default memo(() => {
   const pathname = location.pathname.replace(/^\/doc/, '');
 
   const [tabsId, setTabsId] = useState('');
+  const [error, setError] = useState('');
   const [data, setData] = useState<SwaggerApi.Result | undefined>();
+  const locationQuery: any = qs.parse(location.search.startsWith('?') ? location.search.substring(1) : '');
   const { request: requestSearchSwagger } = useRequest<any>('/api/swagger/search', { lazy: true });
 
   useEffect(() => {
@@ -170,7 +174,10 @@ export default memo(() => {
         searchTag: query.searchTag
       }).then((res: any) => {
         if (res && res[pathname]) {
+          setError('');
           setData(res[pathname]);
+        } else {
+          setError(`${pathname} ，该接口无数据！`);
         }
       });
     }
@@ -179,6 +186,14 @@ export default memo(() => {
   const onExport = () => {
     exportRef.current?.show();
   };
+
+  if (error) {
+    return (
+      <Container isMain title="" className="ui-swagger-detail-container">
+        <h3>{error}</h3>
+      </Container>
+    );
+  }
 
   if (!data) {
     return (
@@ -190,7 +205,7 @@ export default memo(() => {
 
   return (
     <Container isMain title="" className="ui-swagger-detail-container">
-      <ApiInfo url={pathname} api={data} onExport={onExport} />
+      <ApiInfo url={pathname} tabsId={tabsId} title={data.description} api={data} onExport={onExport} searchTag={locationQuery.searchTag} />
 
       <h3 className="mtm20">请求示例：</h3>
       <Code code={data && toResponseJSON(data.request, { resultValueType: 'type' })} />

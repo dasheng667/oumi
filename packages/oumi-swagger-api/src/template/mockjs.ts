@@ -31,7 +31,9 @@ const descMatchValue = (description: string) => {
   return false;
 };
 
-const randomMockValue = (name: string = '', format: string = '', description?: string) => {
+const randomMockValue = (name: string, item: MockItem) => {
+  const { type = '', format = '', description = '' } = item;
+
   if (name === 'remark') return `'@ctitle(3, 10)'`;
   if (name.endsWith('Count') || name.endsWith('Num') || name.endsWith('Min') || name.endsWith('Max')) return `'@integer(1, 100)'`;
   if (name.endsWith('Day') || name.endsWith('Days')) return `'@now'`;
@@ -52,7 +54,13 @@ const randomMockValue = (name: string = '', format: string = '', description?: s
     Mock.Random.image('800x500', '#4A7BF7', 'who am i'),
   ].join(',')`;
 
+  if (name.endsWith('Price')) return `'@float(10, 100, 3)'`;
   if (name.endsWith('Type') || name.endsWith('Status')) return descMatchValue(description) || `'${name}'`;
+
+  if (type === 'boolean') return `'@boolean()'`;
+  if (type === 'int' || type === 'integer') return `'@integer(10, 100)'`;
+  if (type === 'float') return `'@float(10, 100, 3)'`;
+
   return `'${name}'`;
 };
 
@@ -95,7 +103,7 @@ const getMockKey = (item: MockItem, key: string) => {
 
 const getMockValue = (item: MockItem, key) => {
   const { format, type, description } = item;
-  const random = randomMockValue(key, format, description);
+  const random = randomMockValue(key, item);
   if (random) return random;
   return key;
   // 更改了规则， 下面暂时不要。

@@ -129,6 +129,13 @@ const router: IRouter[] = [
         label: 'Debugger',
         exact: true,
         component: asyncComponent(() => import(`../pages/Debugger`))
+      },
+
+      {
+        path: '/editor/:path',
+        label: '编辑器',
+        multiple: true,
+        component: asyncComponent(() => import(`../pages/Editor`))
       }
     ]
   }

@@ -77,3 +77,18 @@ export const taskViewGroup = <T>(arr: any) => {
   });
   return group;
 };
+
+/**
+ * 判断是否是有效字段，因为swagger的数据也是json。response也是json
+ * @param data
+ * @returns
+ */
+export const isValidField = (data: any) => {
+  if (typeof data.type === 'string') {
+    if (Object.keys(data).length === 1) return false;
+    if (data.format || data.example || data.description || typeof data.items === 'object') {
+      return false;
+    }
+  }
+  return true;
+};

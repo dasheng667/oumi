@@ -1,0 +1,74 @@
+
+.editor-detail-container{
+  margin-top: 15px!important;
+  display: flex;
+  flex-direction: column;
+  .api-info-content{
+    flex: 0 auto;
+    margin-bottom: 15px;
+  }
+  .editor-main{
+    display: flex;
+    width: 100%;
+    flex: 1;
+    overflow: hidden;
+  }
+}
+
+.editor-main{
+  .editor-fields{
+    flex: 0 auto;
+    width: 500px;
+    height: 100%;
+    border: 1px solid #eee;
+    padding: 10px;
+    margin-right: 15px;
+    overflow: hidden;
+    overflow-y: auto;
+
+    .editor-fields-wrapper{
+      
+    }
+
+    .editor-fields__item{
+      display: inline-block;
+      width: 200px;
+      border: 1px dotted #ccc;
+      padding: 3px 6px;
+      border-radius: 2px;
+      margin-right: 7px;
+      margin-bottom: 2px;
+      overflow: hidden;
+      cursor: move;
+
+      p{
+        font-weight: bold;
+        margin-bottom: 0;
+      }
+      small{
+        display: block;
+        margin-bottom: 0;
+        white-space: nowrap;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #888;
+      }
+    }
+
+  }
+
+
+  .editor-main-content{
+    flex: 1;
+    height: 100%;
+    border: 1px solid #eee;
+    .drag-node-hover{
+      border: 1px solid red;
+    }
+    .editor-drag-container{
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
