@@ -1,0 +1,21 @@
+{{if fileType === 'ts'}}
+{{if namespace}}export const {{namespace}} {{else}}export default {{/if}} = (params: {{nameUpperCase}}.Props, options?: {[key: string]: any}) => {
+  return request<{{nameUpperCase}}.Result>({
+    url: '{{url}}',
+    method: '{{method.toLocaleUpperCase()}}',
+    data: params, {{if requestParams}}
+    ...{{@ requestParams | JSON.stringify}},{{/if}}
+    ...(options || {})
+  })
+} 
+{{else}}
+export default function(params, options){
+  return request({
+    url: '{{url}}',
+    method: '{{method.toLocaleUpperCase()}}',
+    data: params,{{if requestParams}}
+    ...{{@ requestParams | JSON.stringify}},{{/if}}
+    ...(options || {})
+  })
+}
+{{/if}}

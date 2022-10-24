@@ -55,6 +55,8 @@ export interface BuildApiOption {
 
   /** 若 outputFileType = 'merge'，这里必填 */
   outputFileName?: string;
+
+  requestParams?: object;
 }
 
 export interface MockBuildAOption {

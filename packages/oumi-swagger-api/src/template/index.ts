@@ -1,4 +1,10 @@
+import path from 'path';
 import { stringCase, dataType } from '../utils';
+import template from 'art-template';
+
+const getTemplatePath = (tempName: string) => {
+  return path.resolve(__dirname, '../../', 'template/', tempName);
+};
 
 function getType(value) {
   const { type } = value;
@@ -47,22 +53,29 @@ export const interfaceTemp = (name: string, data: any) => {
   if (interArr.length === 0) {
     return `export type ${stringCase(name)} = null; \n`;
   }
-  let str = `export type ${stringCase(name)} = { \n`;
-  interArr.forEach((key: any) => {
-    const val = data[key];
-    const kname = val.name || key || '';
-    const description = val.description ? `  /** 备注：${val.description} ${val.example ? `示例：${val.example}` : ''} */ \n` : '';
-    const content = ` ${getInterfaceName(kname)}${val.required === false ? '?' : ''}: ${getInterfaceType(val)}; \n`;
-    str += description;
-    str += content;
+  const p = getTemplatePath('ts-type.art');
+  return template(p, {
+    list: data,
+    name: stringCase(name),
+    getInterfaceType,
+    getInterfaceName
   });
-  str += '} \n\n';
-  return str;
+  // let str = `export type ${stringCase(name)} = { \n`;
+  // interArr.forEach((key: any) => {
+  //   const val = data[key];
+  //   const kname = val.name || key || '';
+  //   const description = val.description ? `  /** 备注：${val.description} ${val.example ? `示例：${val.example}` : ''} */ \n` : '';
+  //   const content = ` ${getInterfaceName(kname)}${val.required === false ? '?' : ''}: ${getInterfaceType(val)}; \n`;
+  //   str += description;
+  //   str += content;
+  // });
+  // str += '} \n\n';
+  // return str;
 };
 
 const getNameSpace = (namespace: string) => {
   if (namespace) {
-    return `${stringCase(namespace)}.`;
+    return `${stringCase(namespace)}`;
   }
   return '';
 };
@@ -74,27 +87,39 @@ const getFunExportNameSpace = (namespace: string) => {
   return 'export default ';
 };
 
-export const requestTemp = (options: { method: string; url: string; params?: any; fileType?: 'js' | 'ts'; namespace?: string }) => {
-  const { method = 'GET', url, params, fileType, namespace = '' } = options;
-  if (fileType === 'ts') {
-    return `${getFunExportNameSpace(namespace)}(params: ${getNameSpace(namespace)}Props, options?: {[key: string]: any}) => {
-  return request<${getNameSpace(namespace)}Result>({
-    url: '${url}',
-    method: '${method.toLocaleUpperCase()}',
-    data: params,
-    ...(options || {})
-  })
-} \n`;
+const objectToString = (params: object) => {
+  let str = '';
+  if (params && typeof params === 'object') {
+    Object.keys(params).forEach((k, i) => {
+      if (i !== 0) {
+        str += '\n';
+      }
+      str += ` ${k}: ${params[k]}`;
+    });
+    str += ',';
   }
+  return str;
+};
 
-  return `export default function(params, options){
-  return request({
-    url: '${url}',
-    method: '${method.toLocaleUpperCase()}',
-    data: params,
-    ...(options || {})
-  })
-} \n`;
+export const requestTemp = (options: {
+  method: string;
+  url: string;
+  params?: any;
+  fileType?: 'js' | 'ts';
+  namespace?: string;
+  requestParams?: object;
+}) => {
+  const { method = 'GET', url, params, fileType, namespace = '', requestParams } = options;
+  const p = getTemplatePath('request.art');
+  const html = template(p, {
+    url,
+    method,
+    fileType,
+    namespace,
+    requestParams,
+    nameUpperCase: getNameSpace(namespace)
+  });
+  return html;
 };
 
 export const namespaceTempHead = (name: string) => {

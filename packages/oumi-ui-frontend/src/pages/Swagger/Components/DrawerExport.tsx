@@ -82,12 +82,11 @@ const DrawerExport = (props: any, ref: any) => {
     //     setMockCode(res);
     //   });
     // }
-    if (key === '4' && !code_Mock) {
+    if (key === '4') {
       requestMock(params).then((res) => {
         setMockCode(res);
       });
-    }
-    if (key === '5' && !code_TS) {
+    } else if (key === '5') {
       requestTS(params).then((res) => {
         setTSCode(res);
       });
@@ -134,6 +133,7 @@ const DrawerExport = (props: any, ref: any) => {
           </Dropdown>
         </div>
       }
+      destroyOnClose
       // style={{ position: 'absolute' }}
       // getContainer={document.getElementById('root-content') as HTMLElement}
     >

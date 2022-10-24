@@ -66,7 +66,6 @@ export default class Swagger {
 
       const ref = findResponseRef(request);
       const parametersData = parameters(definitions, request);
-      if (!ref) return;
 
       const res = eachDefinitions({ definitions, ref });
       // console.log('query: ', path);
@@ -234,7 +233,15 @@ export default class Swagger {
    * @returns 生成api文件
    */
   buildApi(options: BuildApiOption) {
-    const { outputPath, requestLibPath, fileType, filterPathPrefix, outputFileName = 'serve.ts', outputFileType } = options || {};
+    const {
+      outputPath,
+      requestLibPath,
+      fileType,
+      filterPathPrefix,
+      outputFileName = 'serve.ts',
+      outputFileType,
+      requestParams
+    } = options || {};
 
     if (!outputPath || typeof outputPath !== 'string') {
       throw new Error(`outputPath: 格式不合法 ${outputPath}`);
@@ -254,7 +261,8 @@ export default class Swagger {
           method: methods,
           url: `/${pathData.path}`,
           fileType,
-          namespace: pathData.key
+          namespace: pathData.key,
+          requestParams
         });
 
         if (fileType === 'js') {
@@ -274,7 +282,8 @@ export default class Swagger {
         const requestContent = requestTemp({
           method: methods,
           url: `/${pathData.path}`,
-          fileType
+          fileType,
+          requestParams
         });
 
         if (fileType === 'js') {

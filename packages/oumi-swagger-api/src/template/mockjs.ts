@@ -112,6 +112,7 @@ const getMockValue = (item: MockItem, key) => {
 };
 
 export const buildMockStr = function (data: any): string | boolean | number {
+  if (!data) return '{}';
   if (dataType.includes(data.type)) {
     return data.type === 'boolean' ? true : '1';
   }

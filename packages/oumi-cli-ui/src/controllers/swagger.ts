@@ -160,7 +160,8 @@ const BuildSwaggerFileToLocal = async (ctx: Context) => {
         requestLibPath,
         filterPathPrefix,
         outputFileType,
-        outputFileName
+        outputFileName,
+        requestParams: data.requestParams
       });
     }
 

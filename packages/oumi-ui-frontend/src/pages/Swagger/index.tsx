@@ -73,7 +73,7 @@ export default memo(() => {
 
   const onTabClick = (id: string, name: string) => {
     // setTabsId(key);
-    history.push(`/swagger/${id}`, { title: name });
+    history.push(`/swagger/${id}`, { title: `API: ${name}` });
   };
 
   // 展开子列表

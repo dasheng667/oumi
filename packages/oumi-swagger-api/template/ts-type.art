@@ -1,0 +1,5 @@
+  export type {{name}} = { 
+    {{each list $value $key}}{{if $value.description}} /** 备注：{{$value.description}} {{if $value.example}}示例：{{$value.example}}{{/if}}  */  
+    {{/if}}{{getInterfaceName($key)}}{{if $value.required}}?{{/if}}: {{getInterfaceType($value)}}; 
+    {{/each}}
+  }

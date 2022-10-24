@@ -71,7 +71,8 @@ const exportTSFile = async (ctx: Context) => {
         method: methods,
         url: `/${pathData.path}`,
         fileType,
-        namespace: pathData.key
+        namespace: pathData.key,
+        requestParams: data.requestParams
       });
 
       mergeTemp += [namespaceTempHead(pathData.key), propsString, resultString, namespaceTempFoot, requestContent].join('\n');

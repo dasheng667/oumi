@@ -4,7 +4,7 @@ import copy from 'copy-to-clipboard';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { CopyOutlined, ExportOutlined } from '@ant-design/icons';
 import { toResponseJSON } from '@src/utils';
-import { Tabs, Spin, Table, Popover, Input, message, Button } from 'antd';
+import { Tabs, Spin, Table, Popover, Input, message, Button, Space } from 'antd';
 import { useRequest } from '@src/hook';
 import Container from '../Container';
 import Code from '../../Components/Code';
@@ -19,6 +19,12 @@ const ApiInfo = (props: any) => {
   const { api = {}, url, onExport } = props;
   return (
     <div className="api-info-content">
+      <Space style={{ marginBottom: 20 }}>
+        <Button icon={<ExportOutlined />} type="primary" danger onClick={onExport}>
+          导出文档
+        </Button>
+      </Space>
+
       <div className="api-info-field">
         <b>接口地址：</b> <span className="text">{url} </span>{' '}
         <span
@@ -38,11 +44,9 @@ const ApiInfo = (props: any) => {
         <b>接口描述：</b> <span className="text">{api.description}</span>
       </div>
 
-      <div className="api-info-fixed-right">
-        <Button icon={<ExportOutlined />} type="primary" danger onClick={onExport}>
-          导出文档
-        </Button>
-      </div>
+      {/* <div className='api-info-fixed-right'>
+        
+      </div> */}
     </div>
   );
 };
