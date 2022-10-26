@@ -74,6 +74,12 @@ export default () => {
 
   const columns = [
     {
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
+      width: 20
+    },
+    {
       title: '名称',
       dataIndex: 'name',
       key: 'name',
@@ -157,43 +163,44 @@ export default () => {
     <Container isMain title="配置" className="ui-config-content">
       <div className="scroll-body ui-config-container ui-content-container">
         <Tabs className="tabs-oumi" type="card" activeKey={currentTag} onChange={(key) => setCurrentTag(key)}>
-          <TabPane tab="Swagger" key="1">
+          <TabPane tab="默认配置" key="1">
             <Row>
               <Col span={11}>
-                <h3>API导出配置</h3>
+                <h3>导出文档配置</h3>
                 <SwaggerConfig formConfig={formConfig} onFinish={onFinishConfig} configLoading={configLoading} />
               </Col>
 
-              <Col span={13}>
-                <h3>Swagger列表</h3>
-                <Form name="form_add" form={formAdd} layout="inline" onFinish={onFinish}>
-                  <Form.Item name="name" label="名称" rules={[{ required: true, message: '请输入Swagger名称' }]}>
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item name="href" label="链接" rules={[{ required: true, validator: checkHref, message: '请输入一个正确的链接' }]}>
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item>
-                    <Button type="primary" htmlType="submit" loading={loadingAdd}>
-                      新增
-                    </Button>
-                  </Form.Item>
-                </Form>
-
-                <div style={{ width: 700, marginTop: 50 }}>
-                  <Table
-                    rowKey="id"
-                    title={() => '我的 Swagger'}
-                    bordered
-                    dataSource={data && data.swagger ? data.swagger : []}
-                    columns={columns}
-                    pagination={false}
-                  />
-                </div>
-              </Col>
+              <Col span={13}>{/* <div style={{ width: 700, marginTop: 50 }}> </div> */}</Col>
             </Row>
+          </TabPane>
+
+          <TabPane tab="Swagger配置" key="swagger-list">
+            <h3>Swagger配置</h3>
+            <Form name="form_add" form={formAdd} layout="inline" onFinish={onFinish}>
+              <Form.Item name="name" label="名称" rules={[{ required: true, message: '请输入Swagger名称' }]}>
+                <Input />
+              </Form.Item>
+
+              <Form.Item name="href" label="链接" rules={[{ required: true, validator: checkHref, message: '请输入一个正确的链接' }]}>
+                <Input />
+              </Form.Item>
+
+              <Form.Item>
+                <Button type="primary" htmlType="submit" loading={loadingAdd}>
+                  新增
+                </Button>
+              </Form.Item>
+            </Form>
+
+            <Table
+              style={{ marginTop: 15 }}
+              rowKey="id"
+              // title={() => '我的 Swagger'}
+              bordered
+              dataSource={data && Array.isArray(data.swagger) ? data.swagger.reverse() : []}
+              columns={columns}
+              pagination={false}
+            />
           </TabPane>
 
           <TabPane tab="资产配置" key="2">
@@ -220,14 +227,7 @@ export default () => {
             </Form>
 
             <div style={{ width: 800, marginTop: 50 }}>
-              <Table
-                rowKey="id"
-                title={() => '资产列表'}
-                bordered
-                dataSource={data && data.blocks ? data.blocks : []}
-                columns={columnsBlock}
-                pagination={false}
-              />
+              <Table rowKey="id" bordered dataSource={data && data.blocks ? data.blocks : []} columns={columnsBlock} pagination={false} />
             </div>
           </TabPane>
 

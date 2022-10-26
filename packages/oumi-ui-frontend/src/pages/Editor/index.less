@@ -54,11 +54,16 @@
         text-overflow: ellipsis;
         color: #888;
       }
+      &:hover{
+        border-color: #1b90ff;
+        background-color: #a6d4ff18;
+      }
     }
 
   }
 
 
+  // 编辑器
   .editor-main-content{
     flex: 1;
     height: 100%;
@@ -66,9 +71,39 @@
     .drag-node-hover{
       border: 1px solid red;
     }
-    .editor-drag-container{
+    .ant-tabs .ant-tabs-nav{
+      margin-bottom: 0!important;
+    }
+    .editor-main-body, .ant-tabs, .ant-tabs-content-holder .ant-tabs-content {
       width: 100%;
       height: 100%;
+    }
+    .editor-main-body__box{
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .editor-main-body__header{
+      height: 40px;
+      flex: 0 auto;
+      display: flex;
+      padding: 0 10px;
+      align-items: center;
+      flex-wrap: nowrap;
+      &__component{
+        padding: 3px 8px;
+        border: 1px solid #eee;
+        border-radius: 3px;
+        cursor: pointer;
+        &:hover{
+          background-color: #4fa5f518;
+        }
+      }
+    }
+    .editor-main-body__scroll{
+      flex: 1;
+      overflow: hidden;
+      overflow-y: auto;
     }
   }
 }

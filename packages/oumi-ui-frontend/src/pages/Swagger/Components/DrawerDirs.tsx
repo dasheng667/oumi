@@ -122,7 +122,7 @@ const App = (props: Props, ref: any) => {
   );
 
   return (
-    <Drawer width={700} title="导出API" placement="right" onClose={onClose} visible={visible} footer={renderFooter} destroyOnClose>
+    <Drawer width={700} title="导出文档" placement="right" onClose={onClose} visible={visible} footer={renderFooter} destroyOnClose>
       <p>生成接口的规则在可以在配置中心自定义。</p>
       <DirectoryTree loadData={onLoadData} treeData={treeData} onSelect={onSelect} />
     </Drawer>

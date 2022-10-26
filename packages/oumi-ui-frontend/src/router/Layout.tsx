@@ -1,11 +1,18 @@
 import React, { memo, useEffect, useState, useReducer, useMemo } from 'react';
-import { Tabs } from 'antd';
+import { Tabs, message } from 'antd';
 import { useHistory } from 'react-router-dom';
 import ErrorBoundary from '@src/Components/ErrorBoundary';
 import routers from './index';
 import renderRoutes from './renderRoutes';
 import Slider from '../Components/Slider';
 import { CacheContext, useCacheContext, CacheReducer, CacheType } from '@src/context/cache';
+
+message.config({
+  top: 130,
+  duration: 2,
+  maxCount: 3,
+  rtl: true
+});
 
 const CacheTab = memo(() => {
   const history = useHistory();

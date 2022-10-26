@@ -2,7 +2,7 @@ import React, { memo, useEffect, useState, useRef } from 'react';
 import qs from 'qs';
 import copy from 'copy-to-clipboard';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import { CopyOutlined, ExportOutlined, EditOutlined } from '@ant-design/icons';
+import { CopyOutlined, ExportOutlined, CodeSandboxOutlined } from '@ant-design/icons';
 import { toResponseJSON } from '@src/utils';
 import { Tabs, Spin, Table, Popover, Input, message, Button, Space } from 'antd';
 import { useRequest } from '@src/hook';
@@ -23,15 +23,15 @@ const ApiInfo = (props: { api: any; title: string; url: string; tabsId: string; 
   return (
     <div className="api-info-content">
       <Space style={{ marginBottom: 20 }}>
-        <Button
-          icon={<EditOutlined />}
+        {/* <Button
+          icon={<CodeSandboxOutlined />}
           type="primary"
           onClick={() => {
-            history.push(`/editor${url}?tabsId=${tabsId}&searchTag=${searchTag}`, { title: `<edit>${title}` });
+            history.push(`/editor${url}?tabsId=${tabsId}&searchTag=${searchTag}`, { title: `<editor>${title}` });
           }}
         >
-          编辑器
-        </Button>
+          低代码
+        </Button> */}
 
         <Button icon={<ExportOutlined />} type="primary" danger onClick={onExport}>
           导出文档

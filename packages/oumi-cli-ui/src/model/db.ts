@@ -143,7 +143,7 @@ const modelDb = {
         return [...this.readConfig(), ...res];
       },
       add(data: SwaggerItem) {
-        if (!this.get()) {
+        if (!db.get(this.KEY).value()) {
           db.set(this.KEY, []).write();
         }
         if (!data.id) {
