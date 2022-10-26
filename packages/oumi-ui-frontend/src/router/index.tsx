@@ -50,6 +50,18 @@ const router: IRouter[] = [
       },
 
       {
+        path: '/tasks',
+        label: '任务',
+        component: asyncComponent(() => import(`../pages/Tasks`))
+      },
+
+      {
+        path: '/tasks/:id',
+        label: '任务',
+        component: asyncComponent(() => import(`../pages/Tasks`))
+      },
+
+      {
         path: '/project/select',
         label: '选择项目',
         exact: true,
@@ -82,18 +94,6 @@ const router: IRouter[] = [
         label: '文档',
         multiple: true,
         component: asyncComponent(() => import(`../pages/Swagger/apiDetail`))
-      },
-
-      {
-        path: '/tasks',
-        label: '任务',
-        component: asyncComponent(() => import(`../pages/Tasks`))
-      },
-
-      {
-        path: '/tasks/:id',
-        label: '任务',
-        component: asyncComponent(() => import(`../pages/Tasks`))
       },
 
       {

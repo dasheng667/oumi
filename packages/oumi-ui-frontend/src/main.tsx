@@ -9,10 +9,6 @@ import { SocketContext, socket } from './hook/socket';
 
 import './index.less';
 
-function App() {
-  return <Router>{renderRoutes(routers)}</Router>;
-}
-
 // const host = import.meta.env.MODE === 'development' ? 'http://localhost:9000' : window.location.origin;
 
 // const client = new ApolloClient({
@@ -22,7 +18,7 @@ function App() {
 
 ReactDOM.render(
   <SocketContext.Provider value={{ socket }}>
-    <App />
+    <Router>{renderRoutes(routers)}</Router>
   </SocketContext.Provider>,
   document.getElementById('root')
 );

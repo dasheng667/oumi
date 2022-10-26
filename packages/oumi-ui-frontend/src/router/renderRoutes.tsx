@@ -1,6 +1,9 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import CacheRoute, { CacheSwitch } from 'react-router-cache-route';
+import C, { CacheSwitch } from 'react-router-cache-route';
+
+// @ts-ignore
+const CacheRoute = C.default ? C.default : C;
 
 export default function renderRoutes(routes: any, extraProps = {}, switchProps = {}) {
   return routes ? (
@@ -10,7 +13,7 @@ export default function renderRoutes(routes: any, extraProps = {}, switchProps =
           key={route.key || i}
           cacheKey={
             route.multiple
-              ? (props) => {
+              ? (props: any) => {
                   return props.location!.pathname;
                 }
               : route.path
@@ -19,7 +22,7 @@ export default function renderRoutes(routes: any, extraProps = {}, switchProps =
           path={route.path}
           exact={route.exact}
           strict={route.strict}
-          render={(props) =>
+          render={(props: any) =>
             route.render ? route.render({ ...props, ...extraProps, route }) : <route.component {...props} {...extraProps} route={route} />
           }
         />
