@@ -1,6 +1,6 @@
 {
   "name": "@oumi/ui-frontend",
-  "version": "0.0.1-beta",
+  "version": "1.8.0",
   "private": true,
   "scripts": {
     "dev": "vite",
