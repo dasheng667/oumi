@@ -65,6 +65,9 @@ export type SwaggerItem = {
   id?: string;
   default?: boolean;
   requestParams?: object;
+  exportConfig?: {
+    request?: boolean;
+  };
 };
 
 export type BlocksItem = {

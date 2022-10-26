@@ -55,9 +55,14 @@ const exportMockFile = async (ctx: Context) => {
 
 const exportTSFile = async (ctx: Context) => {
   const { id, searchPath, isDownload = true }: any = ctx.request.query;
+  const swaggerConfig = await ctx.model.userConfig.swaggerConfig.get();
 
   const data = await ctx.model.userConfig.swagger.findById(id);
   const swaggerData: any = await request.getJSON(data.href);
+  const exportConfig = data.exportConfig || undefined;
+  const isExportRequest = exportConfig === undefined ? true : exportConfig && !!exportConfig.request; // 是否导出 request
+  const requestLibPath = (isExportRequest && swaggerConfig.requestLibPath) || ''; // 导出 request 的import 头
+
   const swagger = new Swagger(swaggerData);
   const fileType = 'ts';
   let mergeTemp = '';
@@ -67,15 +72,19 @@ const exportTSFile = async (ctx: Context) => {
     Object.keys(json).forEach((filePath) => {
       const { propsString, resultString, methods } = json[filePath];
       const pathData = transformPath(filePath, 'api');
-      const requestContent = requestTemp({
-        method: methods,
-        url: `/${pathData.path}`,
-        fileType,
-        namespace: pathData.key,
-        requestParams: data.requestParams
-      });
+      const requestContent =
+        isExportRequest &&
+        requestTemp({
+          method: methods,
+          url: `/${pathData.path}`,
+          fileType,
+          namespace: pathData.key,
+          requestParams: data.requestParams
+        });
 
-      mergeTemp += [namespaceTempHead(pathData.key), propsString, resultString, namespaceTempFoot, requestContent].join('\n');
+      mergeTemp += [requestLibPath, namespaceTempHead(pathData.key), propsString, resultString, namespaceTempFoot, requestContent]
+        .filter((v) => v)
+        .join('\n');
     });
   };
 
