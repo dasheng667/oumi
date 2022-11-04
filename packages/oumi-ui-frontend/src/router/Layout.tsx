@@ -1,7 +1,6 @@
 import React, { memo, useEffect, useState, useReducer, useMemo } from 'react';
 import { Tabs, message } from 'antd';
 import { useHistory } from 'react-router-dom';
-import ErrorBoundary from '@src/Components/ErrorBoundary';
 import routers from './index';
 import renderRoutes from './renderRoutes';
 import Slider from '../Components/Slider';
@@ -87,9 +86,7 @@ const Layout = memo(({ route }: any) => {
       <CacheContext.Provider value={value}>
         <div className="root-container">
           <CacheTab />
-          <ErrorBoundary>
-            <div id="root-content">{renderRoutes(route.routes)}</div>
-          </ErrorBoundary>
+          <div id="root-content">{renderRoutes(route.routes)}</div>
         </div>
       </CacheContext.Provider>
     </React.Fragment>
