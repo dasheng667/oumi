@@ -1,7 +1,6 @@
 import React, { memo, useEffect, useState, useReducer, useMemo } from 'react';
 import { Tabs, message } from 'antd';
 import { useHistory } from 'react-router-dom';
-import ErrorBoundary from '@src/Components/ErrorBoundary';
 import routers from './index';
 import renderRoutes from './renderRoutes';
 import Slider from '../Components/Slider';
@@ -12,6 +11,22 @@ message.config({
   duration: 2,
   maxCount: 3,
   rtl: true
+});
+
+type TabTitleProps = { title: string };
+
+const MAX_TITLE_LENGTH = 15;
+
+const TabTitle = memo((props: TabTitleProps) => {
+  const { title } = props;
+  const titleContent = useMemo(() => {
+    if (title.length >= MAX_TITLE_LENGTH) {
+      return `${title.slice(0, MAX_TITLE_LENGTH)}...`;
+    }
+    return title;
+  }, [title]);
+
+  return <span>{titleContent}</span>;
 });
 
 const CacheTab = memo(() => {
@@ -56,7 +71,7 @@ const CacheTab = memo(() => {
         {state.cacheList.map((item) => {
           const find = routerAll?.find((v) => v.path === item.pathname);
           const title = item.state ? item.state?.title : find?.label;
-          return <Tabs.TabPane tab={title || '页面'} key={item.pathname} />;
+          return <Tabs.TabPane tab={<TabTitle title={title || '页面'} />} key={item.pathname} />;
         })}
       </Tabs>
     </div>
@@ -87,9 +102,7 @@ const Layout = memo(({ route }: any) => {
       <CacheContext.Provider value={value}>
         <div className="root-container">
           <CacheTab />
-          <ErrorBoundary>
-            <div id="root-content">{renderRoutes(route.routes)}</div>
-          </ErrorBoundary>
+          <div id="root-content">{renderRoutes(route.routes)}</div>
         </div>
       </CacheContext.Provider>
     </React.Fragment>

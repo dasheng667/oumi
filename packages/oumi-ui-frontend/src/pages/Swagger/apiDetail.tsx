@@ -86,11 +86,11 @@ const ApiTable = (props: any) => {
       const is = isValidField(item);
       const children: any = is ? [] : null;
       const row = {
-        key: `${index}/${i}/${v}`,
-        name: v,
+        __key: `${index}/${i}/${v}`,
+        __name: v,
         ...item,
-        required: item.required ? 'true' : 'false',
-        type: getType(item),
+        __required: item.required ? 'true' : 'false',
+        __type: getType(item),
         children
       };
       if (Array.isArray(tableData) && v !== 'isArray') {
@@ -106,8 +106,8 @@ const ApiTable = (props: any) => {
   const columns = [
     {
       title: '参数名称',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: '__name',
+      key: '__name',
       width: 350,
       render: (text: string) => {
         return (
@@ -125,18 +125,18 @@ const ApiTable = (props: any) => {
     },
     {
       title: '参数说明',
-      dataIndex: 'description',
-      key: 'description'
+      dataIndex: '__description',
+      key: '__description'
     },
     showRequired && {
       title: '是否必须',
-      dataIndex: 'required',
-      key: 'required'
+      dataIndex: '__required',
+      key: '__required'
     },
     {
       title: '数据类型',
-      dataIndex: 'type',
-      key: 'type'
+      dataIndex: '__type',
+      key: '__type'
     },
     {
       title: 'example',
@@ -148,9 +148,9 @@ const ApiTable = (props: any) => {
   if (tableData.length === 0) {
     return <div>无</div>;
   }
-
+  console.log(tableData);
   return (
-    <Table columns={columns} dataSource={tableData} rowKey="key" size="small" bordered pagination={false} defaultExpandAllRows={true} />
+    <Table columns={columns} dataSource={tableData} rowKey="__key" size="small" bordered pagination={false} defaultExpandAllRows={true} />
   );
 };
 

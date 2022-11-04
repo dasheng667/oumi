@@ -58,7 +58,7 @@ const randomMockValue = (name: string, item: MockItem) => {
   if (name.endsWith('Type') || name.endsWith('Status')) return descMatchValue(description) || `'${name}'`;
 
   if (type === 'boolean') return `'@boolean()'`;
-  if (type === 'int' || type === 'integer') return `'@integer(10, 100)'`;
+  if (type === 'int' || type === 'integer' || type === 'number') return `'@integer(10, 100)'`;
   if (type === 'float') return `'@float(10, 100, 3)'`;
 
   return `'${name}'`;
