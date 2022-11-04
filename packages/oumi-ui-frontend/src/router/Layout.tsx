@@ -13,6 +13,22 @@ message.config({
   rtl: true
 });
 
+type TabTitleProps = { title: string };
+
+const MAX_TITLE_LENGTH = 15;
+
+const TabTitle = memo((props: TabTitleProps) => {
+  const { title } = props;
+  const titleContent = useMemo(() => {
+    if (title.length >= MAX_TITLE_LENGTH) {
+      return `${title.slice(0, MAX_TITLE_LENGTH)}...`;
+    }
+    return title;
+  }, [title]);
+
+  return <span>{titleContent}</span>;
+});
+
 const CacheTab = memo(() => {
   const history = useHistory();
   const { location } = history;
@@ -55,7 +71,7 @@ const CacheTab = memo(() => {
         {state.cacheList.map((item) => {
           const find = routerAll?.find((v) => v.path === item.pathname);
           const title = item.state ? item.state?.title : find?.label;
-          return <Tabs.TabPane tab={title || '页面'} key={item.pathname} />;
+          return <Tabs.TabPane tab={<TabTitle title={title || '页面'} />} key={item.pathname} />;
         })}
       </Tabs>
     </div>
