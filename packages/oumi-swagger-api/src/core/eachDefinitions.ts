@@ -28,7 +28,7 @@ export default function eachDefinitions(params: Props) {
   if (findRefIndex === -1) {
     refTotal.push({ ref, count: 1 });
   } else {
-    if (refTotal[findRefIndex].count >= 3) {
+    if (refTotal[findRefIndex].count >= 10) {
       return {};
     }
     refTotal[findRefIndex].count++;
