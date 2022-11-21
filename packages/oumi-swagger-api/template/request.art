@@ -3,7 +3,7 @@
   return request<{{nameUpperCase}}.Result>({
     url: '{{url}}',
     method: '{{method.toLocaleUpperCase()}}',
-    data: params, {{if requestParams}}
+    {{if method.toLocaleUpperCase() === 'GET'}}params{{else}}data: params{{/if}},{{if requestParams}}
     ...{{@ requestParams | JSON.stringify}},{{/if}}
     ...(options || {})
   })
@@ -13,7 +13,7 @@ export default function(params, options){
   return request({
     url: '{{url}}',
     method: '{{method.toLocaleUpperCase()}}',
-    data: params,{{if requestParams}}
+    {{if method.toLocaleUpperCase() === 'GET'}}params{{else}}data: params{{/if}},{{if requestParams}}
     ...{{@ requestParams | JSON.stringify}},{{/if}}
     ...(options || {})
   })

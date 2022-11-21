@@ -17,6 +17,7 @@ type MockItem = {
   type: string;
   format?: string;
   description?: string;
+  example?: string;
 };
 
 // type MockData = MockItem & { isArray: boolean };
@@ -32,7 +33,7 @@ const descMatchValue = (description: string) => {
 };
 
 const randomMockValue = (name: string, item: MockItem) => {
-  const { type = '', format = '', description = '' } = item;
+  const { type = '', format = '', description = '', example = '' } = item;
 
   if (name === 'remark') return `'@ctitle(3, 10)'`;
   if (name.endsWith('Count') || name.endsWith('Num') || name.endsWith('Min') || name.endsWith('Max')) return `'@integer(1, 100)'`;
@@ -60,22 +61,10 @@ const randomMockValue = (name: string, item: MockItem) => {
   if (type === 'boolean') return `'@boolean()'`;
   if (type === 'int' || type === 'integer' || type === 'number') return `'@integer(10, 100)'`;
   if (type === 'float') return `'@float(10, 100, 3)'`;
+  if (type === 'array' && example) return `'${example.replace(/[{|}|']/g, '')}'.split(',')`;
 
   return `'${name}'`;
 };
-
-// const randomMockValue = (name: string = '', format: string = '') => {
-//   if (name.indexOf('time') > -1 || format.indexOf('time') > -1) return `Mock.Random.date('yyyy-MM-dd')`;
-//   if (name.indexOf('email') > -1) return 'Mock.Random.email()';
-//   if (name.indexOf('url') > -1) return 'Mock.Random.url()';
-//   if (name.indexOf('ip') > -1) return 'Mock.Random.ip()';
-//   if (name.indexOf('province') > -1) return 'Mock.Random.province()';
-//   if (name.indexOf('city') > -1) return 'Mock.Random.city()';
-//   if (name.indexOf('county') > -1) return 'Mock.Random.county()';
-//   if (name.indexOf('address') > -1) return 'Mock.Random.region()';
-//   if (name.endsWith('Id')) return 'Mock.Random.id()';
-//   return false;
-// };
 
 const getMockKey = (item: MockItem, key: string) => {
   const { format, type, description } = item;
@@ -85,21 +74,6 @@ const getMockKey = (item: MockItem, key: string) => {
   }
   return key;
 };
-// const getMockKey = (item: MockItem, key: string) => {
-//   const { format, type, description } = item;
-//   const random = randomMockValue(key, format, description);
-//   if (random) return key;
-//   if (typeof type === 'string' && type.indexOf('int') > -1) {
-//     return `${key}|1-999`;
-//   }
-//   if (type === 'string') {
-//     return `${key}|3-10`;
-//   }
-//   if (type === 'boolean') {
-//     return `${key}|1`;
-//   }
-//   return key;
-// };
 
 const getMockValue = (item: MockItem, key) => {
   const { format, type, description } = item;

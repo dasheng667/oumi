@@ -79,14 +79,14 @@ const ApiTable = (props: any) => {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-shadow
-  const deep = (data: any, tableData: any[], index: number) => {
+  const deep = (data: any, tableData: any[], parent: string = '') => {
     if (typeof data !== 'object' || !data) return;
     Object.keys(data).forEach((v, i) => {
       const item = data[v];
       const is = isValidField(item);
       const children: any = is ? [] : null;
       const row = {
-        __key: `${index}/${i}/${v}`,
+        __key: `${parent}/${v}`,
         __name: v,
         ...item,
         __required: item.required ? 'true' : 'false',
@@ -97,11 +97,11 @@ const ApiTable = (props: any) => {
         tableData.push(row);
       }
       if (is && item && typeof item === 'object') {
-        deep(item, children, index + 1);
+        deep(item, children, `${parent}/${v}`);
       }
     });
   };
-  deep(props?.data, tableData, 1);
+  deep(props?.data, tableData);
 
   const columns = [
     {
@@ -125,8 +125,8 @@ const ApiTable = (props: any) => {
     },
     {
       title: '参数说明',
-      dataIndex: '__description',
-      key: '__description'
+      dataIndex: 'description',
+      key: 'description'
     },
     showRequired && {
       title: '是否必须',
