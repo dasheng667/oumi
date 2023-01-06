@@ -1,6 +1,6 @@
 {
 	"name": "@oumi/cli",
-	"version": "1.9.3",
+	"version": "1.9.4",
 	"description": "@oumi/cli 项目管理器脚手架",
 	"main": "lib/index.js",
 	"bin": {
@@ -30,8 +30,8 @@
 	"dependencies": {
 		"@oumi/block-sdk": "^1.6.9",
 		"@oumi/cli-shared-utils": "^1.6.9",
-		"@oumi/cli-ui": "^1.9.3",
-		"@oumi/swagger-api": "^1.9.3"
+		"@oumi/cli-ui": "^1.9.4",
+		"@oumi/swagger-api": "^1.9.4"
 	},
 	"publishConfig": {
 		"registry": "https://registry.npmjs.org/",
