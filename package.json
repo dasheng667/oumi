@@ -13,7 +13,7 @@
     "lint:js": "eslint --fix packages/**/*.js packages/**/bin/*",
     "lint:prettier": "prettier --check \"packages/**/*\" --end-of-line auto",
     "prettier": "prettier --write \"packages/**/*\"",
-    "serve": "cd packages/oumi-cli-ui && npm run start",
+    "serve": "cd packages/oumi-cli-ui && npm run serve",
     "dev": "cd packages/oumi-ui-frontend && npm run dev",
     "build": "lerna run build",
     "publish": "lerna publish --no-private",

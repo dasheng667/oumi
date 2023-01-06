@@ -3,7 +3,7 @@ import chalk from 'chalk';
 import type { Query } from '../../typings/swagger';
 
 export const validataQuery = function (requestData: any, requestPath: string, options: Query) {
-  const { tags, description } = requestData;
+  const { tags, description } = requestData || {};
   const { keyword, tag, path } = options;
   if (keyword) {
     if (!description) return false;

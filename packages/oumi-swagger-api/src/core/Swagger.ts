@@ -62,7 +62,7 @@ export default class Swagger {
       const { post, get, put } = apiData;
       const request = post || get || put;
 
-      if (!validataQuery(request, path, options)) return;
+      if (!validataQuery(request, path, options) || !request) return;
 
       const ref = findResponseRef(request);
       const parametersData = parameters(definitions, request);
