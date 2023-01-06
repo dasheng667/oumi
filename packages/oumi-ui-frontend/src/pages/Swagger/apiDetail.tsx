@@ -167,11 +167,13 @@ export default memo(() => {
 
   useEffect(() => {
     const query: any = qs.parse(location.search.startsWith('?') ? location.search.substring(1) : '');
+    const params = query.searchTag ? { searchTag: query.searchTag } : { searchPath: query.searchPath };
+
     if (query && query.tabsId) {
       setTabsId(query.tabsId);
       requestSearchSwagger({
         configId: query.tabsId,
-        searchTag: query.searchTag
+        ...params
       }).then((res: any) => {
         if (res && res[pathname]) {
           setError('');

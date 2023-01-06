@@ -1,6 +1,6 @@
 import axios from 'axios';
 import querystring from 'qs';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef, useLayoutEffect } from 'react';
 import { useLocation as useRouterLocation, useRouteMatch as useRouterMatch } from 'react-router-dom';
 import request from '../request';
 
@@ -125,4 +125,19 @@ export const useDownloadFile = () => {
   return {
     downloadFile
   };
+};
+
+export const useEvent = <T extends noop>(handler: T) => {
+  const handlerRef = useRef<T>();
+
+  useLayoutEffect(() => {
+    handlerRef.current = handler;
+  });
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  return useCallback<T>((...args: any[]) => {
+    const fn = handlerRef.current;
+    return fn && fn(...args);
+  }, []);
 };

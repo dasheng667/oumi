@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Checkbox, Drawer, Tabs, Tag, Button, Space, Tooltip, Dropdown, Menu, Spin } from 'antd';
+import { Checkbox, Drawer, Tabs, Tag, Button, Space, Tooltip, Dropdown, Menu, Empty } from 'antd';
 // import { toResponseJSON } from '@src/utils';
 import { useDownloadFile, useRequest } from '@src/hook';
 import {
@@ -26,15 +26,17 @@ const SwaggerList = (props: any) => {
     setSelectId,
     selectId,
     tabsId,
-    onSwaggerApiClick
+    onSwaggerApiClick,
+    searchKeyword
   } = props;
-  const [visible, setVisible] = useState(false);
-  const [drawerData, setDrawerData] = useState<any>(null);
-  const [defaultActiveKey, setDefaultActiveKey] = useState('1');
-  const { downloadFile } = useDownloadFile();
-  const { request: requestJson, loading: loadingJson } = useRequest('/api/export/json', { lazy: true, methods: 'get' });
-  const { request: requestTS, loading: loadingTS } = useRequest('/api/export/typescript', { lazy: true, methods: 'get' });
-  const { request: requestMock, loading: loadingMock } = useRequest('/api/export/mock', { lazy: true, methods: 'get' });
+
+  // const [visible, setVisible] = useState(false);
+  // const [drawerData, setDrawerData] = useState<any>(null);
+  // const [defaultActiveKey, setDefaultActiveKey] = useState('1');
+  // const { downloadFile } = useDownloadFile();
+  // const { request: requestJson, loading: loadingJson } = useRequest('/api/export/json', { lazy: true, methods: 'get' });
+  // const { request: requestTS, loading: loadingTS } = useRequest('/api/export/typescript', { lazy: true, methods: 'get' });
+  // const { request: requestMock, loading: loadingMock } = useRequest('/api/export/mock', { lazy: true, methods: 'get' });
 
   const onAllChange = (e: React.MouseEvent, item: any) => {
     const all = Object.keys(expandData[item.id] || {});
@@ -57,11 +59,11 @@ const SwaggerList = (props: any) => {
     }
   };
 
-  const setDrawerVisible = (flag: boolean) => {
-    setVisible(flag);
-  };
+  // const setDrawerVisible = (flag: boolean) => {
+  //   setVisible(flag);
+  // };
 
-  const clickShowDrawer = (value: any, key: string, item: any) => {
+  const clickSwaggerItem = (value: any, key: string, item: any) => {
     // setDrawerVisible(true);
     // setDefaultActiveKey('1');
     // setDrawerData(null);
@@ -78,74 +80,84 @@ const SwaggerList = (props: any) => {
     }
   };
 
-  const downLoadMock = (path: string) => {
-    if (!path) return;
-    downloadFile('/api/export/json', { params: { id: tabsId, searchPath: path } });
-  };
+  // const downLoadMock = (path: string) => {
+  //   if (!path) return;
+  //   downloadFile('/api/export/json', { params: { id: tabsId, searchPath: path } });
+  // };
 
-  const downLoadTS = (path: string) => {
-    if (!path) return;
-    downloadFile('/api/export/typescript', { params: { id: tabsId, searchPath: path } });
-  };
+  // const downLoadTS = (path: string) => {
+  //   if (!path) return;
+  //   downloadFile('/api/export/typescript', { params: { id: tabsId, searchPath: path } });
+  // };
 
-  const downLoadMockJS = (path: string) => {
-    if (!path) return;
-    downloadFile('/api/export/mock', { params: { id: tabsId, searchPath: path } });
-  };
+  // const downLoadMockJS = (path: string) => {
+  //   if (!path) return;
+  //   downloadFile('/api/export/mock', { params: { id: tabsId, searchPath: path } });
+  // };
 
-  const RenderMethods = () => {
-    return (
-      <>
-        {drawerData && drawerData.methods === 'post' && <Tag color="green">POST</Tag>}
-        {drawerData && drawerData.methods === 'get' && <Tag color="blue">GET</Tag>}
-        {drawerData && drawerData.methods === 'delete' && <Tag color="red">DELETE</Tag>}
-        {drawerData && drawerData.methods === 'put' && <Tag color="volcano">PUT</Tag>}
-      </>
-    );
-  };
+  // const RenderMethods = () => {
+  //   return (
+  //     <>
+  //       {drawerData && drawerData.methods === 'post' && <Tag color="green">POST</Tag>}
+  //       {drawerData && drawerData.methods === 'get' && <Tag color="blue">GET</Tag>}
+  //       {drawerData && drawerData.methods === 'delete' && <Tag color="red">DELETE</Tag>}
+  //       {drawerData && drawerData.methods === 'put' && <Tag color="volcano">PUT</Tag>}
+  //     </>
+  //   );
+  // };
 
-  const onTabClick = (key: string) => {
-    setDefaultActiveKey(key);
-    const params = { isDownload: 0, id: tabsId, searchPath: drawerData?.key };
-    if (key === '3' && !drawerData.code_Response) {
-      requestJson(params).then((res) => {
-        setDrawerData({ ...drawerData, code_Response: res });
-      });
+  // const onTabClick = (key: string) => {
+  //   setDefaultActiveKey(key);
+  //   const params = { isDownload: 0, id: tabsId, searchPath: drawerData?.key };
+  //   if (key === '3' && !drawerData.code_Response) {
+  //     requestJson(params).then((res) => {
+  //       setDrawerData({ ...drawerData, code_Response: res });
+  //     });
+  //   }
+  //   if (key === '4' && !drawerData.code_Mock) {
+  //     requestMock(params).then((res) => {
+  //       setDrawerData({ ...drawerData, code_Mock: res });
+  //     });
+  //   }
+  //   if (key === '5' && !drawerData.code_TS) {
+  //     requestTS(params).then((res) => {
+  //       setDrawerData({ ...drawerData, code_TS: res });
+  //     });
+  //   }
+  // };
+
+  // const menu = (
+  //   <Menu>
+  //     <Menu.Item onClick={() => downLoadMock(drawerData && drawerData.key)}>
+  //       <span>
+  //         <FileTextOutlined /> 导出 Response
+  //       </span>
+  //     </Menu.Item>
+  //     <Menu.Item onClick={() => downLoadMockJS(drawerData && drawerData.key)}>
+  //       <span>
+  //         <ApiOutlined /> 导出 Mock
+  //       </span>
+  //     </Menu.Item>
+  //     <Menu.Item onClick={() => downLoadTS(drawerData && drawerData.key)}>
+  //       <span>
+  //         <ControlOutlined /> 导出 TS
+  //       </span>
+  //     </Menu.Item>
+  //   </Menu>
+  // );
+
+  const renderKeywordTextHighlight = (text: string) => {
+    if (searchKeyword && text.indexOf(searchKeyword) > -1) {
+      const str = text.replace(searchKeyword, `<b><font color="red">${searchKeyword}</font></b>`);
+      return <span dangerouslySetInnerHTML={{ __html: str }} />;
     }
-    if (key === '4' && !drawerData.code_Mock) {
-      requestMock(params).then((res) => {
-        setDrawerData({ ...drawerData, code_Mock: res });
-      });
-    }
-    if (key === '5' && !drawerData.code_TS) {
-      requestTS(params).then((res) => {
-        setDrawerData({ ...drawerData, code_TS: res });
-      });
-    }
+    return text;
   };
-
-  const menu = (
-    <Menu>
-      <Menu.Item onClick={() => downLoadMock(drawerData && drawerData.key)}>
-        <span>
-          <FileTextOutlined /> 导出 Response
-        </span>
-      </Menu.Item>
-      <Menu.Item onClick={() => downLoadMockJS(drawerData && drawerData.key)}>
-        <span>
-          <ApiOutlined /> 导出 Mock
-        </span>
-      </Menu.Item>
-      <Menu.Item onClick={() => downLoadTS(drawerData && drawerData.key)}>
-        <span>
-          <ControlOutlined /> 导出 TS
-        </span>
-      </Menu.Item>
-    </Menu>
-  );
 
   return (
     <div className="swagger-list">
+      {swaggerList && swaggerList.length === 0 && <Empty description="暂无数据" style={{ marginTop: 60 }} />}
+
       {swaggerList &&
         swaggerList.map((item: any) => {
           return (
@@ -167,7 +179,7 @@ const SwaggerList = (props: any) => {
                     </span>
                   )}
                 </div>
-                <h3>{item.name}</h3>
+                <h3>{renderKeywordTextHighlight(item.name)}</h3>
               </div>
 
               {expandCacheId.includes(item.id) && (
@@ -184,10 +196,10 @@ const SwaggerList = (props: any) => {
                               <Checkbox value={key} onChange={() => onChange(key)} checked={selectId.includes(key)} />
                             </span>
                             <span className="methods">{(value.methods || 'get').toLocaleUpperCase()}</span>
-                            <span className="path" onClick={() => clickShowDrawer(value, key, item)}>
-                              {key}
+                            <span className="path" onClick={() => clickSwaggerItem(value, key, item)}>
+                              {renderKeywordTextHighlight(key)}
                             </span>
-                            <span className="desc" title={value.description} onClick={() => clickShowDrawer(value, key, item)}>
+                            <span className="desc" title={value.description} onClick={() => clickSwaggerItem(value, key, item)}>
                               {value.description}
                             </span>
                             <span className="bg">

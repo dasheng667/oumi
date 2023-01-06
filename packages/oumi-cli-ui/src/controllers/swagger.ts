@@ -6,7 +6,7 @@ import { request } from '@oumi/cli-shared-utils';
 import type { Context, Next } from '../typings';
 
 const getSwaggerInfo = async (ctx: Context) => {
-  const { id } = ctx.request.body;
+  const { id, searchKeyword } = ctx.request.body;
 
   if (!id || typeof id !== 'string') {
     return ctx.returnError(`参数异常`);
@@ -19,8 +19,13 @@ const getSwaggerInfo = async (ctx: Context) => {
   }
 
   try {
-    const swagger: any = await request.getJSON(data.href);
-    return ctx.returnSuccess(swagger);
+    const swaggerData: any = await request.getJSON(data.href);
+    if (searchKeyword) {
+      const swagger = new Swagger(swaggerData);
+      const result = swagger.filterPaths(searchKeyword);
+      return ctx.returnSuccess(result);
+    }
+    return ctx.returnSuccess(swaggerData);
   } catch (e) {
     return ctx.returnError(e);
   }

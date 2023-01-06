@@ -1,3 +1,4 @@
+/* eslint-disable no-continue */
 import path from 'path';
 import { request as fetch } from '@oumi/cli-shared-utils';
 import type {
@@ -50,6 +51,40 @@ export default class Swagger {
       }
     }
     return Promise.resolve();
+  }
+
+  /**  filterPaths */
+  filterPaths(keyword: string) {
+    const { basePath, paths, host, definitions, info, swagger, tags } = this.body;
+    const newPaths = {};
+
+    const keys = Object.keys(paths);
+    for (let index = 0; index < keys.length; index++) {
+      const key = keys[index];
+      const value = paths[key];
+      const response: any = value.get || value.post || value.delete || value.put;
+      if (response && Array.isArray(response.tags)) {
+        const find = response.tags.find((t: string) => t.indexOf(keyword) > -1);
+        if (find) {
+          newPaths[key] = value;
+          response.tags = response.tags.filter((t) => t.indexOf(keyword) > -1);
+          continue;
+        }
+      }
+      if (response && key.indexOf(keyword) > -1) {
+        newPaths[key] = value;
+      }
+    }
+
+    return {
+      basePath,
+      host,
+      info,
+      paths: newPaths,
+      definitions,
+      swagger,
+      tags
+    };
   }
 
   query(options: Query, callback?: (list: any) => void) {

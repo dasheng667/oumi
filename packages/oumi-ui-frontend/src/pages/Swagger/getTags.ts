@@ -19,10 +19,8 @@ export default (swaggerData: any) => {
             swaggerTags.push({ name: k, description: value.summary, id: createId(10) });
           }
         });
-    } else {
-      console.warn(response);
     }
   });
 
-  return swaggerTags.sort(arrSortByKey('name'));
+  return swaggerTags.sort(arrSortByKey('name')).reverse();
 };

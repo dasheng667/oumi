@@ -3,7 +3,7 @@ import { Link, useRouteMatch } from 'react-router-dom';
 import { CloseCircleOutlined, ExportOutlined } from '@ant-design/icons';
 import { Tabs, Spin, message, Popover, Form, Button } from 'antd';
 import { useHistory } from 'react-router-dom';
-import { useRequest } from '@src/hook';
+import { useRequest, useEvent } from '@src/hook';
 import { createId } from '@src/utils';
 import Search from './Components/Search';
 import Container from '../Container';
@@ -46,11 +46,19 @@ export default memo(() => {
   const [expandCacheId, setExpandCache] = useState<string[]>([]); // 缓存已展开的列表id
   const [selectId, setSelectId] = useState<string[]>([]); // 已选中的api
 
-  // useEffect(() => {
-  //   if (data && data.length > 0) {
-  //     setTabsId(data[0].id);
-  //   }
-  // }, [data]);
+  const listener = useEvent((ev: any) => {
+    ev.preventDefault();
+    // eslint-disable-next-line no-param-reassign
+    ev.returnValue = `当前有打开的${title}，确认关闭吗？`;
+    return false;
+  });
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', listener, true);
+    return () => {
+      window.removeEventListener('beforeunload', listener, true);
+    };
+  }, []);
 
   useEffect(() => {
     if (swaggerData && Array.isArray(swaggerData.tags)) {
@@ -125,6 +133,10 @@ export default memo(() => {
   // 表单搜索
   const onFinish = (val: { name: string }) => {
     const { name } = val;
+
+    requestSwagger({ id: tabsId, searchKeyword: name });
+
+    return;
     if (name === undefined || name === '') {
       requestSwagger({ id: tabsId });
     } else {
@@ -184,7 +196,6 @@ export default memo(() => {
   };
 
   const onSwaggerApiClick = (res: any) => {
-    // console.log('onSwaggerApiClick.res:', res);
     history.push(`/doc${res.url}?tabsId=${tabsId}&searchTag=${res.item.name}`, { title: res.title });
   };
 
@@ -269,6 +280,7 @@ export default memo(() => {
             expandData={expandData}
             onClickSwaggerHead={onClickSwaggerHead}
             onSwaggerApiClick={onSwaggerApiClick}
+            searchKeyword={form.getFieldValue('name')}
           />
           {/* <ProjectDirs selectId={selectId} setSelectId={setSelectId} configId={tabsId} /> */}
 
